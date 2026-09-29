@@ -1,250 +1,1297 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My File Explorer</title>
-    <!-- Tailwind CSS untuk styling yang cepat dan modern -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome untuk Icon Folder dan File -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* Animasi hover simpel untuk kartu item */
-        .item-card { transition: all 0.2s ease-in-out; }
-        .item-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>MyDrive — Arsip Tugas Kuliah</title>
+<meta name="description" content="File explorer pribadi untuk arsip tugas kuliah semester 1 sampai 8.">
+<meta name="color-scheme" content="light dark">
+
+<!-- Tailwind (Play CDN) -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+        display: ['Sora', 'Inter', 'system-ui', 'sans-serif']
+      }
+    }
+  }
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
+
+<style>
+/* ============================================================
+   TEMA — semua warna lewat CSS variable agar dark mode otomatis
+   ============================================================ */
+:root{
+  --bg:#f4f6f9; --bg-2:#ffffff; --bg-3:#eceff4; --bg-4:#e2e6ee;
+  --fg:#0b1220; --fg-2:#4a5568; --fg-3:#8a94a6;
+  --line:#e3e8ef; --line-2:#cfd6e2;
+  --acc:#2563eb; --acc-2:#1d4ed8; --acc-soft:rgba(37,99,235,.10);
+  --acc-fg:#ffffff;
+  --ring:rgba(37,99,235,.30);
+  --danger:#dc2626;
+  --shadow-sm:0 1px 2px rgba(11,18,32,.05);
+  --shadow:0 1px 2px rgba(11,18,32,.05), 0 12px 32px -12px rgba(11,18,32,.18);
+  --shadow-lg:0 2px 4px rgba(11,18,32,.06), 0 32px 64px -24px rgba(11,18,32,.28);
+  --glow:0 0 0 1px rgba(37,99,235,.18), 0 0 24px -4px rgba(37,99,235,.35);
+  --grid-line:rgba(11,18,32,.045);
+  --sheen:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,0));
+}
+html.dark{
+  --bg:#07080b; --bg-2:#0e1015; --bg-3:#14171e; --bg-4:#1b1f28;
+  --fg:#e9ecf3; --fg-2:#a3acbd; --fg-3:#6b7488;
+  --line:#1c202a; --line-2:#2a2f3c;
+  --acc:#60a5fa; --acc-2:#3b82f6; --acc-soft:rgba(96,165,250,.12);
+  --acc-fg:#04070d;
+  --ring:rgba(96,165,250,.35);
+  --danger:#f87171;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.5);
+  --shadow:0 1px 2px rgba(0,0,0,.5), 0 14px 40px -14px rgba(0,0,0,.75);
+  --shadow-lg:0 2px 6px rgba(0,0,0,.55), 0 40px 80px -28px rgba(0,0,0,.85);
+  --glow:0 0 0 1px rgba(96,165,250,.22), 0 0 32px -4px rgba(96,165,250,.28);
+  --grid-line:rgba(255,255,255,.035);
+  --sheen:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,0));
+}
+
+*{ -webkit-tap-highlight-color:transparent }
+html,body{ background:var(--bg); color:var(--fg) }
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  transition:background-color .35s ease,color .35s ease;
+  background-image:
+    linear-gradient(var(--grid-line) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);
+  background-size:64px 64px;
+  background-attachment:fixed;
+}
+.font-display{ font-family:'Sora','Inter',sans-serif }
+
+/* theme-aware utilities */
+.bg-panel{background:var(--bg-2)} .bg-panel-2{background:var(--bg-3)} .bg-panel-3{background:var(--bg-4)}
+.text-muted{color:var(--fg-2)} .text-dim{color:var(--fg-3)}
+.border-line{color:var(--line);border-width:1px;border-style:solid}
+.border-line-2{color:var(--line-2);border-width:1px;border-style:solid}
+.text-acc{color:var(--acc)} .bg-acc{background:var(--acc);color:var(--acc-fg)} .bg-acc-soft{background:var(--acc-soft)}
+.ring-acc{box-shadow:var(--ring)}
+.sh-sm{box-shadow:var(--shadow-sm)} .sh{box-shadow:var(--shadow)} .sh-lg{box-shadow:var(--shadow-lg)} .glow{box-shadow:var(--glow)}
+.sheen::before{
+  content:'';position:absolute;inset:0;border-radius:inherit;
+  background:var(--sheen);pointer-events:none;
+}
+
+/* pointer glow */
+#pointer-glow{
+  position:fixed;width:520px;height:520px;border-radius:50%;
+  pointer-events:none;z-index:0;transform:translate(-50%,-50%);
+  background:radial-gradient(circle,var(--acc-soft),transparent 65%);
+  opacity:0;transition:opacity .5s ease;will-change:transform;
+}
+body.has-pointer #pointer-glow{opacity:.75}
+
+/* progress bar */
+#progress{transform:scaleX(0);transform-origin:left;background:var(--acc);transition:transform .25s ease,opacity .3s ease;opacity:0}
+
+/* scrollbars */
+*::-webkit-scrollbar{width:10px;height:10px}
+*::-webkit-scrollbar-track{background:transparent}
+*::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:99px;border:3px solid var(--bg)}
+*::-webkit-scrollbar-thumb:hover{background:var(--fg-3)}
+
+/* skeleton shimmer */
+.skel{position:relative;overflow:hidden;background:var(--bg-3);border-radius:14px}
+.skel::after{
+  content:'';position:absolute;inset:0;transform:translateX(-100%);
+  background:linear-gradient(90deg,transparent,var(--bg-4),transparent);
+  animation:shimmer 1.4s infinite;
+}
+@keyframes shimmer{100%{transform:translateX(100%)}}
+
+/* card hover lift */
+.card{transition:transform .28s cubic-bezier(.2,.8,.2,1),box-shadow .28s ease,background-color .28s ease,border-color .28s ease}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--line-2)}
+.card:active{transform:translateY(-1px) scale(.99)}
+.icon-tile{transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.card:hover .icon-tile{transform:scale(1.12) rotate(-4deg)}
+
+/* focus ring */
+:where(a,button,input,[tabindex]):focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:8px}
+
+/* overlay */
+.ov{position:fixed;inset:0;background:rgba(4,6,12,.55);backdrop-filter:blur(14px) saturate(140%);opacity:0;pointer-events:none;transition:opacity .28s ease}
+.ov.open{opacity:1;pointer-events:auto}
+.sheet{opacity:0;transform:translateY(14px) scale(.97);transition:opacity .28s cubic-bezier(.2,.8,.2,1),transform .28s cubic-bezier(.2,.8,.2,1)}
+.ov.open .sheet{opacity:1;transform:none}
+
+/* command palette rows */
+.cmd-row{display:flex;align-items:center;gap:.75rem;padding:.6rem .75rem;border-radius:12px;cursor:pointer;transition:background-color .12s ease}
+.cmd-row[data-active="1"]{background:var(--acc-soft);box-shadow:inset 0 0 0 1px var(--acc-soft)}
+.cmd-row[data-active="1"] .cmd-name{color:var(--acc)}
+mark{background:none;color:var(--acc);font-weight:700}
+
+/* markdown preview */
+.md-wrap{font-size:.95rem;line-height:1.75;color:var(--fg-2)}
+.md-wrap h1,.md-wrap h2,.md-wrap h3,.md-wrap h4{color:var(--fg);font-family:'Sora',sans-serif;line-height:1.25;margin:1.5rem 0 .6rem;font-weight:600}
+.md-wrap h1{font-size:1.6rem} .md-wrap h2{font-size:1.3rem} .md-wrap h3{font-size:1.1rem} .md-wrap h4{font-size:1rem}
+.md-wrap p{margin:.65rem 0}
+.md-wrap ul{margin:.65rem 0;padding-left:1.1rem;list-style:disc}
+.md-wrap li{margin:.3rem 0}
+.md-wrap a{color:var(--acc);text-decoration:underline;text-underline-offset:3px}
+.md-wrap code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.85em;background:var(--bg-3);padding:.15em .4em;border-radius:6px;color:var(--fg)}
+.md-wrap pre{background:var(--bg-3);border:1px solid var(--line);padding:1rem;border-radius:14px;overflow-x:auto;margin:1rem 0}
+.md-wrap pre code{background:none;padding:0;font-size:.82rem;line-height:1.6}
+.md-wrap hr{border:0;border-top:1px solid var(--line);margin:2rem 0}
+.md-wrap img{max-width:100%;border-radius:12px}
+
+/* checkbox */
+.star-btn{opacity:0;transform:scale(.8);transition:opacity .2s ease,transform .2s ease}
+.card:hover .star-btn,.star-btn[data-on="1"]{opacity:1;transform:none}
+
+/* stagger */
+.rise{animation:rise .45s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.rise:nth-child(1){animation-delay:.02s} .rise:nth-child(2){animation-delay:.04s}
+.rise:nth-child(3){animation-delay:.06s} .rise:nth-child(4){animation-delay:.08s}
+.rise:nth-child(5){animation-delay:.10s} .rise:nth-child(6){animation-delay:.12s}
+.rise:nth-child(7){animation-delay:.14s} .rise:nth-child(8){animation-delay:.16s}
+
+/* view toggle */
+.view-btn[data-active="1"]{background:var(--acc-soft);color:var(--acc);box-shadow:inset 0 0 0 1px var(--acc-soft)}
+
+/* toast */
+#toasts{position:fixed;bottom:1.25rem;left:50%;transform:translateX(-50%);z-index:120;display:flex;flex-direction:column;gap:.5rem;align-items:center}
+.toast{
+  display:flex;align-items:center;gap:.6rem;padding:.65rem 1rem;border-radius:14px;
+  background:var(--bg-2);border:1px solid var(--line);box-shadow:var(--shadow-lg);
+  font-size:.85rem;font-weight:500;color:var(--fg);animation:toastIn .35s cubic-bezier(.2,.8,.2,1) both;
+  max-width:90vw;
+}
+.toast[data-out="1"]{animation:toastOut .25s ease forwards}
+@keyframes toastIn{from{opacity:0;transform:translateY(16px) scale(.95)}to{opacity:1;transform:none}}
+@keyframes toastOut{to{opacity:0;transform:translateY(10px) scale(.97)}}
+
+/* list rows */
+.row{display:grid;grid-template-columns:auto 1fr auto;gap:1rem;align-items:center;padding:.7rem .9rem;border-radius:14px;cursor:pointer;transition:background-color .15s ease}
+.row:hover{background:var(--bg-3)}
+
+/* print */
+@media print{ nav,aside,#cmd,#help,#toasts,#pointer-glow{display:none!important} }
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans min-h-screen pb-10">
-    <!-- Navbar -->
-    <nav class="bg-white shadow-sm border-b px-6 py-4 flex justify-between items-center sticky top-0 z-10">
-        <div class="flex items-center gap-3">
-            <i class="fa-solid fa-cloud text-blue-500 text-3xl"></i>
-            <div>
-                <h1 class="text-xl font-bold text-gray-700 leading-tight">My<span class="text-blue-500">Drive</span></h1>
-                <p class="text-xs text-gray-400">Cloud Storage Pribadi</p>
-            </div>
-        </div>
-        <div>
-            <a href="https://github.com" target="_blank" class="text-gray-500 hover:text-black transition">
-                <i class="fa-brands fa-github text-2xl"></i>
-            </a>
-        </div>
-    </nav>
 
-    <main class="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-        <!-- Breadcrumbs (Navigasi Back/Home) -->
-        <div class="flex items-center flex-wrap gap-2 text-sm text-gray-600 mb-6 bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-gray-100" id="breadcrumbs">
-            <button onclick="fetchContents('')" class="hover:text-blue-500 hover:underline flex items-center gap-1 font-medium">
-                <i class="fa-solid fa-home"></i> Home
-            </button>
-            <!-- Javascript akan mengisi path navigasi di sini -->
-        </div>
+<body class="min-h-screen">
 
-        <!-- Animasi Loading -->
-        <div id="loader" class="hidden flex flex-col justify-center items-center py-20 gap-3">
-            <i class="fa-solid fa-circle-notch fa-spin text-4xl text-blue-500"></i>
-            <p class="text-gray-500 text-sm animate-pulse">Mengambil data dari GitHub...</p>
-        </div>
+<!-- pointer glow -->
+<div id="pointer-glow" aria-hidden="true"></div>
 
-        <!-- Pesan Error -->
-        <div id="error-message" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-4 rounded-xl relative mb-6 flex gap-3 items-start">
-            <i class="fa-solid fa-circle-exclamation text-xl mt-0.5"></i>
-            <div>
-                <strong class="font-bold block mb-1">Terjadi Kesalahan!</strong>
-                <span class="text-sm" id="error-text"></span>
-            </div>
-        </div>
+<!-- top progress bar -->
+<div id="progress" class="fixed top-0 left-0 right-0 h-[3px] z-[110]"></div>
 
-        <!-- Tempat menampilkan folder dan file -->
-        <div id="file-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            <!-- Javascript akan merender item di sini -->
-        </div>
-    </main>
+<div class="relative z-10 flex min-h-screen">
 
-    <!-- Modal Pop-up untuk File -->
-    <div id="file-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-4 transition-opacity">
-        <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm mx-auto transform transition-transform scale-100">
-            <div class="flex justify-between items-start mb-5">
-                <div class="flex flex-col overflow-hidden pr-4">
-                    <span class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">File Terpilih</span>
-                    <h3 class="text-lg font-bold truncate text-gray-800" id="modal-filename">filename.pdf</h3>
-                </div>
-                <button onclick="closeModal()" class="text-gray-400 hover:text-red-500 transition-colors bg-gray-100 hover:bg-red-50 rounded-full w-8 h-8 flex items-center justify-center">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-            <div class="flex flex-col gap-3 mt-2">
-                <a id="btn-download" href="#" target="_blank" class="w-full bg-blue-600 text-white font-semibold py-2.5 px-4 rounded-xl shadow-md hover:bg-blue-700 hover:shadow-lg text-center transition flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-cloud-arrow-down"></i> Download File
-                </a>
-            </div>
+  <!-- ================= SIDEBAR ================= -->
+  <aside id="sidebar" class="w-72 shrink-0 border-line border-r bg-panel fixed lg:sticky top-0 left-0 z-50 lg:z-auto h-screen flex flex-col -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-out">
+    <div class="p-5 border-line border-b">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-acc grid place-items-center sh-sm shrink-0">
+          <i class="fa-solid fa-layer-group"></i>
         </div>
+        <div class="min-w-0">
+          <h1 class="font-display font-semibold text-[15px] leading-tight truncate">MyDrive</h1>
+          <p class="text-[11px] text-dim leading-tight truncate" id="repo-label">memuat…</p>
+        </div>
+      </div>
     </div>
 
-    <script>
-        // =========================================================================
-        // PENGATURAN REPOSITORY GITHUB
-        // Silakan ubah 2 baris di bawah ini sesuai dengan akun GitHub Anda!
-        // =========================================================================
-        const USERNAME = 'kemokumakimi';         // Contoh: 'johndoe'
-        const REPO = 'tugaskuliah';               // Contoh: 'penyimpanan-tugas'
-        // =========================================================================
+    <div class="p-3 space-y-1">
+      <button data-quick="" class="quick w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium hover:bg-panel-2 transition text-left">
+        <i class="fa-solid fa-house w-4 text-center text-acc"></i> Beranda
+      </button>
+      <button data-quick="favorites" class="quick w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium hover:bg-panel-2 transition text-left">
+        <i class="fa-solid fa-star w-4 text-center text-[#f59e0b]"></i> Favorit
+        <span class="ml-auto text-[11px] text-dim" id="fav-count">0</span>
+      </button>
+      <button data-quick="recent" class="quick w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium hover:bg-panel-2 transition text-left">
+        <i class="fa-solid fa-clock-rotate-left w-4 text-center"></i> Baru dibuka
+      </button>
+    </div>
 
-        let currentPath = '';
+    <div class="px-5 pt-4 pb-2 flex items-center justify-between">
+      <span class="text-[10px] font-bold uppercase tracking-[.14em] text-dim">Struktur Repo</span>
+      <button id="tree-collapse" class="text-dim hover:text-acc transition" title="Ciutkan semua"><i class="fa-solid fa-angles-left text-xs"></i></button>
+    </div>
+    <nav id="tree" class="flex-1 overflow-y-auto px-2 pb-6 text-sm"></nav>
 
-        // Tangkap elemen HTML
-        const grid = document.getElementById('file-grid');
-        const breadcrumbs = document.getElementById('breadcrumbs');
-        const loader = document.getElementById('loader');
-        const errorMsg = document.getElementById('error-message');
-        const errorText = document.getElementById('error-text');
-        const modal = document.getElementById('file-modal');
+    <div class="p-4 border-line border-t text-[11px] text-dim flex items-center justify-between">
+      <span id="repo-stats">—</span>
+      <a href="https://github.com/kemokumakimi/tugaskuliah" target="_blank" rel="noopener" class="hover:text-acc transition" title="Buka repo di GitHub"><i class="fa-brands fa-github"></i></a>
+    </div>
+  </aside>
 
-        // Fungsi menentukan icon berdasarkan tipe file
-        function getIconClasses(type, filename) {
-            if (type === 'dir') return 'fa-solid fa-folder text-blue-500 text-5xl drop-shadow-sm';
-            
-            const ext = filename.split('.').pop().toLowerCase();
-            const iconMap = {
-                pdf: 'fa-solid fa-file-pdf text-red-500',
-                doc: 'fa-solid fa-file-word text-blue-700',
-                docx: 'fa-solid fa-file-word text-blue-700',
-                xls: 'fa-solid fa-file-excel text-emerald-600',
-                xlsx: 'fa-solid fa-file-excel text-emerald-600',
-                ppt: 'fa-solid fa-file-powerpoint text-orange-500',
-                pptx: 'fa-solid fa-file-powerpoint text-orange-500',
-                jpg: 'fa-regular fa-image text-purple-500',
-                jpeg: 'fa-regular fa-image text-purple-500',
-                png: 'fa-regular fa-image text-purple-500',
-                zip: 'fa-solid fa-file-zipper text-gray-500',
-                rar: 'fa-solid fa-file-zipper text-gray-500',
-                txt: 'fa-solid fa-file-lines text-gray-400',
-                html: 'fa-brands fa-html5 text-orange-600',
-                css: 'fa-brands fa-css3-alt text-blue-500',
-                js: 'fa-brands fa-js text-yellow-400'
-            };
-            return (iconMap[ext] || 'fa-solid fa-file text-gray-400') + ' text-5xl drop-shadow-sm';
-        }
+  <!-- ================= MAIN ================= -->
+  <div class="flex-1 min-w-0 flex flex-col">
 
-        // Fungsi mengambil data dari API GitHub
-        async function fetchContents(path = '') {
-            // Jika Anda belum mengubah variabel konfigurasi di atas
-            if (USERNAME === 'USERNAME_GITHUB_ANDA') {
-                errorMsg.classList.remove('hidden');
-                errorText.innerHTML = "Anda belum mengatur <b>USERNAME</b> dan <b>REPO</b> di dalam kode HTML. Silakan buka file HTML ini di teks editor dan ubah variabelnya.";
-                return;
-            }
+    <!-- TOPBAR -->
+    <header class="sticky top-0 z-40 bg-panel/80 backdrop-blur-xl border-line border-b">
+      <div class="flex items-center gap-3 px-4 sm:px-6 h-16">
+        <button id="btn-sidebar" class="lg:hidden w-9 h-9 grid place-items-center rounded-xl border-line hover:bg-panel-2 transition" title="Menu"><i class="fa-solid fa-bars"></i></button>
 
-            currentPath = path;
-            grid.innerHTML = '';
-            errorMsg.classList.add('hidden');
-            loader.classList.remove('hidden');
-            updateBreadcrumbs();
+        <button id="open-cmd" class="flex-1 max-w-xl flex items-center gap-3 px-3.5 h-10 rounded-xl border-line bg-panel-2 hover:border-line-2 transition text-left group">
+          <i class="fa-solid fa-magnifying-glass text-dim group-hover:text-acc transition text-sm"></i>
+          <span class="text-sm text-dim flex-1 truncate">Cari file di seluruh repo…</span>
+          <kbd class="hidden sm:flex items-center gap-1 text-[10px] font-semibold text-dim border-line rounded-md px-1.5 py-0.5 border">Ctrl K</kbd>
+        </button>
 
-            try {
-                // Endpoint GitHub REST API
-                const url = `https://api.github.com/repos/${USERNAME}/${REPO}/contents/${path}`;
-                const response = await fetch(url);
-                
-                if (!response.ok) {
-                    if (response.status === 404) throw new Error(`Repository <b>${USERNAME}/${REPO}</b> tidak ditemukan. Pastikan repository tersebut Public dan namanya benar.`);
-                    if (response.status === 403) throw new Error("Terlalu banyak permintaan (Rate Limit API GitHub tercapai). Silakan coba lagi nanti.");
-                    throw new Error(`Terjadi kesalahan sistem: ${response.statusText}`);
-                }
+        <div class="ml-auto flex items-center gap-1.5">
+          <div class="hidden md:flex items-center rounded-xl border-line p-0.5">
+            <button id="view-grid" class="view-btn w-8 h-8 grid place-items-center rounded-lg transition" data-view="grid" data-active="1" title="Tampilan grid (G)"><i class="fa-solid fa-table-cells text-xs"></i></button>
+            <button id="view-list" class="view-btn w-8 h-8 grid place-items-center rounded-lg transition" data-view="list" title="Tampilan list (L)"><i class="fa-solid fa-list text-xs"></i></button>
+          </div>
+          <select id="sort" class="hidden sm:block text-xs font-medium rounded-xl border-line bg-panel-2 px-2.5 h-9 cursor-pointer transition hover:border-line-2" title="Urutkan">
+            <option value="name-asc">Nama A→Z</option>
+            <option value="name-desc">Nama Z→A</option>
+            <option value="size-desc">Ukuran ↓</option>
+            <option value="size-asc">Ukuran ↑</option>
+            <option value="type">Jenis</option>
+          </select>
+          <button id="btn-theme" class="w-9 h-9 grid place-items-center rounded-xl border-line hover:bg-panel-2 transition" title="Ganti tema (T)">
+            <i class="fa-solid fa-moon" id="theme-icon"></i>
+          </button>
+          <button id="btn-help" class="w-9 h-9 grid place-items-center rounded-xl border-line hover:bg-panel-2 transition" title="Shortcut (?)"><i class="fa-solid fa-keyboard text-xs"></i></button>
+        </div>
+      </div>
+    </header>
 
-                let data = await response.json();
-                
-                // Urutkan: Folder tampil lebih dulu, lalu File, diurutkan sesuai abjad
-                data.sort((a, b) => {
-                    if (a.type === b.type) return a.name.localeCompare(b.name);
-                    return a.type === 'dir' ? -1 : 1;
-                });
+    <main class="flex-1 px-4 sm:px-6 py-6 sm:py-8">
 
-                loader.classList.add('hidden');
-                renderGrid(data);
-            } catch (error) {
-                loader.classList.add('hidden');
-                errorMsg.classList.remove('hidden');
-                errorText.innerHTML = error.message;
-            }
-        }
+      <!-- breadcrumbs -->
+      <nav id="crumbs" class="flex items-center gap-1 flex-wrap mb-5 text-sm"></nav>
 
-        // Fungsi merender item ke HTML
-        function renderGrid(items) {
-            if (items.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center py-16 text-gray-400 flex flex-col items-center gap-3"><i class="fa-regular fa-folder-open text-4xl"></i><p>Folder ini kosong.</p></div>`;
-                return;
-            }
+      <!-- folder header -->
+      <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+        <div class="min-w-0">
+          <h2 id="folder-title" class="font-display text-2xl sm:text-3xl font-semibold tracking-tight truncate">Memuat…</h2>
+          <p id="folder-meta" class="text-sm text-muted mt-1"></p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="btn-copy" class="btn-act"><i class="fa-solid fa-copy"></i><span class="hidden sm:inline">Salin path</span></button>
+          <button id="btn-zip" class="btn-act"><i class="fa-solid fa-file-zipper"></i><span class="hidden sm:inline">Unduh folder</span></button>
+        </div>
+      </div>
 
-            items.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'item-card bg-white border border-gray-100 shadow-sm rounded-2xl p-5 flex flex-col items-center justify-center text-center cursor-pointer relative group';
-                
-                const icon = document.createElement('i');
-                icon.className = getIconClasses(item.type, item.name) + ' mb-4 group-hover:scale-110 transition-transform duration-300';
-                
-                const title = document.createElement('span');
-                title.className = 'text-xs md:text-sm font-semibold text-gray-700 w-full truncate px-1';
-                title.innerText = item.name;
+      <!-- error -->
+      <div id="error" class="hidden rounded-2xl border-line bg-panel sh p-5 flex gap-4 items-start mb-6" style="border-color:var(--danger)">
+        <i class="fa-solid fa-triangle-exclamation text-xl" style="color:var(--danger)"></i>
+        <div class="min-w-0">
+          <strong class="block mb-1">Terjadi kesalahan</strong>
+          <p id="error-text" class="text-sm text-muted break-words"></p>
+          <button onclick="location.reload()" class="mt-3 text-xs font-semibold px-3 py-1.5 rounded-lg bg-acc">Muat ulang</button>
+        </div>
+      </div>
 
-                card.appendChild(icon);
-                card.appendChild(title);
+      <!-- skeletons -->
+      <div id="skeletons" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4"></div>
 
-                // Aksi ketika diklik
-                if (item.type === 'dir') {
-                    card.onclick = () => fetchContents(item.path);
-                } else {
-                    card.onclick = () => openModal(item);
-                }
+      <!-- content -->
+      <div id="content" class="hidden"></div>
+      <p id="empty" class="hidden text-center py-24 text-dim">
+        <i class="fa-regular fa-folder-open text-5xl mb-4 block"></i>
+        Folder ini kosong.
+      </p>
+    </main>
 
-                grid.appendChild(card);
-            });
-        }
+    <footer class="px-6 py-6 border-line border-t text-[11px] text-dim flex flex-wrap items-center justify-between gap-3">
+      <span>MyDrive — arsip tugas kuliah semester 1–8</span>
+      <span class="flex items-center gap-4">
+        <span class="flex items-center gap-1.5"><kbd class="border-line border rounded px-1.5 py-0.5">Ctrl</kbd>+<kbd class="border-line border rounded px-1.5 py-0.5">K</kbd> cari</span>
+        <span class="flex items-center gap-1.5"><kbd class="border-line border rounded px-1.5 py-0.5">?</kbd> shortcut</span>
+      </span>
+    </footer>
+  </div>
+</div>
 
-        // Fungsi memperbarui breadcrumb (Path / Navigasi)
-        function updateBreadcrumbs() {
-            let parts = currentPath.split('/').filter(p => p !== '');
-            let html = `<button onclick="fetchContents('')" class="hover:text-blue-600 hover:bg-blue-50 px-2 py-1 rounded-md transition flex items-center gap-1.5 font-semibold text-gray-700"><i class="fa-solid fa-house text-sm"></i> Home</button>`;
-            
-            let buildPath = '';
-            parts.forEach((part, index) => {
-                buildPath += (index === 0 ? '' : '/') + part;
-                html += ` <i class="fa-solid fa-chevron-right text-[10px] mx-1 text-gray-300"></i> `;
-                if (index === parts.length - 1) {
-                    html += `<span class="bg-blue-50 text-blue-700 px-3 py-1 rounded-md font-bold truncate max-w-[150px] sm:max-w-[200px]">${part}</span>`;
-                } else {
-                    const thisPath = buildPath;
-                    html += `<button onclick="fetchContents('${thisPath}')" class="hover:text-blue-600 hover:bg-blue-50 px-2 py-1 rounded-md transition text-gray-600 font-medium truncate max-w-[100px] sm:max-w-[150px]">${part}</button>`;
-                }
-            });
-            
-            breadcrumbs.innerHTML = html;
-        }
+<!-- mobile sidebar backdrop -->
+<div id="sb-backdrop" class="fixed inset-0 z-40 hidden lg:hidden" style="background:rgba(4,6,12,.5);backdrop-filter:blur(6px)"></div>
 
-        // Manajemen Modal
-        function openModal(item) {
-            document.getElementById('modal-filename').innerText = item.name;
-            document.getElementById('btn-download').href = item.download_url;
-            
-            modal.classList.remove('hidden');
-            // Sedikit delay untuk memicu animasi CSS (jika ada)
-            setTimeout(() => {
-                modal.children[0].classList.remove('scale-95', 'opacity-0');
-            }, 10);
-        }
+<!-- ================= COMMAND PALETTE ================= -->
+<div id="cmd" class="ov z-[100] flex items-start justify-center p-4 pt-[12vh]">
+  <div class="sheet w-full max-w-2xl bg-panel sh-lg border-line border rounded-2xl overflow-hidden">
+    <div class="flex items-center gap-3 px-4 h-14 border-line border-b">
+      <i class="fa-solid fa-magnifying-glass text-dim text-sm"></i>
+      <input id="cmd-input" type="text" placeholder="Ketik nama file atau folder…" autocomplete="off" spellcheck="false"
+             class="flex-1 bg-transparent outline-none text-[15px] placeholder:text-dim">
+      <kbd class="text-[10px] text-dim border-line border rounded px-1.5 py-0.5">Esc</kbd>
+    </div>
+    <div id="cmd-results" class="max-h-[52vh] overflow-y-auto p-2"></div>
+    <div class="px-4 py-2.5 border-line border-t text-[11px] text-dim flex items-center gap-4">
+      <span class="flex items-center gap-1.5"><kbd class="border-line border rounded px-1">↑</kbd><kbd class="border-line border rounded px-1">↓</kbd> navigasi</span>
+      <span class="flex items-center gap-1.5"><kbd class="border-line border rounded px-1">Enter</kbd> buka</span>
+      <span class="ml-auto" id="cmd-count"></span>
+    </div>
+  </div>
+</div>
 
-        function closeModal() {
-            modal.classList.add('hidden');
-        }
+<!-- ================= PREVIEW MODAL ================= -->
+<div id="pv" class="ov z-[100] flex items-center justify-center p-3 sm:p-6">
+  <div class="sheet w-full max-w-5xl max-h-[92vh] bg-panel sh-lg border-line border rounded-2xl flex flex-col overflow-hidden">
+    <div class="flex items-start gap-3 px-5 py-4 border-line border-b">
+      <div id="pv-icon" class="w-10 h-10 rounded-xl bg-panel-2 grid place-items-center shrink-0 text-xl"></div>
+      <div class="min-w-0 flex-1">
+        <h3 id="pv-name" class="font-semibold truncate text-[15px]"></h3>
+        <p id="pv-path" class="text-xs text-dim truncate font-mono"></p>
+      </div>
+      <a id="pv-dl" href="#" target="_blank" rel="noopener" class="btn-act shrink-0"><i class="fa-solid fa-download"></i><span class="hidden sm:inline">Unduh</span></a>
+      <button onclick="closePreview()" class="w-9 h-9 grid place-items-center rounded-xl border-line hover:bg-panel-2 transition shrink-0" title="Tutup (Esc)"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div id="pv-body" class="flex-1 overflow-auto p-5"></div>
+  </div>
+</div>
 
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                closeModal();
-            }
-        }
+<!-- ================= HELP ================= -->
+<div id="help" class="ov z-[100] flex items-center justify-center p-4">
+  <div class="sheet w-full max-w-lg bg-panel sh-lg border-line border rounded-2xl overflow-hidden">
+    <div class="px-5 py-4 border-line border-b flex items-center justify-between">
+      <h3 class="font-display font-semibold">Pintasan Keyboard</h3>
+      <button onclick="closeHelp()" class="w-8 h-8 grid place-items-center rounded-lg border-line hover:bg-panel-2 transition"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="p-5 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2.5 text-sm" id="help-list"></div>
+  </div>
+</div>
 
-        // Memulai aplikasi pertama kali
-        fetchContents();
-    </script>
+<div id="toasts"></div>
+
+<style>
+.btn-act{display:inline-flex;align-items:center;gap:.5rem;padding:.45rem .8rem;border-radius:12px;border:1px solid var(--line);background:var(--bg-2);font-size:.78rem;font-weight:600;transition:border-color .2s ease,background-color .2s ease,transform .15s ease}
+.btn-act:hover{border-color:var(--line-2);background:var(--bg-3)}
+.btn-act:active{transform:scale(.97)}
+</style>
+
+<script>
+/* ============================================================================
+   KONFIGURASI
+   ========================================================================= */
+const CONFIG = {
+  username : 'kemokumakimi',
+  repo     : 'tugaskuliah',
+  branch   : 'main',
+  cacheTTL : 1000 * 60 * 60 * 12   // 12 jam
+};
+const API      = `https://api.github.com/repos/${CONFIG.username}/${CONFIG.repo}`;
+const RAW      = `https://raw.githubusercontent.com/${CONFIG.username}/${CONFIG.repo}/${CONFIG.branch}`;
+const SITE     = `https://${CONFIG.username}.github.io/${CONFIG.repo}`;
+const enc      = p => String(p).split('/').map(encodeURIComponent).join('/');
+
+/* ============================================================================
+   STATE
+   ========================================================================= */
+const S = {
+  path       : '',
+  view       : localStorage.getItem('md:view')  || 'grid',
+  sort       : localStorage.getItem('md:sort')  || 'name-asc',
+  theme      : localStorage.getItem('md:theme') || 'system',
+  entries    : [],
+  tree       : null,      // Map<path, {type,size,sha}>
+  children   : null,      // Map<dirPath, [entry]>
+  folders    : null,      // Set<path>
+  stats      : null,      // Map<dirPath, {files,bytes}>
+  expanded   : new Set(JSON.parse(localStorage.getItem('md:exp') || '[]')),
+  recents    : JSON.parse(localStorage.getItem('md:recent') || '[]'),
+  favorites  : JSON.parse(localStorage.getItem('md:fav')   || '[]'),
+  cmdItems   : [],
+  cmdIndex   : 0,
+  quick      : ''
+};
+
+/* ============================================================================
+   UTILITAS
+   ========================================================================= */
+const $  = s => document.querySelector(s);
+const el = (t, c, h) => { const n = document.createElement(t); if (c) n.className = c; if (h != null) n.innerHTML = h; return n; };
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function bytes(n){
+  if (n == null) return '—';
+  if (n === 0) return '0 B';
+  const u = ['B','KB','MB','GB'];
+  const i = Math.min(u.length - 1, Math.floor(Math.log(Math.abs(n)) / Math.log(1024)));
+  return (n / 1024 ** i).toFixed(i === 0 ? 0 : 1).replace(/\.0$/, '') + ' ' + u[i];
+}
+function countFmt(n){ return n.toLocaleString('id-ID') }
+function debounce(fn, ms){ let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms) } }
+function ls(k, v){ if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, typeof v === 'string' ? v : JSON.stringify(v)) }
+
+const EXT_ICON = {
+  pdf:['fa-file-pdf','#e11d48'], doc:['fa-file-word','#1d4ed8'], docx:['fa-file-word','#1d4ed8'],
+  xls:['fa-file-excel','#047857'], xlsx:['fa-file-excel','#047857'], csv:['fa-file-csv','#047857'],
+  ppt:['fa-file-powerpoint','#c2410c'], pptx:['fa-file-powerpoint','#c2410c'],
+  jpg:['fa-file-image','#7c3aed'], jpeg:['fa-file-image','#7c3aed'], png:['fa-file-image','#7c3aed'],
+  gif:['fa-file-image','#7c3aed'], webp:['fa-file-image','#7c3aed'], svg:['fa-file-image','#7c3aed'], bmp:['fa-file-image','#7c3aed'],
+  zip:['fa-file-zipper','#71717a'], rar:['fa-file-zipper','#71717a'], '7z':['fa-file-zipper','#71717a'],
+  mp4:['fa-file-video','#0891b2'], mkv:['fa-file-video','#0891b2'], mov:['fa-file-video','#0891b2'], avi:['fa-file-video','#0891b2'],
+  mp3:['fa-file-audio','#7c3aed'], wav:['fa-file-audio','#7c3aed'], m4a:['fa-file-audio','#7c3aed'],
+  html:['fa-file-code','#ea580c'], htm:['fa-file-code','#ea580c'], css:['fa-file-code','#0284c7'],
+  js:['fa-file-code','#ca8a04'], mjs:['fa-file-code','#ca8a04'], ts:['fa-file-code','#0284c7'], jsx:['fa-file-code','#0284c7'],
+  py:['fa-file-code','#2563eb'], c:['fa-file-code','#0f766e'], cpp:['fa-file-code','#0f766e'], h:['fa-file-code','#0f766e'],
+  hpp:['fa-file-code','#0f766e'], java:['fa-file-code','#dc2626'], json:['fa-file-code','#ca8a04'],
+  md:['fa-file-lines','#475569'], txt:['fa-file-lines','#64748b'], log:['fa-file-lines','#64748b'],
+  ino:['fa-file-code','#0891b2'], xml:['fa-file-code','#64748b'], yml:['fa-file-code','#64748b'], yaml:['fa-file-code','#64748b']
+};
+const extOf = n => (String(n).split('.').pop() || '').toLowerCase();
+function iconFor(type, name){
+  if (type === 'dir') return ['fa-folder','var(--acc)'];
+  const e = EXT_ICON[extOf(name)];
+  return e ? [e[0], e[1]] : ['fa-file','#94a3b8'];
+}
+const isPreviewable = name => {
+  const e = extOf(name);
+  return ['png','jpg','jpeg','gif','webp','bmp','svg','pdf','mp4','webm','mov','mp3','wav','m4a','md','txt','json','html','htm','css','js','mjs','ts','py','c','cpp','h','hpp','java','xml','yml','yaml','csv','ino','log','sh','sql','r','go','rs','php','rb','lua','kt','swift'].includes(e);
+};
+
+/* ============================================================================
+   TEMA
+   ========================================================================= */
+const media = matchMedia('(prefers-color-scheme: dark)');
+function applyTheme(){
+  const dark = S.theme === 'dark' || (S.theme === 'system' && media.matches);
+  document.documentElement.classList.toggle('dark', dark);
+  const i = $('#theme-icon');
+  i.className = dark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+  i.parentElement.title = dark ? 'Mode gelap (T)' : 'Mode terang (T)';
+}
+function cycleTheme(){
+  S.theme = S.theme === 'light' ? 'dark' : S.theme === 'system' ? 'light' : 'dark';
+  ls('md:theme', S.theme);
+  applyTheme();
+  toast(`Tema: ${S.theme === 'system' ? 'Ikuti sistem' : S.theme === 'dark' ? 'Gelap' : 'Terang'}`);
+}
+media.addEventListener('change', () => { if (S.theme === 'system') applyTheme() });
+
+/* ============================================================================
+   TOAST
+   ========================================================================= */
+function toast(msg, icon = 'fa-circle-check'){
+  const t = el('div', 'toast', `<i class="fa-solid ${icon} text-acc"></i><span>${esc(msg)}</span>`);
+  $('#toasts').appendChild(t);
+  setTimeout(() => { t.dataset.out = '1'; setTimeout(() => t.remove(), 260); }, 2600);
+}
+
+/* ============================================================================
+   NETWORK + CACHE
+   ========================================================================= */
+let inflight = 0;
+function busy(on){
+  inflight += on ? 1 : -1;
+  const p = $('#progress');
+  p.style.opacity = inflight > 0 ? '1' : '0';
+  p.style.transform = `scaleX(${Math.min(1, inflight * 0.5)})`;
+}
+async function api(url){
+  busy(true);
+  try{
+    const r = await fetch(url, { headers: { Accept: 'application/vnd.github+json' } });
+    if (r.status === 404) throw new Error('Data tidak ditemukan. Repo mungkin tidak ada atau masih private.');
+    if (r.status === 403) throw new Error('Rate limit API GitHub tercapai (60 permintaan/jam). Coba lagi nanti.');
+    if (!r.ok) throw new Error('Terjadi kesalahan sistem: ' + r.statusText);
+    return await r.json();
+  } finally { busy(false) }
+}
+function cacheGet(k){
+  try{ const v = JSON.parse(localStorage.getItem('md:cache:' + k)); return v && Date.now() - v.t < CONFIG.cacheTTL ? v.d : null }
+  catch{ return null }
+}
+function cacheSet(k, d){ try{ localStorage.setItem('md:cache:' + k, JSON.stringify({ t: Date.now(), d })) }catch{} }
+
+/* ============================================================================
+   MUAT INDEX REPO (satu permintaan → tree, map, statistik)
+   ========================================================================= */
+async function loadIndex(){
+  const hit = cacheGet('tree');
+  if (hit){ buildIndex(hit, true); return }
+  const data = await api(`${API}/git/trees/${CONFIG.branch}?recursive=1`);
+  if (!data.tree) throw new Error('Index repo tidak bisa dibaca.');
+  const list = data.tree
+    .filter(n => n.type === 'blob' || n.type === 'tree')
+    .map(n => ({ path: n.path, type: n.type === 'tree' ? 'dir' : 'file', size: n.size || 0 }));
+  if (!data.truncated){ cacheSet('tree', list); buildIndex(list, false) }
+  else { buildIndex(list, false); toast('Repo besar — sebagian struktur tidak terindeks', 'fa-triangle-exclamation') }
+}
+
+function buildIndex(list, fromCache){
+  const tree = new Map(), children = new Map(), folders = new Set();
+  for (const n of list){
+    tree.set(n.path, n);
+    const parts = n.path.split('/');
+    for (let i = 1; i < parts.length; i++){
+      const dir = parts.slice(0, i).join('/');
+      if (!folders.has(dir)){ folders.add(dir); tree.set(dir, { path: dir, type: 'dir', size: 0 }) }
+    }
+  }
+  for (const n of tree.values()){
+    if (n.type !== 'file') continue;
+    const dir = n.path.includes('/') ? n.path.slice(0, n.path.lastIndexOf('/')) : '';
+    if (!children.has(dir)) children.set(dir, []);
+    children.get(dir).push(n);
+  }
+  for (const [dir, arr] of children){
+    arr.sort((a, b) => a.type !== b.type ? (a.type === 'dir' ? -1 : 1) : a.path.localeCompare(b.path, 'id'));
+    children.set(dir, arr);
+  }
+  const stats = new Map();
+  for (const n of tree.values()){
+    if (n.type !== 'file') continue;
+    const parts = n.path.split('/');
+    for (let i = 0; i < parts.length; i++){
+      const dir = parts.slice(0, i).join('/');
+      const s = stats.get(dir) || { files: 0, bytes: 0 };
+      s.files++; s.bytes += n.size || 0;
+      stats.set(dir, s);
+    }
+  }
+  S.tree = tree; S.children = children; S.folders = folders; S.stats = stats;
+  renderTree(); renderRepoStats();
+  if (fromCache) toast('Di-cache — cepat', 'fa-bolt');
+}
+
+function renderRepoStats(){
+  if (!S.stats) return;
+  const s = S.stats.get('');
+  $('#repo-stats').textContent = s ? `${countFmt(s.files)} file · ${bytes(s.bytes)}` : '—';
+  $('#repo-label').textContent = `${CONFIG.username}/${CONFIG.repo}`;
+}
+
+/* ============================================================================
+   NAVIGASI
+   ========================================================================= */
+function readHash(){
+  const h = decodeURIComponent(location.hash.replace(/^#\/?/, ''));
+  return h;
+}
+function go(path, push = true){
+  S.path = path;
+  S.quick = '';
+  if (push) location.hash = '#/' + enc(path);
+  else history.replaceState(null, '', '#/' + enc(path));
+  $('#sb-backdrop').classList.add('hidden');
+  $('#sidebar').classList.remove('-translate-x-full');
+  expandAncestors(path);
+  loadFolder();
+  window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+}
+function up(){ if (S.path) go(S.path.includes('/') ? S.path.slice(0, S.path.lastIndexOf('/')) : '') }
+function expandAncestors(p){
+  const parts = p.split('/').filter(Boolean);
+  let acc = '';
+  for (let i = 0; i < parts.length; i++){ acc = acc ? acc + '/' + parts[i] : parts[i]; S.expanded.add(acc) }
+  S.expanded.add('');
+  ls('md:exp', [...S.expanded]);
+}
+
+/* ============================================================================
+   MUAT FOLDER
+   ========================================================================= */
+const SORTS = {
+  'name-asc'  : (a, b) => a.type !== b.type ? (a.type === 'dir' ? -1 : 1) : a.name.localeCompare(b.name, 'id', { numeric: true }),
+  'name-desc' : (a, b) => a.type !== b.type ? (a.type === 'dir' ? -1 : 1) : b.name.localeCompare(a.name, 'id', { numeric: true }),
+  'size-desc' : (a, b) => (b.size || 0) - (a.size || 0),
+  'size-asc'  : (a, b) => (a.size || 0) - (b.size || 0),
+  'type'      : (a, b) => (extOf(a.name) || '').localeCompare(extOf(b.name) || '') || a.name.localeCompare(b.name, 'id')
+};
+
+async function loadFolder(){
+  showError(null);
+  showSkeletons();
+
+  if (S.quick === 'favorites' || S.quick === 'recent'){ renderQuick(S.quick); return }
+
+  let items = null;
+  if (S.children && S.children.has(S.path)) items = S.children.get(S.path).map(toItem);
+  if (!items){
+    const key = 'contents:' + S.path;
+    const hit = cacheGet(key);
+    if (hit) items = hit;
+    else {
+      try{
+        const raw = await api(`${API}/contents/${enc(S.path)}`);
+        if (!Array.isArray(raw)) throw new Error('Path itu file, bukan folder.');
+        items = raw.map(n => ({ name: n.name, path: n.path, type: n.type === 'dir' ? 'dir' : 'file', size: n.size || 0, sha: n.sha }));
+        cacheSet(key, items);
+      } catch (e){ showSkeletons(false); showError(e.message); return }
+    }
+  }
+  S.entries = items.sort(SORTS[S.sort] || SORTS['name-asc']);
+  render();
+}
+const toItem = n => ({ name: n.path.slice(n.path.lastIndexOf('/') + 1), path: n.path, type: n.type, size: n.size || 0, sha: n.sha });
+
+function render(){
+  hideSkeletons();
+  renderCrumbs(); renderHeader(); renderCards();
+  $('#empty').innerHTML = EMPTY_MSG;
+  $('#content').classList.toggle('hidden', S.entries.length === 0);
+  $('#empty').classList.toggle('hidden', S.entries.length !== 0);
+  markQuick();
+}
+const EMPTY_MSG = '<i class="fa-regular fa-folder-open text-5xl mb-4 block"></i>Folder ini kosong.';
+
+function renderHeader(){
+  const name = S.path ? S.path.split('/').pop() : 'Beranda';
+  $('#folder-title').textContent = name;
+  const dirs = S.entries.filter(e => e.type === 'dir').length;
+  const files = S.entries.length - dirs;
+  const st = S.stats && S.stats.get(S.path);
+  const bits = [`${countFmt(S.entries.length)} item`];
+  if (dirs)  bits.push(`${dirs} folder`);
+  if (files) bits.push(`${files} file`);
+  if (st && files) bits.push(bytes(st.bytes));
+  $('#folder-meta').textContent = bits.join(' · ');
+  const canZip = st && st.bytes > 0 && st.bytes < 40 * 1024 * 1024 && st.files < 60;
+  $('#btn-zip').style.display = canZip ? '' : 'none';
+  document.title = (S.path ? name + ' — ' : '') + 'MyDrive';
+}
+
+function renderCrumbs(){
+  const c = $('#crumbs');
+  c.innerHTML = '';
+  const parts = S.path.split('/').filter(Boolean);
+  const home = el('button', 'flex items-center gap-1.5 px-2.5 h-8 rounded-lg text-sm font-medium hover:bg-panel-2 transition', '<i class="fa-solid fa-house text-[11px]"></i> Repo');
+  home.onclick = () => go('');
+  c.appendChild(home);
+  let acc = '';
+  parts.forEach((p, i) => {
+    acc = acc ? acc + '/' + p : p;
+    const path = acc;
+    const isLast = i === parts.length - 1;
+    c.appendChild(el('span', 'text-dim text-xs', '<i class="fa-solid fa-chevron-right"></i>'));
+    if (isLast) c.appendChild(el('span', 'px-2.5 h-8 inline-flex items-center rounded-lg text-sm font-semibold truncate max-w-[240px]', esc(p)));
+    else { const b = el('button', 'px-2.5 h-8 inline-flex items-center rounded-lg text-sm hover:bg-panel-2 transition truncate max-w-[180px]', esc(p)); b.onclick = () => go(path); c.appendChild(b) }
+  });
+}
+
+/* ============================================================================
+   KARTU / BARIS
+   ========================================================================= */
+function renderCards(){
+  const wrap = $('#content');
+  wrap.innerHTML = '';
+  const isGrid = S.view === 'grid';
+  wrap.className = isGrid
+    ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4'
+    : 'flex flex-col gap-1';
+
+  const favSet = new Set(S.favorites);
+  const frag = document.createDocumentFragment();
+
+  S.entries.forEach((e, idx) => {
+    const [ic, col] = iconFor(e.type, e.name);
+    const node = el('div', 'rise');
+    node.style.animationDelay = Math.min(idx * 14, 320) + 'ms';
+
+    if (isGrid){
+      node.className = 'rise card sheen relative bg-panel border-line border rounded-2xl p-4 sm:p-5 flex flex-col items-center text-center cursor-pointer select-none group';
+      node.innerHTML = `
+        <button class="star-btn absolute top-2 right-2 w-7 h-7 grid place-items-center rounded-lg text-sm ${favSet.has(e.path) ? 'text-[#f59e0b] is-on' : 'text-dim hover:text-[#f59e0b]'}" data-on="${favSet.has(e.path) ? 1 : 0}" title="Favorit">
+          <i class="${favSet.has(e.path) ? 'fa-solid' : 'fa-regular'} fa-star"></i>
+        </button>
+        <i class="fa-solid ${ic} icon-tile text-4xl sm:text-5xl mb-3" style="color:${col}"></i>
+        <span class="text-[13px] sm:text-sm font-semibold w-full truncate px-1" title="${esc(e.name)}">${esc(e.name)}</span>
+        <span class="text-[11px] text-dim mt-1">${e.type === 'dir' ? 'Folder' : bytes(e.size)}</span>`;
+    } else {
+      node.className = 'rise row border border-transparent hover:border-line';
+      node.innerHTML = `
+        <i class="fa-solid ${ic} text-xl w-6 text-center" style="color:${col}"></i>
+        <div class="min-w-0 flex items-center gap-3">
+          <span class="text-sm font-medium truncate" title="${esc(e.name)}">${esc(e.name)}</span>
+          <span class="text-[11px] text-dim shrink-0 hidden sm:inline">${e.type === 'dir' ? 'Folder' : extOf(e.name).toUpperCase()}</span>
+        </div>
+        <div class="flex items-center gap-3 shrink-0">
+          <span class="text-[11px] text-dim tabular-nums hidden sm:inline">${e.type === 'dir' ? '—' : bytes(e.size)}</span>
+          <button class="star-btn w-7 h-7 grid place-items-center rounded-lg text-sm ${favSet.has(e.path) ? 'text-[#f59e0b] is-on' : 'text-dim hover:text-[#f59e0b]'}" data-on="${favSet.has(e.path) ? 1 : 0}" title="Favorit">
+            <i class="${favSet.has(e.path) ? 'fa-solid' : 'fa-regular'} fa-star"></i>
+          </button>
+          <i class="fa-solid fa-ellipsis text-dim text-sm"></i>
+        </div>`;
+    }
+
+    node.onclick = ev => { if (ev.target.closest('.star-btn')) return; open(e) };
+    node.oncontextmenu = ev => { ev.preventDefault(); contextMenu(e, ev.clientX, ev.clientY) };
+    const st = node.querySelector('.star-btn');
+    if (st) st.onclick = ev => { ev.stopPropagation(); toggleFav(e) };
+    frag.appendChild(node);
+  });
+  wrap.appendChild(frag);
+}
+
+function open(e){
+  if (e.type === 'dir') go(e.path);
+  else { trackRecent(e); if (isPreviewable(e.name)) openPreview(e); else download(e) }
+}
+function download(e){
+  trackRecent(e);
+  const a = el('a'); a.href = `${RAW}/${enc(e.path)}`; a.download = e.name; document.body.appendChild(a); a.click(); a.remove();
+  toast('Mengunduh ' + e.name, 'fa-download');
+}
+function toggleFav(e){
+  const i = S.favorites.indexOf(e.path);
+  if (i >= 0) S.favorites.splice(i, 1); else S.favorites.unshift(e.path);
+  ls('md:fav', S.favorites); $('#fav-count').textContent = S.favorites.length;
+  renderCards();
+  toast(i >= 0 ? 'Dihapus dari favorit' : 'Ditambahkan ke favorit', i >= 0 ? 'fa-star' : 'fa-star');
+}
+function trackRecent(e){
+  S.recents = [{ p: e.path, n: e.name, t: e.type, s: e.size, d: Date.now() }, ...S.recents.filter(r => r.p !== e.path)].slice(0, 30);
+  ls('md:recent', S.recents);
+}
+
+/* ============================================================================
+   FAVORIT / RECENT
+   ========================================================================= */
+function renderQuick(kind){
+  hideSkeletons();
+  renderCrumbs();
+  const wrap = $('#content');
+  wrap.className = 'flex flex-col gap-1';
+  wrap.innerHTML = '';
+  const st = kind === 'favorites'
+    ? S.favorites.map(p => S.tree.get(p)).filter(Boolean)
+    : S.recents.map(r => S.tree.get(r.p) || { path: r.p, name: r.n, type: r.t, size: r.s });
+  $('#folder-title').textContent = kind === 'favorites' ? 'Favorit' : 'Baru dibuka';
+  $('#folder-meta').textContent = `${countFmt(st.length)} item`;
+  $('#btn-zip').style.display = 'none';
+
+  if (!st.length){
+    $('#content').classList.add('hidden');
+    $('#empty').innerHTML = `<i class="fa-regular fa-star text-5xl mb-4 block"></i>${kind === 'favorites' ? 'Belum ada favorit. Bintangkan file lewat klik kanan.' : 'Riwayat kosong.'}`;
+    $('#empty').classList.remove('hidden');
+    return;
+  }  $('#empty').classList.add('hidden');
+  $('#content').classList.remove('hidden');
+
+  st.forEach(n => {
+    const [ic, col] = iconFor(n.type, n.name);
+    const row = el('div', 'rise row border border-transparent hover:border-line', `
+      <i class="fa-solid ${ic} text-xl w-6 text-center" style="color:${col}"></i>
+      <div class="min-w-0">
+        <div class="text-sm font-medium truncate" title="${esc(n.name)}">${esc(n.name)}</div>
+        <div class="text-[11px] text-dim font-mono truncate">${esc(n.path.includes('/') ? n.path.slice(0, n.path.lastIndexOf('/')) || '/' : '/')}</div>
+      </div>
+      <div class="flex items-center gap-2 shrink-0">
+        <button class="w-7 h-7 grid place-items-center rounded-lg text-sm text-dim hover:text-[#f59e0b] transition" title="Hapus"><i class="fa-solid fa-xmark"></i></button>
+      </div>`);
+    row.onclick = ev => { if (ev.target.closest('button')) return; open({ name: n.name, path: n.path, type: n.type, size: n.size }) };
+    row.querySelector('button').onclick = ev => {
+      ev.stopPropagation();
+      S.favorites = S.favorites.filter(p => p !== n.path);
+      S.recents  = S.recents.filter(r => r.p !== n.path);
+      ls('md:fav', S.favorites); ls('md:recent', S.recents);
+      $('#fav-count').textContent = S.favorites.length;
+      renderQuick(kind);
+    };
+    wrap.appendChild(row);
+  });
+}
+function markQuick(){
+  document.querySelectorAll('.quick').forEach(b => {
+    b.classList.toggle('bg-panel-2', S.quick === b.dataset.quick);
+    b.classList.toggle('text-acc', S.quick === b.dataset.quick);
+  });
+}
+
+/* ============================================================================
+   SIDEBAR TREE
+   ========================================================================= */
+function renderTree(){
+  const nav = $('#tree');
+  nav.innerHTML = '';
+  if (!S.folders) return;
+  const build = (dir, depth) => {
+    const kids = S.children.get(dir) || [];
+    kids.forEach(k => {
+      const name = k.path.slice(k.path.lastIndexOf('/') + 1);
+      if (k.type === 'dir'){
+        const open = S.expanded.has(k.path);
+        const row = el('div', 'flex items-center gap-1 rounded-lg pr-1 hover:bg-panel-2 transition group');
+        row.innerHTML = `
+          <button class="w-4 h-7 grid place-items-center text-dim shrink-0" data-tw="${esc(k.path)}"><i class="fa-solid fa-chevron-right text-[9px] transition-transform ${open ? 'rotate-90' : ''}"></i></button>
+          <button class="flex items-center gap-2 flex-1 min-w-0 h-7 text-left" data-go="${esc(k.path)}">
+            <i class="fa-solid ${open ? 'fa-folder-open' : 'fa-folder'} text-[11px]" style="color:var(--acc)"></i>
+            <span class="truncate text-[13px]">${esc(name)}</span>
+          </button>`;
+        if (S.path === k.path) row.querySelector('[data-go]').classList.add('text-acc', 'font-semibold');
+        nav.appendChild(row);
+        if (open) build(k.path, depth + 1);
+      }
+    });
+  };
+  build('', 0);
+  nav.querySelectorAll('[data-tw]').forEach(b => b.onclick = e => {
+    e.stopPropagation();
+    const p = b.dataset.tw;
+    S.expanded.has(p) ? S.expanded.delete(p) : S.expanded.add(p);
+    ls('md:exp', [...S.expanded]); renderTree();
+  });
+  nav.querySelectorAll('[data-go]').forEach(b => b.onclick = () => go(b.dataset.go));
+}
+
+/* ============================================================================
+   COMMAND PALETTE + FUZZY SEARCH
+   ========================================================================= */
+function fuzzy(needle, hay){
+  const n = needle.toLowerCase(), h = hay.toLowerCase();
+  if (!n) return { score: 0, marks: [] };
+  let hi = 0, score = 0, streak = 0; const marks = [];
+  for (let i = 0; i < n.length; i++){
+    const idx = h.indexOf(n[i], hi);
+    if (idx === -1) return null;
+    streak = idx === hi && i > 0 ? streak + 1 : 0;
+    score += 10 + streak * 8;
+    if (idx === 0 || /[\s\-_./]/.test(h[idx - 1])) score += 14;
+    marks.push(idx); hi = idx + 1;
+  }
+  score -= (hay.length - n.length) * 0.12;
+  return { score, marks };
+}
+function highlight(text, marks){
+  if (!marks || !marks.length) return esc(text);
+  const set = new Set(marks); let out = '', open = false;
+  for (let i = 0; i < text.length; i++){
+    const m = set.has(i);
+    if (m && !open){ out += '<mark>'; open = true }
+    if (!m && open){ out += '</mark>'; open = false }
+    out += esc(text[i]);
+  }
+  return out + (open ? '</mark>' : '');
+}
+function buildCmdIndex(){
+  if (!S.tree) return;
+  const arr = [];
+  for (const n of S.tree.values()){
+    const name = n.path.slice(n.path.lastIndexOf('/') + 1);
+    arr.push({ name, path: n.path, type: n.type, size: n.size, dir: n.path.includes('/') ? n.path.slice(0, n.path.lastIndexOf('/')) : '' });
+  }
+  S.cmdItems = arr;
+}
+function openCmd(){
+  if (!S.cmdItems.length) buildCmdIndex();
+  $('#cmd').classList.add('open');
+  $('#cmd-input').value = '';
+  paintCmd('');
+  setTimeout(() => $('#cmd-input').focus(), 40);
+}
+function closeCmd(){ $('#cmd').classList.remove('open') }
+function paintCmd(q){
+  let items = S.cmdItems;
+  if (q.trim()){
+    const scored = [];
+    for (const it of items){
+      const a = fuzzy(q, it.name);
+      if (a) { scored.push({ it, s: a.score + (it.type === 'dir' ? 6 : 0) }); continue }
+      const b = fuzzy(q, it.path);
+      if (b) scored.push({ it, s: b.score * 0.45, marks: null });
+    }
+    scored.sort((x, y) => y.s - x.s);
+    items = scored.map(x => ({ ...x.it, marks: x.marks || [] }));
+    items = items.slice(0, 60);
+  } else {
+    items = items.slice(0, 40);
+  }
+  S.cmdItems2 = items; S.cmdIndex = 0;
+  const box = $('#cmd-results');
+  box.innerHTML = '';
+  if (!items.length){ box.innerHTML = '<div class="py-10 text-center text-sm text-dim">Tidak ada hasil</div>'; $('#cmd-count').textContent = ''; return }
+  items.forEach((it, i) => {
+    const [ic, col] = iconFor(it.type, it.name);
+    const r = el('div', 'cmd-row', `
+      <i class="fa-solid ${ic} w-5 text-center" style="color:${col}"></i>
+      <div class="min-w-0 flex-1">
+        <div class="cmd-name text-sm font-medium truncate">${highlight(it.name, it.marks)}</div>
+        <div class="text-[11px] text-dim font-mono truncate">${esc(it.dir || '/')}</div>
+      </div>
+      <span class="text-[10px] text-dim shrink-0">${it.type === 'dir' ? 'Folder' : bytes(it.size)}</span>`);
+    r.dataset.active = i === 0 ? '1' : '0';
+    r.onclick = () => { closeCmd(); open({ name: it.name, path: it.path, type: it.type, size: it.size }) };
+    r.onmousemove = () => { S.cmdIndex = i; syncCmdActive() };
+    box.appendChild(r);
+  });
+  $('#cmd-count').textContent = items.length + ' hasil';
+  syncCmdActive();
+}
+function syncCmdActive(){
+  document.querySelectorAll('#cmd-results .cmd-row').forEach((r, i) => r.dataset.active = i === S.cmdIndex ? '1' : '0');
+  const a = document.querySelector(`#cmd-results .cmd-row[data-active="1"]`);
+  if (a) a.scrollIntoView({ block: 'nearest' });
+}
+
+/* ============================================================================
+   PREVIEW
+   ========================================================================= */
+let pvToken = 0;
+function openPreview(e){
+  const tok = ++pvToken;
+  const [ic, col] = iconFor(e.type, e.name);
+  $('#pv-icon').innerHTML = `<i class="fa-solid ${ic}" style="color:${col}"></i>`;
+  $('#pv-name').textContent = e.name;
+  $('#pv-path').textContent = e.path;
+  $('#pv-dl').href = `${RAW}/${enc(e.path)}`;
+  $('#pv-dl').setAttribute('download', e.name);
+  const body = $('#pv-body');
+  body.innerHTML = loadingBlock();
+  $('#pv').classList.add('open');
+
+  const url = `${RAW}/${enc(e.path)}`;
+  const ext = extOf(e.name);
+
+  if (['png','jpg','jpeg','gif','webp','bmp','svg'].includes(ext)){
+    body.innerHTML = `<div class="grid place-items-center min-h-[50vh]"><img src="${url}" alt="${esc(e.name)}" class="max-h-[68vh] rounded-xl sh" onerror="pvFail(this)"></div>`;
+    return;
+  }
+  if (ext === 'pdf'){
+    body.innerHTML = `<iframe src="${url}#toolbar=0" class="w-full h-[70vh] rounded-xl border-line border bg-panel-2"></iframe>`;
+    return;
+  }
+  if (['mp4','webm','mov','mkv'].includes(ext)){
+    body.innerHTML = `<video src="${url}" controls class="w-full max-h-[70vh] rounded-xl sh bg-black"></video>`;
+    return;
+  }
+  if (['mp3','wav','m4a'].includes(ext)){
+    body.innerHTML = `<div class="py-16 text-center"><i class="fa-solid fa-file-audio text-5xl mb-4 block text-acc"></i><audio src="${url}" controls class="w-full max-w-lg"></audio></div>`;
+    return;
+  }
+  if (ext === 'md'){
+    fetch(url).then(r => r.ok ? r.text() : Promise.reject()).then(t => {
+      if (tok !== pvToken) return;
+      body.innerHTML = `<article class="md-wrap mx-auto" style="max-width:70ch">${mdToHtml(t)}</article>`;
+    }).catch(() => { if (tok === pvToken) pvFail(null) });
+    return;
+  }
+  // teks / kode
+  fetch(url).then(r => r.ok ? r.text() : Promise.reject()).then(t => {
+    if (tok !== pvToken) return;
+    const tooBig = t.length > 400000;
+    body.innerHTML = tooBig
+      ? `<div class="py-16 text-center text-dim"><i class="fa-solid fa-file-lines text-5xl mb-4 block"></i>File terlalu besar untuk pratinjau (${bytes(t.length)}).<br><a href="${url}" target="_blank" rel="noopener" class="text-acc underline mt-2 inline-block">Buka di tab baru</a></div>`
+      : `<pre class="text-[12.5px] leading-relaxed font-mono overflow-x-auto"><code>${esc(t)}</code></pre>`;
+  }).catch(() => { if (tok === pvToken) pvFail(null) });
+}
+function closePreview(){ pvToken++; $('#pv').classList.remove('open') }
+function pvFail(img){
+  if (img) img.outerHTML = '<div class="py-16 text-center text-dim text-sm">Pratinjau gagal dimuat.</div>';
+  else $('#pv-body').innerHTML = '<div class="py-16 text-center text-dim text-sm">Pratinjau tidak tersedia untuk file ini.</div>';
+}
+function loadingBlock(){
+  return `<div class="space-y-3 py-4">${'<div class="skel" style="height:14px;width:' + (90 - Math.random() * 30) + '%"></div>'.repeat(7)}</div>`;
+}
+
+/* markdown → html (escape dulu, lalu format terbatas) */
+function mdToHtml(src){
+  const inline = s => esc(s)
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/(^|[\s(])\*([^*\n]+)\*/g, '$1<em>$2</em>')
+    .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (m, t, u) => /^(https?:|mailto:|#|\/)/i.test(u) ? `<a href="${u}" target="_blank" rel="noopener noreferrer">${t}</a>` : t);
+  const out = []; let inCode = false, code = [], listBuf = [];
+  const flush = () => {
+    if (listBuf.length){ out.push('<ul>' + listBuf.join('') + '</ul>'); listBuf = [] }
+  };
+  for (const raw of (src || '').split(/\r?\n/)){
+    if (/^\s*```/.test(raw)){
+      if (inCode){ out.push('<pre><code>' + esc(code.join('\n')) + '</code></pre>'); code = []; inCode = false }
+      else { flush(); inCode = true }
+      continue;
+    }
+    if (inCode){ code.push(raw); continue }
+    const h = raw.match(/^(#{1,6})\s+(.*)$/);
+    if (h){ flush(); out.push(`<h${h[1].length}>${inline(h[2])}</h${h[1].length}>`); continue }
+    if (/^\s*(\*\s*){3,}$|^\s*(-\s*){3,}$|^\s*(_\s*){3,}$/.test(raw)){ flush(); out.push('<hr>'); continue }
+    const ul = raw.match(/^\s*[-*+]\s+(.*)$/);
+    if (ul){ listBuf.push('<li>' + inline(ul[1]) + '</li>'); continue }
+    const ol = raw.match(/^\s*\d+[.)]\s+(.*)$/);
+    if (ol){ listBuf.push('<li>' + inline(ol[1]) + '</li>'); continue }
+    if (!raw.trim()){ flush(); continue }
+    flush(); out.push('<p>' + inline(raw) + '</p>');
+  }
+  if (inCode && code.length) out.push('<pre><code>' + esc(code.join('\n')) + '</code></pre>');
+  flush();
+  return out.join('');
+}
+
+/* ============================================================================
+   CONTEXT MENU
+   ========================================================================= */
+let ctxEl = null;
+function contextMenu(e, x, y){
+  ctxEl && ctxEl.remove();
+  const fav = S.favorites.includes(e.path);
+  const items = [];
+  items.push([e.type === 'dir' ? 'Buka folder' : (isPreviewable(e.name) ? 'Pratinjau' : 'Unduh'), e.type === 'dir' || isPreviewable(e.name) ? 'fa-eye' : 'fa-download', () => open(e)]);
+  if (e.type === 'file') items.push(['Unduh', 'fa-download', () => download(e)]);
+  items.push(['Salin path', 'fa-copy', () => { navigator.clipboard.writeText(e.path); toast('Path disalin', 'fa-copy') }]);
+  items.push([fav ? 'Hapus dari favorit' : 'Tambah favorit', 'fa-star', () => toggleFav(e)]);
+  items.push(['Buka di GitHub', 'fa-brands fa-github', () => window.open(`https://github.com/${CONFIG.username}/${CONFIG.repo}/blob/${CONFIG.branch}/${e.path}`, '_blank')]);
+
+  ctxEl = el('div', 'fixed z-[130] bg-panel border-line border rounded-xl sh-lg p-1.5 text-sm min-w-[210px]');
+  items.forEach(([label, icon, fn]) => {
+    const b = el('button', 'w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-panel-2 transition text-left', `<i class="fa-solid ${icon} w-4 text-center text-dim text-xs"></i><span>${label}</span>`);
+    b.onclick = () => { ctxEl.remove(); ctxEl = null; fn() };
+    ctxEl.appendChild(b);
+  });
+  document.body.appendChild(ctxEl);
+  const r = ctxEl.getBoundingClientRect();
+  ctxEl.style.left = Math.min(x, innerWidth - r.width - 12) + 'px';
+  ctxEl.style.top  = Math.min(y, innerHeight - r.height - 12) + 'px';
+  const off = ev => { if (ctxEl && !ctxEl.contains(ev.target)){ ctxEl.remove(); ctxEl = null } removeEventListener('mousedown', off) };
+  setTimeout(() => addEventListener('mousedown', off), 0);
+}
+addEventListener('keydown', e => { if (e.key === 'Escape' && ctxEl){ ctxEl.remove(); ctxEl = null } });
+addEventListener('scroll', () => { if (ctxEl){ ctxEl.remove(); ctxEl = null } }, true);
+
+/* ============================================================================
+   UNDUH FOLDER SEBAGAI ZIP
+   ========================================================================= */
+async function zipFolder(){
+  if (typeof JSZip === 'undefined'){ toast('JSZip belum termuat', 'fa-triangle-exclamation'); return }
+  const st = S.stats && S.stats.get(S.path);
+  if (!st){ toast('Folder kosong', 'fa-circle-info'); return }
+  const label = S.path ? S.path.split('/').pop() : 'repo';
+  const t = toast(`Menyiapkan ${countFmt(st.files)} file…`, 'fa-spinner fa-spin'); t.id = 'zipjob';
+  const zip = new JSZip();
+  const base = S.path ? S.path + '/' : '';
+  const prefix = S.path ? S.path + '/' : '';
+  const files = [];
+  if (S.tree) for (const n of S.tree.values()) if (n.type === 'file' && n.path.startsWith(prefix)) files.push(n);
+  else for (const n of (S.children.get(S.path) || [])) if (n.type === 'file') files.push(n);
+  try{
+    let done = 0;
+    const CONC = 6;
+    const queue = files.slice();
+    const worker = async () => {
+      while (queue.length){
+        const f = queue.shift();
+        const r = await fetch(`${RAW}/${enc(f.path)}`);
+        if (!r.ok) continue;
+        zip.file(f.path.slice(base.length), await r.blob());
+        done++;
+      }
+    };
+    await Promise.all(Array.from({ length: Math.min(CONC, files.length) }, worker));
+    const blob = await zip.generateAsync({ type: 'blob' });
+    const a = el('a'); a.href = URL.createObjectURL(blob); a.download = label + '.zip';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    t.remove(); toast(`${label}.zip — ${countFmt(done)} file`, 'fa-file-zipper');
+  } catch(e){
+    t.remove(); toast('Gagal membuat zip: ' + e.message, 'fa-triangle-exclamation');
+  }
+}
+
+/* ============================================================================
+   KEYBOARD
+   ========================================================================= */
+const SHORTCUTS = [
+  ['Ctrl / ⌘ + K', 'Buka pencarian'],
+  ['Esc', 'Tutup overlay'],
+  ['?', 'Bantuan pintasan'],
+  ['T', 'Ganti tema'],
+  ['G', 'Tampilan grid'],
+  ['L', 'Tampilan list'],
+  ['/', 'Fokus pencarian'],
+  ['Backspace', 'Naik satu folder'],
+  ['↑ ↓ ← →', 'Pindah fokus kartu'],
+  ['Enter', 'Buka item terpilih'],
+  ['D', 'Unduh item terpilih'],
+  ['P', 'Pratinjau item terpilih'],
+  ['F', 'Tambah/hapus favorit']
+];
+addEventListener('keydown', e => {
+  const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName);
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k'){ e.preventDefault(); openCmd(); return }
+  if (e.key === 'Escape'){
+    if ($('#cmd').classList.contains('open')) return closeCmd();
+    if ($('#pv').classList.contains('open')) return closePreview();
+    if ($('#help').classList.contains('open')) return closeHelp();
+    return;
+  }
+  if (typing) return;
+  if ($('#cmd').classList.contains('open')){
+    if (e.key === 'ArrowDown' || (e.key === 'Tab' && !e.shiftKey)){ e.preventDefault(); S.cmdIndex = Math.min(S.cmdIndex + 1, (S.cmdItems2 || []).length - 1); syncCmdActive() }
+    if (e.key === 'ArrowUp' || (e.key === 'Tab' && e.shiftKey)){ e.preventDefault(); S.cmdIndex = Math.max(S.cmdIndex - 1, 0); syncCmdActive() }
+    if (e.key === 'Enter'){ const it = (S.cmdItems2 || [])[S.cmdIndex]; if (it){ closeCmd(); open(it) } }
+    return;
+  }
+  const k = e.key.toLowerCase();
+  if (k === '?'){ e.preventDefault(); openHelp(); return }
+  if (k === '/'){ e.preventDefault(); openCmd(); return }
+  if (k === 't'){ cycleTheme(); return }
+  if (k === 'g'){ setView('grid'); return }
+  if (k === 'l'){ setView('list'); return }
+  if (e.key === 'Backspace'){ e.preventDefault(); up(); return }
+  const cur = S.entries[focusIdx];
+  if (e.key.startsWith('Arrow')){
+    e.preventDefault();
+    const perRow = S.view === 'grid' ? currentPerRow() : 1;
+    let i = focusIdx;
+    if (e.key === 'ArrowRight') i++;
+    if (e.key === 'ArrowLeft')  i = Math.max(0, i - 1);
+    if (e.key === 'ArrowDown')  i += perRow;
+    if (e.key === 'ArrowUp')    i -= perRow;
+    focusIdx = Math.max(0, Math.min(S.entries.length - 1, i));
+    paintFocus(); return;
+  }
+  if (k === 'enter' && cur){ e.preventDefault(); open(cur) }
+  if (k === 'd' && cur){ download(cur) }
+  if (k === 'p' && cur && cur.type === 'file'){ trackRecent(cur); openPreview(cur) }
+  if (k === 'f' && cur){ toggleFav(cur) }
+});
+let focusIdx = -1;
+function currentPerRow(){
+  const w = $('#content').clientWidth;
+  const cols = w >= 1280 ? 6 : w >= 768 ? 4 : w >= 640 ? 3 : 2;
+  return cols;
+}
+function paintFocus(){
+  const nodes = $('#content').children;
+  [...nodes].forEach((n, i) => {
+    n.style.outline = i === focusIdx ? '2px solid var(--acc)' : '';
+    n.style.outlineOffset = i === focusIdx ? '2px' : '';
+  });
+  if (nodes[focusIdx]) nodes[focusIdx].scrollIntoView({ block: 'nearest' });
+}
+
+/* ============================================================================
+   HELP
+   ========================================================================= */
+function openHelp(){
+  const box = $('#help-list');
+  box.innerHTML = SHORTCUTS.map(([k, d]) =>
+    `<div class="flex items-center justify-between gap-4 py-1"><span class="text-muted">${d}</span><kbd class="text-[10px] font-semibold border-line border rounded px-1.5 py-0.5 shrink-0">${esc(k)}</kbd></div>`
+  ).join('');
+  $('#help').classList.add('open');
+}
+function closeHelp(){ $('#help').classList.remove('open') }
+
+/* ============================================================================
+* UI KECIL
+   ========================================================================= */
+function showSkeletons(on = true){
+  const s = $('#skeletons'), c = $('#content');
+  if (on){
+    s.classList.remove('hidden');
+    s.innerHTML = Array.from({ length: 18 }, () => '<div class="skel" style="height:132px"></div>').join('');
+    c.classList.add('hidden');
+  } else s.classList.add('hidden');
+}
+function hideSkeletons(){ $('#skeletons').classList.add('hidden') }
+function showError(msg){
+  const e = $('#error');
+  if (!msg){ e.classList.add('hidden'); return }
+  e.classList.remove('hidden');
+  $('#error-text').textContent = msg;
+}
+function setView(v){
+  S.view = v; ls('md:view', v);
+  document.querySelectorAll('.view-btn').forEach(b => b.dataset.active = b.dataset.view === v ? '1' : '0');
+  renderCards();
+}
+function markAllQuick(){
+  document.querySelectorAll('.quick').forEach(b => b.onclick = () => {
+    const kind = b.dataset.quick;
+    if (!kind){ S.quick = ''; go(''); return }
+    S.quick = kind;
+    S.path = '';
+    S.entries = [];
+    location.hash = '#/';
+    $('#sidebar').classList.add('-translate-x-full');
+    $('#sb-backdrop').classList.add('hidden');
+    markQuick();
+    renderQuick(kind);
+  });
+}
+
+/* ============================================================================
+   EVENT BINDING
+   ========================================================================= */
+$('#open-cmd').onclick   = openCmd;
+$('#cmd').onclick         = e => { if (e.target.id === 'cmd') closeCmd() };
+$('#cmd-input').oninput   = debounce(e => paintCmd(e.target.value), 90);
+$('#pv').onclick          = e => { if (e.target.id === 'pv') closePreview() };
+$('#help').onclick        = e => { if (e.target.id === 'help') closeHelp() };
+$('#btn-theme').onclick   = cycleTheme;
+$('#btn-help').onclick    = openHelp;
+$('#view-grid').onclick   = () => setView('grid');
+$('#view-list').onclick   = () => setView('list');
+$('#sort').onchange       = e => { S.sort = e.target.value; ls('md:sort', S.sort); loadFolder() };
+$('#btn-copy').onclick    = async () => {
+  try{ await navigator.clipboard.writeText(S.path || '/'); toast('Path disalin', 'fa-copy') }
+  catch{ toast('Path: ' + (S.path || '/'), 'fa-copy') }
+};
+$('#btn-zip').onclick     = zipFolder;
+$('#tree-collapse').onclick = () => { S.expanded = new Set(['']); ls('md:exp', ['']); renderTree() };
+$('#fav-count').textContent = S.favorites.length;
+$('#sort').value = S.sort;
+$('#btn-sidebar').onclick = () => {
+  const sb = $('#sidebar'), bd = $('#sb-backdrop');
+  if (sb.classList.contains('-translate-x-full')){ sb.classList.remove('-translate-x-full'); bd.classList.remove('hidden') }
+  else { sb.classList.add('-translate-x-full'); bd.classList.add('hidden') }
+};
+$('#sb-backdrop').onclick = () => { $('#sidebar').classList.add('-translate-x-full'); $('#sb-backdrop').classList.add('hidden') };
+markAllQuick();
+document.querySelectorAll('.view-btn').forEach(b => b.dataset.active = b.dataset.view === S.view ? '1' : '0');
+
+/* pointer glow */
+if (matchMedia('(pointer:fine)').matches){
+  const glow = $('#pointer-glow');
+  addEventListener('mousemove', e => {
+    document.body.classList.add('has-pointer');
+    glow.style.transform = `translate(${e.clientX - 260}px,${e.clientY - 260}px)`;
+  }, { passive: true });
+}
+
+/* sidebar responsif */
+function syncSidebar(){
+  if (innerWidth >= 1024){
+    $('#sidebar').classList.remove('-translate-x-full');
+    $('#sb-backdrop').classList.add('hidden');
+  } else if (innerWidth < 640){
+    $('#sidebar').classList.add('-translate-x-full');
+    $('#sb-backdrop').classList.add('hidden');
+  }
+}
+addEventListener('resize', debounce(syncSidebar, 150));
+
+/* ============================================================================
+   START
+   ========================================================================= */
+applyTheme();
+syncSidebar();
+
+(async function start(){
+  showSkeletons();
+  try{
+    await loadIndex();
+  } catch(e){
+    showSkeletons(false);
+    showError(e.message);
+  }
+  go(readHash(), false);
+  addEventListener('hashchange', () => {
+    const p = readHash();
+    if (p !== S.path){ S.quick = ''; markQuick(); go(p, false) }
+  });
+})();
+</script>
 </body>
 </html>

@@ -549,9 +549,13 @@ function iconFor(type, name){
   const e = EXT_ICON[extOf(name)];
   return e ? [e[0], e[1]] : ['fa-file','#94a3b8'];
 }
+// Format Office: GitHub menyajikan sebagai application/octet-stream, jadi butuh viewer sendiri
+const OFFICE = ['docx','docm','doc','pptx','pptm','ppt','xlsx','xlsm','xls'];
+const isOffice = name => OFFICE.includes(extOf(name));
 const isPreviewable = name => {
   const e = extOf(name);
-  return ['png','jpg','jpeg','gif','webp','bmp','svg','avif','heic','heif','pdf','mp4','webm','mov','mp3','wav','m4a','md','txt','json','html','htm','css','js','mjs','ts','py','c','cpp','h','hpp','java','xml','yml','yaml','csv','ino','log','sh','sql','r','go','rs','php','rb','lua','kt','swift'].includes(e);
+  return ['png','jpg','jpeg','gif','webp','bmp','svg','avif','heic','heif','pdf','mp4','webm','mov','mp3','wav','m4a','md','txt','json','html','htm','css','js','mjs','ts','py','c','cpp','h','hpp','java','xml','yml','yaml','csv','ino','log','sh','sql','r','go','rs','php','rb','lua','kt','swift'].includes(e)
+      || isOffice(name);
 };
 
 /* ============================================================================
@@ -830,8 +834,34 @@ function renderCards(){
 }
 
 function open(e){
-  if (e.type === 'dir') go(e.path);
-  else { trackRecent(e); if (isPreviewable(e.name)) openPreview(e); else download(e) }
+  if (e.type === 'dir'){ go(e.path); return }
+  trackRecent(e);
+  if (extOf(e.name) === 'pdf'){ openPdf(e); return }
+  if (isPreviewable(e.name)){ openPreview(e); return }
+  download(e);
+}
+// GitHub menyajikan PDF sebagai application/octet-stream, jadi tab baru akan men-download-nya.
+// Bungkus jadi Blob dengan tipe aslinya supaya browser menampilkannya di viewer bawaan.
+// Tab harus dibuka duluan, sebelum fetch, kalau tidak akan diblokir popup.
+function openPdf(e){
+  const url = `${RAW}/${enc(e.path)}`;
+  const tab = window.open('', '_blank');
+  if (!tab){ toast('Pop-up diblokir peramban. Izinkan pop-up untuk situs ini.', 'fa-triangle-exclamation'); return }
+  try {
+    tab.document.write('<!doctype html><meta charset="utf-8"><title>Memuat…</title>'
+      + '<body style="font:15px system-ui;display:grid;place-items:center;height:100vh;margin:0;background:#0b1020;color:#94a3b8">'
+      + 'Memuat ' + esc(e.name) + '…</body>');
+  } catch (_){}
+  fetch(url).then(r => { if (!r.ok) throw new Error(r.status); return r.blob() })
+    .then(b => {
+      const obj = URL.createObjectURL(new Blob([b], { type: 'application/pdf' }));
+      tab.location.replace(obj);
+      setTimeout(() => URL.revokeObjectURL(obj), 60000);
+    })
+    .catch(() => {
+      try { tab.location.replace(url) } catch (_){}
+      toast('Tidak bisa ditampilkan, membuka file mentahnya.', 'fa-triangle-exclamation');
+    });
 }
 function download(e){
   trackRecent(e);
@@ -1053,16 +1083,26 @@ function openPreview(e){
     body.innerHTML = `<div class="grid place-items-center min-h-[50vh]"><img src="${url}" alt="${esc(e.name)}" class="max-h-[68vh] rounded-xl sh" onerror="pvFail(this)"></div>`;
     return;
   }
-  if (ext === 'pdf'){
-    body.innerHTML = `<iframe src="${url}#toolbar=0" class="w-full h-[70vh] rounded-xl border-line border bg-panel-2"></iframe>`;
+  if (ext === 'pdf'){ openPdf(e); return }
+  if (isOffice(e.name)){
+    const src = `${RAW}/${enc(e.path)}`;
+    body.innerHTML = `
+      <div class="note mb-4 flex gap-2.5">
+        <i class="fa-solid fa-circle-info text-dim mt-0.5 shrink-0"></i>
+        <p class="text-[11px] text-muted leading-relaxed">Dokumen ini dibuka lewat Microsoft Office Viewer, jadi filenya dikirim ke server Microsoft. Repo publik berarti isinya sebenarnya sudah bisa dibaca siapa pun, tapi tetap perlu internet dan bisa gagal untuk dokumen besar.</p>
+      </div>
+      <iframe src="https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(src)}"
+              class="w-full h-[70vh] rounded-xl border-line border bg-panel-2"></iframe>
+      <p class="text-[11px] text-dim mt-3">Tidak muncul? <a href="${src}" target="_blank" rel="noopener" class="text-acc underline">Buka/unduh aslinya</a>.</p>`;
     return;
   }
   if (['mp4','webm','mov','mkv'].includes(ext)){
-    body.innerHTML = `<video src="${url}" controls class="w-full max-h-[70vh] rounded-xl sh bg-black"></video>`;
+    body.innerHTML = `<video src="${url}" controls preload="metadata" onerror="pvMediaFail(this,'${esc(ext)}')" class="w-full max-h-[70vh] rounded-xl sh bg-black"></video>
+      <p class="text-[11px] text-dim mt-3 text-center">Kalau video tidak berputar, <a href="${url}" target="_blank" rel="noopener" class="text-acc underline">buka di tab baru</a>.</p>`;
     return;
   }
   if (['mp3','wav','m4a'].includes(ext)){
-    body.innerHTML = `<div class="py-16 text-center"><i class="fa-solid fa-file-audio text-5xl mb-4 block text-acc"></i><audio src="${url}" controls class="w-full max-w-lg"></audio></div>`;
+    body.innerHTML = `<div class="py-16 text-center"><i class="fa-solid fa-file-audio text-5xl mb-4 block text-acc"></i><audio src="${url}" controls onerror="pvMediaFail(this,'${esc(ext)}')" class="w-full max-w-lg"></audio></div>`;
     return;
   }
   if (ext === 'md'){
@@ -1082,6 +1122,18 @@ function openPreview(e){
   }).catch(() => { if (tok === pvToken) pvFail(null) });
 }
 function closePreview(){ pvToken++; pvEntry = null; $('#pv').classList.remove('open') }
+// GitHub menyajikan video/audio sebagai octet-stream; sebagian peramban menolak memainkannya.
+function pvMediaFail(node, ext){
+  if (!pvEntry) return;
+  const url = `${RAW}/${enc(pvEntry.path)}`;
+  node.closest('div')?.remove?.();
+  const box = $('#pv-body');
+  if (box) box.innerHTML = `<div class="py-16 text-center text-sm">
+    <i class="fa-solid fa-circle-exclamation text-5xl mb-4 block text-dim"></i>
+    <p class="font-medium">Peramban ini tidak bisa memutar ${esc(ext.toUpperCase())} langsung dari repo.</p>
+    <p class="text-dim mt-1.5 mb-5">File Disajikan GitHub sebagai application/octet-stream, bukan video.</p>
+    <a href="${url}" target="_blank" rel="noopener" class="btn-act">Buka di tab baru</a></div>`;
+}
 function pvFail(img){
   const ext = pvEntry ? extOf(pvEntry.name) : '';
   const html = ext === 'heic' || ext === 'heif'
@@ -1143,7 +1195,10 @@ function contextMenu(e, x, y){
   ctxEl && ctxEl.remove();
   const fav = S.favorites.includes(e.path);
   const items = [];
-  items.push([e.type === 'dir' ? 'Buka folder' : (isPreviewable(e.name) ? 'Pratinjau' : 'Unduh'), e.type === 'dir' || isPreviewable(e.name) ? 'fa-eye' : 'fa-download', () => open(e)]);
+  const pdf = e.type !== 'dir' && extOf(e.name) === 'pdf';
+  const lab = e.type === 'dir' ? 'Buka folder' : (pdf ? 'Buka di tab baru' : (isPreviewable(e.name) ? 'Pratinjau' : 'Unduh'));
+  const ico = e.type === 'dir' || isPreviewable(e.name) ? 'fa-eye' : 'fa-download';
+  items.push([lab, ico, () => open(e)]);
   if (e.type === 'file') items.push(['Unduh', 'fa-download', () => download(e)]);
   items.push(['Salin path', 'fa-copy', () => { navigator.clipboard.writeText(e.path); toast('Path disalin', 'fa-copy') }]);
   items.push([fav ? 'Hapus dari favorit' : 'Tambah favorit', 'fa-star', () => toggleFav(e)]);

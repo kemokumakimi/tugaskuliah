@@ -1,0 +1,2818 @@
+{
+  "type": "FeatureCollection",
+  "generator": "overpass-turbo",
+  "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+  "timestamp": "2026-05-04T04:35:59Z",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/23960048",
+        "access:roof": "yes",
+        "addr:city": "Semarang",
+        "addr:full": "Jalan Agus Salim",
+        "backup_generator": "yes",
+        "building": "mall",
+        "building:condition": "good",
+        "building:levels": "4",
+        "building:material": "brick",
+        "building:roof": "asbestos",
+        "building:structure": "confined_masonry",
+        "capacity:persons": "100-250",
+        "leisure": "fitness_centre",
+        "name": "Plaza Semarang",
+        "roof:angle": "30",
+        "roof:shape": "hipped",
+        "shop": "vacant",
+        "source": "HOT_InAWARESurvey_2018",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.4273055,
+          -6.9713747
+        ]
+      },
+      "id": "way/23960048"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/120379304",
+        "building": "yes",
+        "building:roof": "tin",
+        "building:walls": "brick",
+        "leisure": "fitness_centre",
+        "name": "Lembah fitnes UGM",
+        "sport": "athletics",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.3823209,
+          -7.7720599
+        ]
+      },
+      "id": "way/120379304"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/351193438",
+        "building": "yes",
+        "leisure": "fitness_centre",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.4147048,
+          -7.8234148
+        ]
+      },
+      "id": "way/351193438"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/362369018",
+        "building": "yes",
+        "leisure": "fitness_centre",
+        "name": "ChrisStudio",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.4032155,
+          -7.720442
+        ]
+      },
+      "id": "way/362369018"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/364460388",
+        "leisure": "fitness_centre",
+        "name": "Lapangan Sudarsono (Lapangan Petir)",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.4961395,
+          -7.8279547
+        ]
+      },
+      "id": "way/364460388"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/405794990",
+        "building": "yes",
+        "leisure": "fitness_centre",
+        "name": "Asia Fitness",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.830426,
+          -7.5651933
+        ]
+      },
+      "id": "way/405794990"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/481306406",
+        "building": "yes",
+        "leisure": "fitness_centre",
+        "name": "Hardcore Fitness Centre",
+        "sport": "fitness",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.3734238,
+          -7.7873742
+        ]
+      },
+      "id": "way/481306406"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/493550178",
+        "building": "yes",
+        "leisure": "fitness_centre",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.3736525,
+          -7.7397538
+        ]
+      },
+      "id": "way/493550178"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/500641812",
+        "building": "yes",
+        "building:levels": "6",
+        "leisure": "fitness_centre",
+        "name": "Willfitness Hayam Wuruk",
+        "opening_hours": "Mo-Su 06:00-22:00",
+        "phone": "+6281119949777",
+        "sport": "fitness",
+        "website": "https://willfitness.id/",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.8191267,
+          -6.1584203
+        ]
+      },
+      "id": "way/500641812"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/504996243",
+        "building": "yes",
+        "leisure": "fitness_centre",
+        "name": "Kobe fight club",
+        "sauna": "yes",
+        "sport": "boxing",
+        "swimming_pool": "yes",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.8122697,
+          -6.2812152
+        ]
+      },
+      "id": "way/504996243"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/512932191",
+        "building": "yes",
+        "leisure": "fitness_centre",
+        "name": "DM Lidra Gym",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.590456,
+          -6.8697437
+        ]
+      },
+      "id": "way/512932191"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/521698474",
+        "addr:city": "Jakarta Barat",
+        "addr:district": "Grogol Petamburan",
+        "addr:housenumber": "21",
+        "addr:postcode": "11470",
+        "addr:province": "DKI Jakarta",
+        "addr:street": "Jalan Tanjung Duren Raya",
+        "addr:subdistrict": "Tanjung Duren Selatan",
+        "branch": "Tanjung Duren",
+        "building": "yes",
+        "leisure": "fitness_centre",
+        "name": "FTL Gym",
+        "phone": "+62818687858",
+        "website": "http://www.ftlgym.com/",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.7855856,
+          -6.1739862
+        ]
+      },
+      "id": "way/521698474"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/534496243",
+        "building": "yes",
+        "leisure": "fitness_centre",
+        "name": "Virenka Gym",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.3348681,
+          -7.8819045
+        ]
+      },
+      "id": "way/534496243"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/535259187",
+        "building": "yes",
+        "contact:facebook": "Intan Nurimani",
+        "contact:instagram": "intan_nurimani",
+        "leisure": "fitness_centre",
+        "name": "SUNFLWR Studio",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.8168026,
+          -7.5762711
+        ]
+      },
+      "id": "way/535259187"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/538685813",
+        "building": "yes",
+        "leisure": "fitness_centre",
+        "name": "Pemuda Gym",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          108.5411697,
+          -6.7304351
+        ]
+      },
+      "id": "way/538685813"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/549270230",
+        "building": "yes",
+        "leisure": "fitness_centre",
+        "name": "Shegia Aerobic Studio",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          108.528201,
+          -6.7372098
+        ]
+      },
+      "id": "way/549270230"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/611389858",
+        "building": "yes",
+        "leisure": "fitness_centre",
+        "name": "Optimum Fitness & Cafe Karangwaru",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.3622772,
+          -7.7792109
+        ]
+      },
+      "id": "way/611389858"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/621677698",
+        "addr:street": "Jalan Merdeka",
+        "leisure": "fitness_centre",
+        "name": "Apollo",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.7879681,
+          -6.5915114
+        ]
+      },
+      "id": "way/621677698"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/631305760",
+        "building": "yes",
+        "leisure": "fitness_centre",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.8670708,
+          -6.44302
+        ]
+      },
+      "id": "way/631305760"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/634988331",
+        "building": "yes",
+        "leisure": "fitness_centre",
+        "name": "Lookman Gym",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.1953568,
+          -6.9190194
+        ]
+      },
+      "id": "way/634988331"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/637416831",
+        "building": "yes",
+        "leisure": "fitness_centre",
+        "name": "gym",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.3818195,
+          -7.7764279
+        ]
+      },
+      "id": "way/637416831"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/638394697",
+        "addr:housenumber": "57",
+        "addr:street": "Jalan Prof. Dr. Surya Soemantri",
+        "building": "yes",
+        "leisure": "fitness_centre",
+        "name": "Fit Hub",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.581133,
+          -6.8850439
+        ]
+      },
+      "id": "way/638394697"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/704119478",
+        "building": "yes",
+        "leisure": "fitness_centre",
+        "name": "Puri Mansion Apartment Gym Center",
+        "sport": "fitness",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.7235352,
+          -6.1810028
+        ]
+      },
+      "id": "way/704119478"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/731266002",
+        "building": "yes",
+        "leisure": "fitness_centre",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.5903194,
+          -6.8603535
+        ]
+      },
+      "id": "way/731266002"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/755301233",
+        "building": "yes",
+        "building:levels": "4",
+        "leisure": "fitness_centre",
+        "name": "KYZN",
+        "sport": "multi",
+        "start_date": "2023",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.818137,
+          -6.2211129
+        ]
+      },
+      "id": "way/755301233"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/876316114",
+        "building": "yes",
+        "leisure": "fitness_centre",
+        "name": "Axel Fitness Centre",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          109.2453638,
+          -7.4188092
+        ]
+      },
+      "id": "way/876316114"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/944507380",
+        "building": "yes",
+        "leisure": "fitness_centre",
+        "name": "W Gym",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.3916115,
+          -7.755667
+        ]
+      },
+      "id": "way/944507380"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1063313609",
+        "building": "yes",
+        "leisure": "fitness_centre",
+        "name": "Rajawali Fitness",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.5489901,
+          -6.1539688
+        ]
+      },
+      "id": "way/1063313609"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1094762041",
+        "building": "yes",
+        "leisure": "fitness_centre",
+        "name": "OVIQ STD Purbalingga",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          109.3569949,
+          -7.3951431
+        ]
+      },
+      "id": "way/1094762041"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1211733389",
+        "building": "yes",
+        "leisure": "fitness_centre",
+        "name": "Breeze Water Club House",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.0976168,
+          -6.0346947
+        ]
+      },
+      "id": "way/1211733389"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1283841849",
+        "brand": "Agung Sedayu",
+        "building": "yes",
+        "layer": "1",
+        "leisure": "fitness_centre",
+        "sport": "gymnastics;weightlifting;fitness",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.7402327,
+          -6.0936722
+        ]
+      },
+      "id": "way/1283841849"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1324732824",
+        "building": "commercial",
+        "building:levels": "2",
+        "leisure": "fitness_centre",
+        "name": "Nest Gym & Reflexology",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.6945542,
+          -6.0624287
+        ]
+      },
+      "id": "way/1324732824"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1333245369",
+        "access:roof": "yes",
+        "addr:city": "Semarang",
+        "addr:full": "Jalan Agus Salim",
+        "backup_generator": "yes",
+        "building": "mall",
+        "building:condition": "good",
+        "building:levels": "4",
+        "building:material": "brick",
+        "building:roof": "asbestos",
+        "building:structure": "confined_masonry",
+        "capacity:persons": "100-250",
+        "leisure": "fitness_centre",
+        "name": "Plaza Semarang",
+        "roof:angle": "30",
+        "roof:shape": "hipped",
+        "shop": "vacant",
+        "source": "HOT_InAWARESurvey_2018",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.4269265,
+          -6.9714592
+        ]
+      },
+      "id": "way/1333245369"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1382767356",
+        "building": "yes",
+        "leisure": "fitness_centre",
+        "name": "GYM Syahdu",
+        "opening_hours": "Mo-Su 09:00-23:00",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          111.3464423,
+          -6.7148655
+        ]
+      },
+      "id": "way/1382767356"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1412245221",
+        "building": "yes",
+        "leisure": "fitness_centre",
+        "name": "Fit Hub Go",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          108.5509105,
+          -6.7187042
+        ]
+      },
+      "id": "way/1412245221"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1430785719",
+        "building": "yes",
+        "leisure": "fitness_centre",
+        "name": "Gym",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.5096305,
+          -7.3984752
+        ]
+      },
+      "id": "way/1430785719"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1443168802",
+        "addr:housenumber": "15",
+        "addr:place": "Sapphire Commercial",
+        "building": "commercial",
+        "leisure": "fitness_centre",
+        "name": "She Fitz",
+        "opening_hours": "Mo-Su 09:00-21:00",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.7008085,
+          -6.9600823
+        ]
+      },
+      "id": "way/1443168802"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1443168856",
+        "addr:housenumber": "02",
+        "addr:place": "Crystal Commercial",
+        "brand": "Curves",
+        "building": "commercial",
+        "leisure": "fitness_centre",
+        "name": "Curves",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.7003787,
+          -6.9603237
+        ]
+      },
+      "id": "way/1443168856"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1455004965",
+        "addr:housenumber": "33",
+        "addr:street": "Jalan Merdeka",
+        "building": "yes",
+        "building:levels": "2",
+        "building:roof": "tin",
+        "building:structure": "reinforced_masonry",
+        "building:use": "commercial",
+        "building:walls": "brick",
+        "leisure": "fitness_centre",
+        "name": "FTL Gym",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6103014,
+          -6.9086705
+        ]
+      },
+      "id": "way/1455004965"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1463699562",
+        "building": "yes",
+        "leisure": "fitness_centre",
+        "name": "Cadet Fitness Center",
+        "sport": "running",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.8805053,
+          -6.5248376
+        ]
+      },
+      "id": "way/1463699562"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1469397489",
+        "addr:city": "Kota Bogor",
+        "addr:district": "Bogor Selatan",
+        "addr:housenumber": "34",
+        "addr:province": "Jawa Barat",
+        "addr:street": "Jalan Pahlawan",
+        "addr:subdistrict": "Empang",
+        "building": "yes",
+        "leisure": "fitness_centre",
+        "name": "FTL Gym Pahlawan Bogor",
+        "opening_hours": "24/7",
+        "sport": "pilates;boxing;fitness",
+        "website": "https://ftlgym.com/",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.7965921,
+          -6.6079499
+        ]
+      },
+      "id": "way/1469397489"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4288913789",
+        "addr:street": "Jalan KH Mas Mansyur",
+        "leisure": "fitness_centre",
+        "name": "Gold's Gym Thamrin City"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.8148956,
+          -6.194474
+        ]
+      },
+      "id": "node/4288913789"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4288914189",
+        "addr:housenumber": "160 1.40A-B",
+        "addr:postcode": "40132",
+        "addr:street": "Jalan Cihampelas",
+        "leisure": "fitness_centre",
+        "name": "Gold's Gym Cihampelas Walk",
+        "name:en": "Gold's Gym"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6040332,
+          -6.8954072
+        ]
+      },
+      "id": "node/4288914189"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4288914489",
+        "addr:housenumber": "99-101",
+        "addr:postcode": "40111",
+        "addr:street": "Jalan Braga",
+        "leisure": "fitness_centre",
+        "name": "Gold's Gym Braha City Walk"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6078468,
+          -6.9170257
+        ]
+      },
+      "id": "node/4288914489"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4582250090",
+        "addr:street": "Jalan Pasir Mulya 4",
+        "leisure": "fitness_centre",
+        "name": "Lapangan Futsal",
+        "opening_hours": "Mo-Su 09:00-22:00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.7772428,
+          -6.595962
+        ]
+      },
+      "id": "node/4582250090"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4585536355",
+        "leisure": "fitness_centre",
+        "name": "Lembah fitnes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.4142956,
+          -7.7787998
+        ]
+      },
+      "id": "node/4585536355"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4585536357",
+        "leisure": "fitness_centre",
+        "name": "Get fit"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.4139523,
+          -7.7791187
+        ]
+      },
+      "id": "node/4585536357"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4611366992",
+        "addr:street": "Jalan Besar Stadion Manahan",
+        "leisure": "fitness_centre"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.807428,
+          -7.556141
+        ]
+      },
+      "id": "node/4611366992"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4840727722",
+        "leisure": "fitness_centre",
+        "name": "Lapangan Bulutangkis"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.8690507,
+          -6.2238563
+        ]
+      },
+      "id": "node/4840727722"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5119336933",
+        "leisure": "fitness_centre",
+        "name": "Just Wax"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.5954155,
+          -6.8884932
+        ]
+      },
+      "id": "node/5119336933"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5174025555",
+        "leisure": "fitness_centre",
+        "name": "PIK Fit"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.7504164,
+          -6.1078682
+        ]
+      },
+      "id": "node/5174025555"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5246846724",
+        "addr:housenumber": "5",
+        "addr:postcode": "43111",
+        "addr:street": "Jalan Surya Kencana",
+        "leisure": "fitness_centre",
+        "name": "MyFit",
+        "phone": "+622666250802"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.928156,
+          -6.9188758
+        ]
+      },
+      "id": "node/5246846724"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5442649621",
+        "addr:housenumber": "73",
+        "addr:postcode": "55162",
+        "addr:street": "Jalan Menteri Supeno",
+        "leisure": "fitness_centre",
+        "name": "Fitness DM",
+        "name:de": "Fitness DM",
+        "opening_hours": "Mo-Su 07:00-21:30"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.3809189,
+          -7.8160667
+        ]
+      },
+      "id": "node/5442649621"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5803815656",
+        "leisure": "fitness_centre",
+        "name": "Gold's Gym",
+        "sport": "fitness"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6090066,
+          -6.9171428
+        ]
+      },
+      "id": "node/5803815656"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5896082685",
+        "brand": "Celebrity Fitness",
+        "brand:wikidata": "Q5057734",
+        "leisure": "fitness_centre",
+        "name": "Celebrity Fitness",
+        "name:en": "Celebrity Fitness"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.7912675,
+          -6.1764169
+        ]
+      },
+      "id": "node/5896082685"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5898211585",
+        "leisure": "fitness_centre",
+        "name": "Gold's Gym"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.7859174,
+          -6.1686735
+        ]
+      },
+      "id": "node/5898211585"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6002444689",
+        "leisure": "fitness_centre",
+        "name": "Sasak Gym"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.139722,
+          -6.8253017
+        ]
+      },
+      "id": "node/6002444689"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6002466385",
+        "leisure": "fitness_centre",
+        "name": "Clunbury Fit n Fresh"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.1399448,
+          -6.8255375
+        ]
+      },
+      "id": "node/6002466385"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6071138186",
+        "leisure": "fitness_centre",
+        "name": "Fitness First Platinum"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.7969229,
+          -6.227002
+        ]
+      },
+      "id": "node/6071138186"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6154755987",
+        "leisure": "fitness_centre",
+        "name": "Duo Shine"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.6248735,
+          -6.1721323
+        ]
+      },
+      "id": "node/6154755987"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6154802286",
+        "leisure": "fitness_centre",
+        "name": "Gloria Gym"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.6264429,
+          -6.1766971
+        ]
+      },
+      "id": "node/6154802286"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6183158385",
+        "leisure": "fitness_centre",
+        "name": "Grand Fitness Club"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.8087728,
+          -6.1660767
+        ]
+      },
+      "id": "node/6183158385"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6185591488",
+        "addr:housenumber": "15",
+        "addr:street": "Jalan Musi",
+        "leisure": "fitness_centre",
+        "name": "MediFIT"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.8093668,
+          -6.1746998
+        ]
+      },
+      "id": "node/6185591488"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6210484490",
+        "leisure": "fitness_centre",
+        "name": "20 Fit"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.7881916,
+          -6.1751252
+        ]
+      },
+      "id": "node/6210484490"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6213079008",
+        "leisure": "fitness_centre",
+        "name": "Java Muscle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.8059819,
+          -6.1919794
+        ]
+      },
+      "id": "node/6213079008"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6230131393",
+        "leisure": "fitness_centre",
+        "name": "Tetap Segar Klub"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.8443778,
+          -6.2813718
+        ]
+      },
+      "id": "node/6230131393"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6236279590",
+        "leisure": "fitness_centre",
+        "name": "Yakuza Gym"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.8080089,
+          -6.1504831
+        ]
+      },
+      "id": "node/6236279590"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6264007295",
+        "leisure": "fitness_centre",
+        "name": "MG Fitness"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.6214488,
+          -6.1978149
+        ]
+      },
+      "id": "node/6264007295"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6265881487",
+        "leisure": "fitness_centre",
+        "name": "Senam Sehat Ladies"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.8156604,
+          -6.150849
+        ]
+      },
+      "id": "node/6265881487"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6265898685",
+        "leisure": "fitness_centre",
+        "name": "Abadi Star Gym"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.8146563,
+          -6.1500466
+        ]
+      },
+      "id": "node/6265898685"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6281175588",
+        "leisure": "fitness_centre",
+        "name": "Maxima"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.7956065,
+          -6.2876848
+        ]
+      },
+      "id": "node/6281175588"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6318643888",
+        "leisure": "fitness_centre",
+        "name": "Budi Mulia"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.8422584,
+          -6.1305803
+        ]
+      },
+      "id": "node/6318643888"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6357841387",
+        "leisure": "fitness_centre",
+        "name": "Ramboe",
+        "phone": "+62217237838"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.7984237,
+          -6.263386
+        ]
+      },
+      "id": "node/6357841387"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6377823407",
+        "leisure": "fitness_centre",
+        "name": "Alfa"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.9655514,
+          -6.9178095
+        ]
+      },
+      "id": "node/6377823407"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6393446988",
+        "leisure": "fitness_centre",
+        "name": "Medley Yoga & Pilates"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.8074206,
+          -6.1636175
+        ]
+      },
+      "id": "node/6393446988"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6400698098",
+        "leisure": "fitness_centre",
+        "name": "Ray"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.8046735,
+          -6.1233963
+        ]
+      },
+      "id": "node/6400698098"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6900290685",
+        "leisure": "fitness_centre",
+        "name": "Mars Mens Health"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.8193546,
+          -6.1940441
+        ]
+      },
+      "id": "node/6900290685"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6909100118",
+        "leisure": "fitness_centre",
+        "name": "Beehub"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.7801757,
+          -6.2022481
+        ]
+      },
+      "id": "node/6909100118"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6936079987",
+        "brand": "Celebrity Fitness",
+        "brand:wikidata": "Q5057734",
+        "brand:wikipedia": "en:Celebrity Fitness",
+        "leisure": "fitness_centre",
+        "name": "Celebrity Fitness",
+        "name:en": "Celebrity Fitness"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.8255291,
+          -6.2277599
+        ]
+      },
+      "id": "node/6936079987"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6953818986",
+        "leisure": "fitness_centre",
+        "name": "Columbus Circle Gymnasium"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.8312524,
+          -6.2252062
+        ]
+      },
+      "id": "node/6953818986"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6953845785",
+        "leisure": "fitness_centre",
+        "name": "Fitness First"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.8142087,
+          -6.2201052
+        ]
+      },
+      "id": "node/6953845785"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6956712286",
+        "leisure": "fitness_centre",
+        "name": "Absolute Fit"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.7820869,
+          -6.1851371
+        ]
+      },
+      "id": "node/6956712286"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7152835614",
+        "addr:street": "Jalan Raya Tajem",
+        "leisure": "fitness_centre",
+        "name": "Empire Gym",
+        "sport": "gymnastics"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.4337353,
+          -7.7567386
+        ]
+      },
+      "id": "node/7152835614"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7333022675",
+        "leisure": "fitness_centre",
+        "name": "Celebrity Fitness",
+        "sport": "fitness"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.7829791,
+          -6.2654375
+        ]
+      },
+      "id": "node/7333022675"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7707315303",
+        "leisure": "fitness_centre",
+        "name": "Sanggar Senam Sokaraja Diva"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          109.2787533,
+          -7.4587697
+        ]
+      },
+      "id": "node/7707315303"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7902306489",
+        "leisure": "fitness_centre",
+        "name": "Zumba"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.9367295,
+          -6.9187478
+        ]
+      },
+      "id": "node/7902306489"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8206679716",
+        "leisure": "fitness_centre",
+        "name": "Sho Shin Gym"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.6861205,
+          -6.300634
+        ]
+      },
+      "id": "node/8206679716"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8601701970",
+        "leisure": "fitness_centre",
+        "name": "Shidma Yoga",
+        "sport": "yoga"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.9968231,
+          -6.2954328
+        ]
+      },
+      "id": "node/8601701970"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9132831411",
+        "check_date": "2025-02-15",
+        "leisure": "fitness_centre",
+        "name": "Gold's Gym"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.6548938,
+          -6.3011996
+        ]
+      },
+      "id": "node/9132831411"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9704514894",
+        "leisure": "fitness_centre",
+        "name": "Dimension Gym & Cafe",
+        "sport": "gymnastics"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.4121233,
+          -7.7626611
+        ]
+      },
+      "id": "node/9704514894"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9765028507",
+        "leisure": "fitness_centre",
+        "name": "BUGARO SPORT"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.6788723,
+          -7.4543197
+        ]
+      },
+      "id": "node/9765028507"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9765801433",
+        "leisure": "fitness_centre",
+        "name": "Sanggar Senam Queen Karanggede"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.6389162,
+          -7.3583904
+        ]
+      },
+      "id": "node/9765801433"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9765801468",
+        "leisure": "fitness_centre",
+        "name": "Dhemest Gym"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.6567389,
+          -7.363669
+        ]
+      },
+      "id": "node/9765801468"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9809110690",
+        "branch": "Kebon Pisang",
+        "brand": "Curves",
+        "brand:wikidata": "Q5196080",
+        "leisure": "fitness_centre",
+        "name": "Curves"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6178869,
+          -6.918292
+        ]
+      },
+      "id": "node/9809110690"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9819145064",
+        "leisure": "fitness_centre",
+        "name": "Curves Ciumbuleuit"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6038408,
+          -6.8802132
+        ]
+      },
+      "id": "node/9819145064"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9875899351",
+        "addr:city": "Sleman",
+        "addr:housenumber": "17",
+        "addr:neighbourhood": "Maguwoharjo",
+        "addr:postcode": "55281",
+        "addr:state": "Yogyakarta",
+        "addr:street": "Jl. Persatuan Baru",
+        "brand": "SAARAH",
+        "email": "info@saarahdayspa.com",
+        "fee": "yes",
+        "internet_access": "wlan",
+        "leisure": "fitness_centre",
+        "name": "SAARAH Day Spa",
+        "opening_hours": "Mo-Su 13:00-21:00",
+        "payment:american_express": "yes",
+        "payment:cash": "yes",
+        "payment:credit_cards": "yes",
+        "payment:debit_cards": "yes",
+        "payment:maestro": "yes",
+        "payment:mastercard": "yes",
+        "payment:visa": "yes",
+        "phone": "+62 819 44829999",
+        "sport": "yoga",
+        "website": "https://saarahdayspa.com"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.4282579,
+          -7.7712655
+        ]
+      },
+      "id": "node/9875899351"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9892449716",
+        "leisure": "fitness_centre",
+        "name": "Tadasana Studio",
+        "sport": "yoga"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.4565969,
+          -7.8380982
+        ]
+      },
+      "id": "node/9892449716"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9941570522",
+        "check_date": "2022-08-09",
+        "leisure": "fitness_centre",
+        "name": "Fit 24 Express"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.8161558,
+          -6.273908
+        ]
+      },
+      "id": "node/9941570522"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10739044036",
+        "leisure": "fitness_centre",
+        "name": "House of Metamorfit"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.6828214,
+          -6.298794
+        ]
+      },
+      "id": "node/10739044036"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10967738664",
+        "leisure": "fitness_centre",
+        "name": "Gym Saraga"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6105887,
+          -6.8860495
+        ]
+      },
+      "id": "node/10967738664"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11265681797",
+        "leisure": "fitness_centre",
+        "name": "Empire Fit Club"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.8035904,
+          -6.2179702
+        ]
+      },
+      "id": "node/11265681797"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11395179569",
+        "addr:housenumber": "24",
+        "addr:postcode": "11470",
+        "addr:street": "Jalan Tanjung Duren Raya",
+        "contact:instagram": "realmuaythai",
+        "leisure": "fitness_centre",
+        "name": "Real Muay Thai",
+        "opening_hours": "Mo-Fr 09:00-21:00; Sa 09:00-18:30",
+        "phone": "0877-3873-7077"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.787332,
+          -6.1729627
+        ]
+      },
+      "id": "node/11395179569"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11439482899",
+        "leisure": "fitness_centre"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.7939659,
+          -6.2219107
+        ]
+      },
+      "id": "node/11439482899"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11469843270",
+        "leisure": "fitness_centre",
+        "name": "Badminton Hall Pratama"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.7452134,
+          -6.2456459
+        ]
+      },
+      "id": "node/11469843270"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11474853469",
+        "leisure": "fitness_centre",
+        "name": "Club House Graha Taman"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.7070783,
+          -6.276404
+        ]
+      },
+      "id": "node/11474853469"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11474980669",
+        "leisure": "fitness_centre",
+        "name": "Emerald Club House"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.7027009,
+          -6.2808229
+        ]
+      },
+      "id": "node/11474980669"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11538797851",
+        "addr:city": "Bandung",
+        "addr:country": "ID",
+        "addr:place": "Summarecon Mall Bandung",
+        "addr:province": "Jawa Barat",
+        "addr:subdistrict": "Gedebage",
+        "brand": "Anytime Fitness",
+        "brand:wikidata": "Q4778364",
+        "leisure": "fitness_centre",
+        "level": "0",
+        "name": "Anytime Fitness"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6966735,
+          -6.9558294
+        ]
+      },
+      "id": "node/11538797851"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11580467946",
+        "addr:city": "Special Capital Region of Jakarta",
+        "addr:housenumber": "78",
+        "addr:postcode": "10330",
+        "addr:street": "Jalan Haji Oemar Said Cokroaminoto",
+        "check_date:opening_hours": "2024-02-03",
+        "check_date:opening_hours:url": "2024-02-03",
+        "description": "Colour Yoga is the ultimate destination for Iyengar, Hatha, Swing, and specialized classes for kids, as well as yoga therapy tailored for Scoliosis and special needs children.",
+        "email": "reservation@colouryoga.com",
+        "leisure": "fitness_centre",
+        "name": "Colour Yoga",
+        "opening_hours": "Mo-Th 06:30-20:30; Fr 06:30-18:00; Sa off; Su 07:30-19:00; PH off",
+        "opening_hours:url": "https://www.colouryoga.com/schedule",
+        "phone": "+6281210000956",
+        "sport": "yoga",
+        "website": "https://www.colouryoga.com",
+        "wheelchair": "limited"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.8283135,
+          -6.1965337
+        ]
+      },
+      "id": "node/11580467946"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12005059261",
+        "leisure": "fitness_centre",
+        "name": "Jibril Fitness"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          109.9201595,
+          -7.3303985
+        ]
+      },
+      "id": "node/12005059261"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12109957220",
+        "addr:city": "Kota Serang",
+        "addr:district": "Kecamatan Cipocok Jaya",
+        "addr:housenumber": "Blok A2",
+        "addr:neighbourhood": "Komplek RSS Pemda",
+        "addr:province": "Provinsi Banten",
+        "addr:subdistrict": "Kelurahan Banjar Sari",
+        "addr:unit": "5A",
+        "leisure": "fitness_centre",
+        "name": "Bulldog Gym Banten",
+        "official_name": "Sasana Angkat Besi dan Kebugaran : Bulldog Gym Banten",
+        "sport": "weightlifting"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.1795845,
+          -6.15132
+        ]
+      },
+      "id": "node/12109957220"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12314353265",
+        "addr:city": "Bekasi",
+        "addr:district": "Bekasi Utara",
+        "addr:housenumber": "10",
+        "addr:postcode": "17610",
+        "addr:province": "Jawa Barat",
+        "addr:street": "Jalan Raya Pulo Timaha",
+        "addr:subdistrict": "Babelan",
+        "contact:facebook": "https://www.facebook.com/glstudio.id/",
+        "email": "mail@glstudio.id",
+        "image": "https://images.app.goo.gl/SurLyPJAW2xt4LT79",
+        "leisure": "fitness_centre",
+        "loc_name": "GL Studio",
+        "name": "GL Studio Trampoline Dance Bekasi",
+        "opening_hours": "Mo-Su 09:00-21:00",
+        "phone": "+6285161551600",
+        "sport": "zumba;trampoline_dance;aerobics;yoga;pound_fit;bl;belly_dance;fitness",
+        "website": "https://glstudio.id"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0179293,
+          -6.1609047
+        ]
+      },
+      "id": "node/12314353265"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12337071435",
+        "leisure": "fitness_centre",
+        "name": "Anytime Fitness"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.6586852,
+          -6.2375528
+        ]
+      },
+      "id": "node/12337071435"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12338747957",
+        "leisure": "fitness_centre"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.3780388,
+          -7.7581973
+        ]
+      },
+      "id": "node/12338747957"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12651049828",
+        "brand": "Anytime Fitness",
+        "brand:wikidata": "Q4778364",
+        "leisure": "fitness_centre",
+        "name": "Anytime Fitness"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.6093514,
+          -6.2942705
+        ]
+      },
+      "id": "node/12651049828"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12762515140",
+        "leisure": "fitness_centre",
+        "name": "The Gym Evolution"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.9979862,
+          -6.1592573
+        ]
+      },
+      "id": "node/12762515140"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12791343301",
+        "leisure": "fitness_centre",
+        "name": "KYZN Clubhouse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.6330953,
+          -6.2935472
+        ]
+      },
+      "id": "node/12791343301"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12802386190",
+        "leisure": "fitness_centre",
+        "name": "Postural Specialist",
+        "opening_hours": "10:00:20:00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.6920974,
+          -6.0592526
+        ]
+      },
+      "id": "node/12802386190"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12808938656",
+        "leisure": "fitness_centre",
+        "name": "Groove Fitness"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.1398507,
+          -6.3320257
+        ]
+      },
+      "id": "node/12808938656"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12857258633",
+        "leisure": "fitness_centre",
+        "name": "Sweatbox"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.6915223,
+          -6.0642874
+        ]
+      },
+      "id": "node/12857258633"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12945849345",
+        "leisure": "fitness_centre",
+        "name": "I'm Gym",
+        "operator": "I'm Gym"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          108.5234307,
+          -6.7421862
+        ]
+      },
+      "id": "node/12945849345"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12967063501",
+        "addr:housenumber": "39D",
+        "addr:postcode": "13220",
+        "addr:street": "Jalan Sunan Drajad",
+        "leisure": "fitness_centre",
+        "name": "FIT HUB Rawamangun",
+        "opening_hours": "Mo-Fr 05:00-00:00; Sa-Su 06:00-21:00",
+        "website": "https://fithub.id"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.8949091,
+          -6.1938691
+        ]
+      },
+      "id": "node/12967063501"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12981730843",
+        "leisure": "fitness_centre",
+        "name": "Mpower Studio"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          108.5505377,
+          -6.7253283
+        ]
+      },
+      "id": "node/12981730843"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12993893034",
+        "leisure": "fitness_centre",
+        "name": "Sport Center Plamongan Indah"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.4992726,
+          -7.0308797
+        ]
+      },
+      "id": "node/12993893034"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13038504174",
+        "brand": "Fithub",
+        "leisure": "fitness_centre",
+        "name": "Fithub Gandaria"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.7817134,
+          -6.2454081
+        ]
+      },
+      "id": "node/13038504174"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13093990464",
+        "addr:city": "Bekasi",
+        "addr:district": "Rawalumbu",
+        "addr:postcode": "17114",
+        "addr:province": "Jawa Barat",
+        "addr:street": "Jalan Cut Mutia",
+        "addr:subdistrict": "Sepanjang Jaya",
+        "leisure": "fitness_centre",
+        "name": "House of Metamorfit Kirana",
+        "sport": "fitness"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0017019,
+          -6.2602664
+        ]
+      },
+      "id": "node/13093990464"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13132389769",
+        "addr:housenumber": "22-28",
+        "addr:place": "Ruby Commercial",
+        "brand": "Fit Hub",
+        "leisure": "fitness_centre",
+        "name": "Fit Hub",
+        "opening_hours": "24/7"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6948067,
+          -6.9598918
+        ]
+      },
+      "id": "node/13132389769"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13161174366",
+        "leisure": "fitness_centre",
+        "name": "Fitness View"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.5913545,
+          -6.8492662
+        ]
+      },
+      "id": "node/13161174366"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13195356601",
+        "leisure": "fitness_centre",
+        "name": "KX Pilates"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.8291347,
+          -6.1864642
+        ]
+      },
+      "id": "node/13195356601"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13197720601",
+        "leisure": "fitness_centre",
+        "name": "Precision Gym"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.7981057,
+          -6.2364497
+        ]
+      },
+      "id": "node/13197720601"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13326092039",
+        "check_date": "2025-11",
+        "leisure": "fitness_centre",
+        "name": "Pro Gym Cirebon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          108.562047,
+          -6.7251316
+        ]
+      },
+      "id": "node/13326092039"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13327329034",
+        "brand": "Fitness Plus",
+        "contact:instagram": "https://www.instagram.com/fitnessplus.cirebon",
+        "leisure": "fitness_centre",
+        "name": "Fitness Plus Cirebon",
+        "opening_hours": "24/7",
+        "personal_trainer": "yes",
+        "sport": "fitness;weightlifting;yoga",
+        "website": "https://cirebon.fitnessplusindonesia.co.id"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          108.5632072,
+          -6.7409229
+        ]
+      },
+      "id": "node/13327329034"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13358994143",
+        "leisure": "fitness_centre",
+        "name": "Bulls Gym",
+        "website": "https://bullsgym.co.id"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.6282525,
+          -6.338551
+        ]
+      },
+      "id": "node/13358994143"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13359183607",
+        "leisure": "fitness_centre",
+        "name": "FitHub"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.7152697,
+          -6.227499
+        ]
+      },
+      "id": "node/13359183607"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13396640518",
+        "leisure": "fitness_centre",
+        "name": "Bilgym"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          108.5647601,
+          -6.7202527
+        ]
+      },
+      "id": "node/13396640518"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13423775377",
+        "addr:city": "Kota Cirebon",
+        "addr:country": "ID",
+        "addr:district": "Kesambi",
+        "addr:housenumber": "38A",
+        "addr:postcode": "45134",
+        "addr:province": "Jawa Barat",
+        "addr:street": "Jalan Doktor Sudarsono",
+        "addr:subdistrict": "Kesambi",
+        "contact:instagram": "https://www.instagram.com/movemor.fitclub/",
+        "leisure": "fitness_centre",
+        "name": "Movemor Fitclub"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          108.5528549,
+          -6.7284852
+        ]
+      },
+      "id": "node/13423775377"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13469610215",
+        "description": "30 minutes women only fitness club",
+        "leisure": "fitness_centre",
+        "name": "Curves"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          108.5513236,
+          -6.7082486
+        ]
+      },
+      "id": "node/13469610215"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13546619984",
+        "leisure": "fitness_centre",
+        "name": "Anytime Fitness"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.901008,
+          -6.3096441
+        ]
+      },
+      "id": "node/13546619984"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13609205997",
+        "leisure": "fitness_centre",
+        "name": "Esa Athletica"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6124807,
+          -6.8919774
+        ]
+      },
+      "id": "node/13609205997"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13611577655",
+        "leisure": "fitness_centre",
+        "name": "FTL"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.613059,
+          -6.8885672
+        ]
+      },
+      "id": "node/13611577655"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13612479540",
+        "addr:city": "Jakarta Barat",
+        "addr:district": "Grogol Petamburan",
+        "addr:housenumber": "50A",
+        "addr:postcode": "11470",
+        "addr:province": "DKI Jakarta",
+        "addr:street": "Jalan Tanjung Duren Barat III",
+        "addr:subdistrict": "Tanjung Duren Utara",
+        "leisure": "fitness_centre",
+        "name": "Yoona Pilates Studio",
+        "website": "https://yoona-pilates.web.app/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.7807008,
+          -6.1772866
+        ]
+      },
+      "id": "node/13612479540"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13612479559",
+        "addr:city": "Jakarta Barat",
+        "addr:district": "Grogol Petamburan",
+        "addr:housenumber": "1C",
+        "addr:postcode": "11470",
+        "addr:province": "DKI Jakarta",
+        "addr:street": "Jalan Tanjung Duren Barat I",
+        "addr:subdistrict": "Tanjung Duren Utara",
+        "leisure": "fitness_centre",
+        "name": "Muscle House",
+        "opening_hours": "Mo-Sa 07:00-22:00",
+        "phone": "+6282286000140"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.7809014,
+          -6.1737088
+        ]
+      },
+      "id": "node/13612479559"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13620619889",
+        "addr:city": "Jakarta Barat",
+        "addr:district": "Grogol Petamburan",
+        "addr:housenumber": "33",
+        "addr:postcode": "11470",
+        "addr:province": "DKI Jakarta",
+        "addr:street": "Jalan Taman Daan Mogot",
+        "addr:subdistrict": "Tanjung Duren Utara",
+        "leisure": "fitness_centre",
+        "name": "Generation Fit",
+        "opening_hours": "Mo-Fr 08:00-22:00; Sa-Su 08:00-21:00",
+        "website": "https://www.instagram.com/generationfit33"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.7831271,
+          -6.1690129
+        ]
+      },
+      "id": "node/13620619889"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13630174045",
+        "leisure": "fitness_centre",
+        "name": "Gym Nation"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6039277,
+          -6.9532728
+        ]
+      },
+      "id": "node/13630174045"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13630181792",
+        "leisure": "fitness_centre",
+        "name": "Anytime Fitness"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6061598,
+          -6.9539275
+        ]
+      },
+      "id": "node/13630181792"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13704688897",
+        "leisure": "fitness_centre",
+        "name": "Upstairs Gym",
+        "sport": "fitness"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.3996212,
+          -7.7268232
+        ]
+      },
+      "id": "node/13704688897"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13707202202",
+        "leisure": "fitness_centre",
+        "name": "K Fitness"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.8120213,
+          -6.1767734
+        ]
+      },
+      "id": "node/13707202202"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13707202401",
+        "leisure": "fitness_centre",
+        "name": "Fit Hub"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.8118063,
+          -6.1761917
+        ]
+      },
+      "id": "node/13707202401"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13713779338",
+        "leisure": "fitness_centre",
+        "name": "Oxy Fit"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.5983078,
+          -6.8947115
+        ]
+      },
+      "id": "node/13713779338"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13729816126",
+        "brand": "Alana Studio",
+        "leisure": "fitness_centre",
+        "name": "Alana Studio",
+        "sport": "pilates"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          108.5493398,
+          -6.7375531
+        ]
+      },
+      "id": "node/13729816126"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13745218360",
+        "leisure": "fitness_centre",
+        "name": "Mulai Gym"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.5774807,
+          -6.9178223
+        ]
+      },
+      "id": "node/13745218360"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13753809202",
+        "leisure": "fitness_centre",
+        "name": "Tride Gym"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.8243811,
+          -6.1629941
+        ]
+      },
+      "id": "node/13753809202"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13757314350",
+        "leisure": "fitness_centre",
+        "name": "Fit Hub"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.0137365,
+          -6.2587731
+        ]
+      },
+      "id": "node/13757314350"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13764011403",
+        "brand": "Fit Hub",
+        "brand:wikidata": "Q138671218",
+        "leisure": "fitness_centre",
+        "name": "Fit Hub"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.8120339,
+          -6.2093205
+        ]
+      },
+      "id": "node/13764011403"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13764011801",
+        "brand": "FTL Gym",
+        "brand:wikidata": "Q138670800",
+        "leisure": "fitness_centre",
+        "name": "FTL Gym"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.8121551,
+          -6.2087008
+        ]
+      },
+      "id": "node/13764011801"
+    }
+  ]
+}

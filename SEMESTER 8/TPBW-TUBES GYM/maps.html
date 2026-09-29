@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GymMap Jawa Barat — Peta Interaktif</title>
+
+<script>
+  const savedTheme = localStorage.getItem('gymmap_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+
+<style>
+/* ════════════════ TOKENS ════════════════ */
+:root{
+  --bg:#0e0e0e;--bg2:#181818;--bg3:#242424;--bg4:#2e2e2e;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+  --text:#f0f0f0;--text2:#888;--text3:#555;
+  --accent:#fff;--accent-text:#0e0e0e;
+  --green:rgba(120,220,130,.9);--red:rgba(220,100,100,.9);
+  --shadow:0 8px 40px rgba(0,0,0,.5);--shadow2:0 2px 12px rgba(0,0,0,.4);
+  --radius:14px;--radius2:10px;--radius3:8px;
+  --fd:'IBM Plex Mono',monospace;--fb:'IBM Plex Sans',sans-serif;
+  --sidebar-w:280px;--header-h:64px;
+}
+[data-theme="light"]{
+  --bg:#f4f4f4;--bg2:#fff;--bg3:#eee;--bg4:#e0e0e0;
+  --border:rgba(0,0,0,.09);--border2:rgba(0,0,0,.16);
+  --text:#111;--text2:#666;--text3:#aaa;
+  --accent:#111;--accent-text:#fff;
+  --green:rgba(40,160,60,.9);--red:rgba(200,60,60,.9);
+  --shadow:0 8px 40px rgba(0,0,0,.12);--shadow2:0 2px 12px rgba(0,0,0,.08);
+}
+
+/* ════════════════ BASE ════════════════ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;overflow:hidden;}
+body{font-family:var(--fb);background:var(--bg);color:var(--text);transition:background .3s,color .3s;}
+
+/* ════════════════ MAP & ROUTING ════════════════ */
+#map{position:fixed;inset:0;z-index:1;}
+.leaflet-routing-container { display: none !important; }
+
+/* ════════════════ HEADER ════════════════ */
+.header{
+  position:fixed;top:14px;left:50%;transform:translateX(-50%);
+  z-index:600;width:calc(100% - 36px);max-width:880px;
+  background:rgba(14,14,14,.88);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border:1px solid var(--border2);border-radius:var(--radius);
+  padding:0 18px;height:var(--header-h);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  box-shadow:var(--shadow);
+}
+[data-theme="light"] .header{background:rgba(255,255,255,.9);}
+.hd-left{display:flex;align-items:center;gap:14px;min-width:0;}
+.logo{font-family:var(--fd);font-size:.95rem;font-weight:600;letter-spacing:.02em;color:var(--text);text-decoration:none;white-space:nowrap;}
+.logo em{color:var(--text2);font-style:normal;}
+.logo-divider{width:1px;height:20px;background:var(--border2);flex-shrink:0;}
+.header-sub{font-family:var(--fd);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);white-space:nowrap;}
+.hd-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.badge{background:var(--accent);color:var(--accent-text);font-family:var(--fd);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap;letter-spacing:.04em;}
+.hbtn{background:var(--bg3);border:1px solid var(--border);color:var(--text);width:34px;height:34px;border-radius:var(--radius3);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;position:relative;}
+.hbtn:hover{background:var(--accent);color:var(--accent-text);}
+#clearRouteBtn { background: rgba(220,100,100,.2); border-color: rgba(220,100,100,.4); color: var(--text); display: none; }
+#clearRouteBtn:hover { background: rgba(220,100,100,.9); color: #fff; }
+.hbtn-text{height:34px;padding:0 12px;font-family:var(--fd);font-size:.62rem;letter-spacing:.06em;border-radius:var(--radius3);display:flex;align-items:center;gap:6px;white-space:nowrap;background:var(--bg3);border:1px solid var(--border);color:var(--text2);cursor:pointer;transition:all .2s;text-decoration:none;}
+.hbtn-text:hover{color:var(--text);border-color:var(--border2);}
+.badge-count { position:absolute; top:-5px; right:-5px; background:var(--red); color:#fff; font-size:8px; font-weight:bold; width:14px; height:14px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--fd); border:1px solid var(--bg2); }
+
+/* ════════════════ FAB (mobile) ════════════════ */
+.fab{display:none;position:fixed;bottom:22px;right:18px;z-index:620;background:var(--accent);color:var(--accent-text);border:none;border-radius:50%;width:50px;height:50px;font-size:20px;cursor:pointer;box-shadow:var(--shadow);align-items:center;justify-content:center;}
+
+/* ════════════════ SIDEBAR ════════════════ */
+.sidebar{
+  position:fixed;left:14px;top:calc(var(--header-h) + 28px);bottom:14px;
+  width:var(--sidebar-w);z-index:500;
+  background:rgba(14,14,14,.88);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border:1px solid var(--border2);border-radius:var(--radius);
+  display:flex;flex-direction:column;
+  box-shadow:var(--shadow);overflow:hidden;
+  transition:transform .3s ease,background .3s;
+}
+[data-theme="light"] .sidebar{background:rgba(255,255,255,.92);}
+.sidebar-inner{flex:1;overflow-y:auto;padding:14px;scrollbar-width:thin;scrollbar-color:var(--border2) transparent;}
+.sidebar-inner::-webkit-scrollbar{width:4px;}
+.sidebar-inner::-webkit-scrollbar-track{background:transparent;}
+.sidebar-inner::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+.s-label{display:block;font-family:var(--fd);font-size:9px;font-weight:700;letter-spacing:1.6px;color:var(--text3);text-transform:uppercase;margin-bottom:8px;}
+.s-divider{border:none;border-top:1px solid var(--border);margin:12px 0;}
+.s-section{margin-bottom:2px;}
+
+/* Slider Radius */
+.range-slider { -webkit-appearance: none; width: 100%; height: 4px; border-radius: 2px; background: var(--border2); outline: none; margin-top: 5px; }
+.range-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--accent); cursor: pointer; border: 2px solid var(--bg2); }
+.range-slider::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: var(--accent); cursor: pointer; border: 2px solid var(--bg2); }
+
+/* ════════════════ FORM CONTROLS ════════════════ */
+select.ctrl,input.ctrl{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius3);color:var(--text);font-family:var(--fb);font-size:12px;outline:none;transition:border .2s;padding:8px 10px;cursor:pointer;}
+select.ctrl:focus,input.ctrl:focus,
+.search-wrap:focus-within{border-color:var(--border2)!important;}
+
+.search-wrap{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius3);display:flex;align-items:center;padding:0 10px;transition:border .2s;}
+.search-wrap input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:var(--fb);font-size:12px;padding:8px 0;}
+.search-wrap input::placeholder{color:var(--text2);}
+.s-icon{font-size:12px;margin-right:7px;opacity:.5;flex-shrink:0;}
+.s-clear{background:none;border:none;color:var(--text2);cursor:pointer;font-size:12px;flex-shrink:0;transition:color .2s;padding:0 2px;}
+.s-clear:hover{color:var(--text);}
+.search-results{margin-top:6px;max-height:170px;overflow-y:auto;scrollbar-width:thin;}
+.sr-item{padding:6px 8px;border-radius:var(--radius3);cursor:pointer;transition:background .15s;border:1px solid transparent;}
+.sr-item:hover{background:var(--bg3);border-color:var(--border);}
+.sr-name{font-size:11px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sr-addr{font-size:9.5px;color:var(--text2);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+.pill-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px;}
+.pill{font-family:var(--fd);font-size:.6rem;letter-spacing:.04em;background:var(--bg3);color:var(--text2);border:1px solid var(--border);padding:4px 9px;cursor:pointer;border-radius:6px;transition:all .2s;}
+.pill:hover{color:var(--text);border-color:var(--border2);}
+.pill.on{background:var(--accent);color:var(--accent-text);border-color:var(--accent);}
+
+.btn{display:flex;align-items:center;gap:6px;width:100%;padding:8px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius3);color:var(--text);font-family:var(--fb);font-size:12px;cursor:pointer;transition:all .2s;justify-content:center;}
+.btn:hover{background:var(--accent);border-color:var(--accent);color:var(--accent-text);}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-text);}
+.btn.primary:hover{opacity:.85;}
+.mini{background:transparent;border:1px solid var(--border);color:var(--text2);font-size:10px;padding:3px 8px;border-radius:6px;cursor:pointer;transition:all .2s;}
+.mini:hover{background:var(--text);color:var(--bg);}
+
+.tog-row{display:flex;align-items:center;gap:9px;cursor:pointer;}
+.tog-row input{display:none;}
+.tog-track{width:33px;height:18px;background:var(--bg4);border:1px solid var(--border);border-radius:20px;position:relative;flex-shrink:0;transition:background .3s;}
+.tog-track::after{content:'';position:absolute;top:3px;left:3px;width:10px;height:10px;background:var(--text3);border-radius:50%;transition:transform .3s,background .3s;}
+.tog-row input:checked+.tog-track{background:var(--accent);border-color:var(--accent);}
+.tog-row input:checked+.tog-track::after{transform:translateX(15px);background:var(--accent-text);}
+.tog-label{font-size:12px;color:var(--text);}
+
+.stat2{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.stat2-item{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius3);padding:8px;text-align:center;}
+.stat2-n{display:block;font-family:var(--fd);font-size:16px;font-weight:700;color:var(--accent);}
+.stat2-l{font-size:8px;color:var(--text2);letter-spacing:.8px;text-transform:uppercase;}
+
+.near-list{display:flex;flex-direction:column;gap:5px;margin-top:4px;}
+.near-item{display:flex;align-items:flex-start;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius3);padding:7px 9px;cursor:pointer;transition:all .2s;}
+.near-item:hover{border-color:var(--border2);background:var(--bg4);}
+.near-rank{font-family:var(--fd);font-size:.58rem;font-weight:700;color:var(--accent);min-width:16px;padding-top:1px;}
+.near-info{flex:1;min-width:0;}
+.near-name{font-size:.72rem;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.near-meta{font-family:var(--fd);font-size:.58rem;color:var(--text2);margin-top:2px;}
+
+.fav-count{background:var(--accent);color:var(--accent-text);font-size:9px;font-weight:700;padding:1px 6px;border-radius:20px;margin-left:4px;}
+.fav-list{max-height:120px;overflow-y:auto;scrollbar-width:thin;}
+.fav-item{display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius3);padding:6px 8px;margin-bottom:4px;cursor:pointer;transition:all .2s;}
+.fav-item:hover{border-color:var(--border2);}
+.fav-name{font-size:11px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:170px;}
+.fav-rm{background:none;border:none;color:var(--text3);cursor:pointer;font-size:12px;transition:color .2s;padding:0 2px;}
+.fav-rm:hover{color:var(--text);}
+.hint{font-size:10px;color:var(--text3);line-height:1.6;}
+
+/* ════════════════ POPUP ════════════════ */
+.leaflet-popup-content-wrapper{background:var(--bg2)!important;border:1px solid var(--border2)!important;border-radius:14px!important;box-shadow:var(--shadow)!important;padding:0!important;}
+.leaflet-popup-tip{background:var(--bg2)!important;}
+.leaflet-popup-content{margin:0!important;min-width:260px;max-width:290px;}
+.popup{padding:14px 16px;}
+.popup-name{font-family:var(--fd);font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;padding-right:8px;line-height:1.3;}
+.popup-city{font-family:var(--fd);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
+.popup-addr{font-size:11px;color:var(--text2);margin-bottom:7px;line-height:1.5;}
+.popup-badge{display:inline-flex;align-items:center;gap:5px;font-family:var(--fd);font-size:9px;letter-spacing:.06em;padding:3px 9px;border-radius:4px;margin-bottom:8px;font-weight:600;}
+.popup-badge.open{background:rgba(120,220,130,.12);color:var(--green);border:1px solid rgba(120,220,130,.2);}
+.popup-badge.closed{background:rgba(220,100,100,.1);color:var(--red);border:1px solid rgba(220,100,100,.15);}
+.popup-badge.unknown{background:var(--bg3);color:var(--text2);border:1px solid var(--border);}
+.popup-meta{font-size:11px;color:var(--text2);line-height:1.9;margin-bottom:9px;}
+.popup-price{display:inline-block;font-family:var(--fd);font-size:9px;font-weight:700;padding:3px 8px;border-radius:5px;margin-bottom:8px;}
+.popup-price.budget{background:rgba(100,200,100,.1);color:#7dcf7d;border:1px solid rgba(100,200,100,.15);}
+.popup-price.mid{background:rgba(210,170,60,.1);color:#c9ab3c;border:1px solid rgba(210,170,60,.15);}
+.popup-price.premium{background:rgba(170,100,200,.1);color:#b87de0;border:1px solid rgba(170,100,200,.15);}
+.popup-rev-snip{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius3);padding:7px 9px;margin-bottom:8px;font-size:10px;color:var(--text2);line-height:1.5;}
+.popup-actions{display:flex;gap:5px;flex-wrap:wrap;}
+.pa{font-family:var(--fd);font-size:9.5px;letter-spacing:.02em;background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:6px 9px;border-radius:6px;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:4px;flex-grow:1;justify-content:center;white-space:nowrap;}
+.pa:hover{background:var(--bg4);border-color:var(--border2);color:var(--text);}
+.pa.fav-on{background:var(--accent);border-color:var(--accent);color:var(--accent-text);}
+.pa.plan{background:var(--bg4);border-color:var(--border2);color:var(--text);}
+.pa.route-btn { background: rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.3); color: #60a5fa; }
+.pa.route-btn:hover { background: rgba(59, 130, 246, 0.9); color: #fff; }
+
+.marker-cluster div{background:var(--accent);color:var(--accent-text);font-family:var(--fd);font-weight:700;font-size:11px;border-radius:50%;display:grid;place-items:center;width:100%;height:100%;}
+.marker-cluster{background:rgba(255,255,255,.15);border-radius:50%;}
+[data-theme="light"] .marker-cluster{background:rgba(0,0,0,.1);}
+.pin-wrap{background:none;border:none;}
+.pin-wrap svg{filter:drop-shadow(0 4px 8px rgba(0,0,0,.45));transition:transform .2s cubic-bezier(.34,1.56,.64,1),filter .2s;}
+.pin-wrap:hover svg{transform:scale(1.3) translateY(-5px);filter:drop-shadow(0 8px 12px rgba(0,0,0,.55));}
+
+.leaflet-tooltip.gtt{background:var(--bg2)!important;border:1px solid var(--border2)!important;border-radius:var(--radius3)!important;box-shadow:var(--shadow2)!important;padding:7px 11px!important;color:var(--text)!important;font-family:var(--fb)!important;font-size:11px!important;}
+.leaflet-tooltip.gtt::before{display:none!important;}
+.tt-name{font-family:var(--fd);font-size:10px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.tt-city{font-size:9px;color:var(--text3);font-family:var(--fd);letter-spacing:.06em;text-transform:uppercase;}
+
+/* ════════════════ MODALS ════════════════ */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);z-index:1000;display:none;align-items:center;justify-content:center;padding:16px;}
+.overlay.on{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:18px;padding:22px;width:100%;max-width:420px;position:relative;box-shadow:var(--shadow);animation:mIn .22s ease;max-height:90vh;overflow-y:auto;scrollbar-width:thin;}
+.modal.wide{max-width:540px;}
+@keyframes mIn{from{opacity:0;transform:scale(.96) translateY(12px);}to{opacity:1;transform:scale(1) translateY(0);}}
+.modal-close{position:absolute;top:14px;right:14px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:12px;display:grid;place-items:center;transition:all .2s;}
+.modal-close:hover{background:var(--text);color:var(--bg);}
+.modal h3{font-family:var(--fd);font-size:14px;font-weight:700;margin-bottom:4px;padding-right:36px;color:var(--text);}
+
+/* Review modal */
+.stars{display:flex;gap:6px;margin-bottom:12px;}
+.stars span{font-size:24px;color:var(--bg4);cursor:pointer;transition:color .15s,transform .15s;user-select:none;}
+.stars span.on,.stars span:hover{color:var(--text);transform:scale(1.15);}
+.rev-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius3);color:var(--text);font-family:var(--fb);font-size:12px;padding:10px 12px;resize:vertical;min-height:70px;margin-bottom:10px;outline:none;transition:border .2s;}
+.rev-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius3);padding:9px;margin-bottom:7px;}
+.rev-card .rev-stars{color:var(--text);font-size:11px;}
+.rev-card .rev-body{font-size:11px;color:var(--text);margin-top:2px;line-height:1.5;}
+.rev-card .rev-date{font-size:9.5px;color:var(--text3);margin-top:3px;}
+
+/* Stats modal */
+.kpi-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px;}
+.kpi{background:var(--bg3);border:1px solid var(--border);border-radius:11px;padding:10px 8px;text-align:center;}
+.kpi-n{display:block;font-family:var(--fd);font-size:22px;font-weight:600;color:var(--accent);line-height:1.2;}
+.kpi-l{display:block;font-size:8.5px;color:var(--text3);letter-spacing:.8px;text-transform:uppercase;margin-top:3px;}
+.chart-label{font-family:var(--fd);font-size:9px;font-weight:600;letter-spacing:1.4px;color:var(--text3);margin-bottom:9px;}
+.brow{display:grid;grid-template-columns:90px 1fr 28px;align-items:center;gap:7px;margin-bottom:5px;}
+.blabel{font-size:10px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right;}
+.btrack{background:var(--bg3);border-radius:3px;height:6px;overflow:hidden;}
+.bfill{height:100%;border-radius:3px;background:var(--text);transition:width .7s cubic-bezier(.4,0,.2,1);}
+.bcount{font-family:var(--fd);font-size:9.5px;font-weight:600;color:var(--text3);}
+.top-list{display:flex;flex-direction:column;gap:5px;}
+.top-item{display:flex;align-items:center;gap:9px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius3);padding:7px 9px;}
+.top-rank{font-family:var(--fd);font-size:12px;font-weight:600;color:var(--text);width:18px;text-align:center;flex-shrink:0;}
+.top-info{flex:1;min-width:0;}
+.top-name{font-size:11px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* Compare Grid */
+.comp-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top:14px; }
+.comp-card { background: var(--bg3); padding: 14px; border-radius: var(--radius2); border: 1px solid var(--border); position: relative; }
+.comp-title { font-family: var(--fd); font-size: 11px; font-weight: 700; color: var(--text); margin-bottom: 8px; line-height: 1.4; padding-right:15px; }
+.comp-row { display: flex; justify-content: space-between; font-size: 10px; border-bottom: 1px solid var(--border); padding: 5px 0; }
+.comp-row:last-child { border-bottom: none; }
+.comp-label { color: var(--text3); }
+.comp-val { color: var(--text); font-weight: 500; text-align:right; max-width: 60%; word-break: break-word;}
+.comp-rm { position:absolute; top:8px; right:8px; background:none; border:none; color:var(--text3); font-size:12px; cursor:pointer; }
+.comp-rm:hover { color:var(--red); }
+
+/* Planner modal */
+.prog-bar{display:flex;gap:4px;margin-bottom:18px;}
+.prog-dot{flex:1;height:3px;background:var(--bg4);border-radius:2px;transition:background .3s;}
+.prog-dot.done{background:var(--accent);}
+.pstep{display:none;}
+.pstep.on{display:block;}
+.opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
+.opt{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:12px 10px;cursor:pointer;transition:all .2s;text-align:center;}
+.opt:hover{border-color:var(--border2);}
+.opt.on{background:var(--accent);border-color:var(--accent);color:var(--accent-text);}
+.opt-icon{font-size:20px;margin-bottom:5px;}
+.opt-label{font-family:var(--fd);font-size:.66rem;font-weight:600;display:block;}
+.opt-sub{font-size:.6rem;color:var(--text2);margin-top:2px;display:block;}
+.opt.on .opt-sub{color:var(--accent-text);opacity:.7;}
+.p-nav{display:flex;gap:8px;margin-top:14px;}
+.p-nav button{flex:1;padding:10px;border-radius:var(--radius3);font-family:var(--fd);font-size:.68rem;font-weight:600;letter-spacing:.06em;cursor:pointer;border:1px solid var(--border);transition:all .2s;background:var(--bg3);color:var(--text2);}
+.p-nav button:hover{background:var(--text);color:var(--bg);}
+.p-next{background:var(--accent)!important;color:var(--accent-text)!important;border-color:var(--accent)!important;}
+/* Planner result */
+.plan-result-box{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:12px;}
+.plan-result-title{font-family:var(--fd);font-size:.72rem;font-weight:700;color:var(--accent);letter-spacing:.08em;margin-bottom:10px;}
+.sched-grid{display:flex;flex-direction:column;gap:5px;margin-top:8px;}
+.sched-week{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius3);padding:9px;}
+.sched-wk-label{font-family:var(--fd);font-size:.6rem;font-weight:700;color:var(--accent);letter-spacing:.1em;margin-bottom:6px;}
+.sched-days{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+.day-cell{padding:5px 2px;border-radius:5px;text-align:center;font-family:var(--fd);font-size:.52rem;}
+.day-cell.gym{background:var(--accent);color:var(--accent-text);}
+.day-cell.rest{background:var(--bg4);color:var(--text3);}
+.day-lbl{font-size:.46rem;color:var(--text3);display:block;margin-top:1px;}
+.plan-gym-item{display:flex;align-items:flex-start;gap:9px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius3);padding:9px;margin-bottom:5px;cursor:pointer;transition:all .2s;}
+.plan-gym-item:hover{border-color:var(--border2);background:var(--bg3);}
+.plan-gym-rank{font-family:var(--fd);font-size:10px;font-weight:700;color:var(--accent);min-width:16px;}
+.plan-gym-name{font-size:12px;font-weight:600;color:var(--text);}
+.plan-gym-meta{font-size:9.5px;color:var(--text2);margin-top:2px;line-height:1.5;}
+
+.city-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;}
+.city-chip{font-family:var(--fd);font-size:.58rem;letter-spacing:.04em;background:var(--bg3);color:var(--text2);border:1px solid var(--border);padding:3px 8px;cursor:pointer;border-radius:5px;transition:all .2s;}
+.city-chip:hover{color:var(--text);border-color:var(--border2);}
+.city-chip.on{background:var(--accent);color:var(--accent-text);border-color:var(--accent);}
+
+@media(max-width:680px){
+  :root{--sidebar-w:calc(100vw - 28px);}
+  .sidebar{transform:translateX(calc(-100% - 20px));bottom:76px;left:14px;right:14px;}
+  .sidebar.open{transform:translateX(0);}
+  .fab{display:flex;}
+  .header{width:calc(100% - 20px);border-radius:12px;}
+  .header-sub,.logo-divider,.hbtn-text{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<header class="header">
+  <div class="hd-left">
+    <a href="index.html" class="hbtn-text">← Kembali</a>
+    <div class="logo-divider"></div>
+    <a href="index.html" class="logo">GYM<em>MAP</em></a>
+    <div class="logo-divider"></div>
+    <span class="header-sub">Peta Gym Seluruh Jawa Barat</span>
+  </div>
+  <div class="hd-right">
+    <span id="totalBadge" class="badge">Memuat…</span>
+    <button id="compareTopBtn" class="hbtn" title="Bandingkan Gym">⚖️<span id="compareBadge" class="badge-count" style="display:none">0</span></button>
+    <button id="plannerBtn" class="hbtn" title="30-Day Gym Planner">🗓️</button>
+    <button id="statsBtn" class="hbtn" title="Statistik">📊</button>
+    <button id="heatmapBtn" class="hbtn" title="Toggle Heatmap">🔥</button>
+    <button id="darkBtn" class="hbtn" title="Toggle Tema"></button>
+    <button id="clearRouteBtn" class="hbtn" title="Hapus Rute">❌</button>
+    <button id="gpsBtn" class="hbtn" title="Lokasi Saya">📍</button>
+  </div>
+</header>
+
+<button class="fab" id="fabBtn">☰</button>
+
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-inner">
+
+  <div class="s-section">
+    <label class="s-label">CARI GYM</label>
+    <div class="search-wrap">
+      <span class="s-icon">🔍</span>
+      <input type="text" id="q" placeholder="Nama gym / kota…">
+      <button class="s-clear" id="qClear" style="display:none">✕</button>
+    </div>
+    <div id="qResults" class="search-results"></div>
+  </div>
+  <div class="s-divider"></div>
+
+  <div class="s-section">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <label class="s-label" style="margin:0">RADIUS PENCARIAN (GPS)</label>
+      <span id="radiusVal" style="font-size:10px;color:var(--accent);font-family:var(--fd);font-weight:bold;">Maks</span>
+    </div>
+    <input type="range" id="radiusF" class="range-slider" min="1" max="21" value="21" step="1">
+    <p class="hint" style="margin-top:4px">Geser untuk membatasi jarak dari lokasi kamu.</p>
+  </div>
+  <div class="s-divider"></div>
+
+  <div class="s-section">
+    <label class="s-label">KOTA / KAB</label>
+    <div id="cityChips" class="city-chips">
+      <button class="city-chip on" data-city="all">Semua</button>
+      <button class="city-chip" data-city="Bandung">Bandung</button>
+      <button class="city-chip" data-city="Bogor">Bogor</button>
+      <button class="city-chip" data-city="Bekasi">Bekasi</button>
+      <button class="city-chip" data-city="Depok">Depok</button>
+      <button class="city-chip" data-city="Cirebon">Cirebon</button>
+      <button class="city-chip" data-city="Cimahi">Cimahi</button>
+      <button class="city-chip" data-city="Sukabumi">Sukabumi</button>
+      <button class="city-chip" data-city="Tasikmalaya">Tasikmalaya</button>
+      <button class="city-chip" data-city="Garut">Garut</button>
+      <button class="city-chip" data-city="Karawang">Karawang</button>
+    </div>
+  </div>
+  <div class="s-divider"></div>
+
+  <div class="s-section">
+    <label class="s-label">KATEGORI</label>
+    <select id="catF" class="ctrl">
+      <option value="all">🏋️ Semua Kategori</option>
+      <option value="gym">💪 Gym Umum</option>
+      <option value="fitness">🏃 Fitness Center</option>
+      <option value="crossfit">🔥 CrossFit</option>
+      <option value="yoga">🧘 Yoga</option>
+      <option value="boxing">🥊 Boxing / MMA</option>
+      <option value="pilates">🤸 Pilates</option>
+    </select>
+  </div>
+  <div class="s-divider"></div>
+
+  <div class="s-section">
+    <label class="s-label">BIAYA / BULAN</label>
+    <select id="priceF" class="ctrl">
+      <option value="all">💰 Semua Harga</option>
+      <option value="budget">🟢 < Rp 100.000</option>
+      <option value="mid">🟡 Rp 100.000 – 300.000</option>
+      <option value="premium">🔴 > Rp 300.000</option>
+    </select>
+  </div>
+  <div class="s-divider"></div>
+
+  <div class="s-section">
+    <label class="s-label">RATING MINIMUM</label>
+    <div class="pill-row" id="ratingPills">
+      <button class="pill on" data-val="0">Semua</button>
+      <button class="pill" data-val="3">⭐ 3+</button>
+      <button class="pill" data-val="4">⭐ 4+</button>
+      <button class="pill" data-val="4.5">⭐ 4.5+</button>
+    </div>
+  </div>
+  <div class="s-divider"></div>
+
+  <div class="s-section">
+    <label class="s-label">URUTKAN</label>
+    <select id="sortF" class="ctrl" style="margin-bottom:8px">
+      <option value="default">📋 Default</option>
+      <option value="rating">⭐ Rating Tertinggi</option>
+      <option value="reviews">💬 Ulasan Terbanyak</option>
+      <option value="distance">📡 Jarak Terdekat</option>
+    </select>
+    <button id="gpsSort" class="btn" style="margin-bottom:5px">
+      <span>📍</span> Urutkan by GPS
+    </button>
+    <p id="gpsStatus" class="hint"></p>
+  </div>
+  <div class="s-divider"></div>
+
+  <div class="s-section">
+    <label class="s-label">GYM TERDEKAT</label>
+    <div id="nearList" class="near-list">
+      <p class="hint">Aktifkan GPS 📍 untuk melihat gym terdekat.</p>
+    </div>
+  </div>
+  <div class="s-divider"></div>
+
+  <div class="s-section">
+    <label class="s-label">LAYER PETA</label>
+    <div class="pill-row" id="layerPills">
+      <button class="pill" data-layer="dark">🌑 Dark</button>
+      <button class="pill" data-layer="street">🗺️ Street</button>
+      <button class="pill" data-layer="sat">🛰️ Satellite</button>
+    </div>
+  </div>
+  <div class="s-divider"></div>
+
+  <div class="s-section">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <label class="s-label" style="margin:0">FAVORIT <span id="favCount" class="fav-count">0</span></label>
+      <button id="clearFavBtn" class="mini" style="display:none">Hapus Semua</button>
+    </div>
+    <div id="favList" class="fav-list">
+      <p class="hint">Klik ⭐ di popup untuk menyimpan.</p>
+    </div>
+  </div>
+  <div class="s-divider"></div>
+
+  <div class="s-section">
+    <label class="s-label">RINGKASAN DATA</label>
+    <div class="stat2">
+      <div class="stat2-item"><span id="statTotal" class="stat2-n">0</span><span class="stat2-l">Total Gym</span></div>
+      <div class="stat2-item"><span id="statOpen" class="stat2-n">0</span><span class="stat2-l">Buka Sekarang</span></div>
+    </div>
+  </div>
+  <div class="s-divider"></div>
+  <p class="hint" style="text-align:center;font-size:9px;padding-bottom:4px">
+    Sumber: Google Maps & OpenStreetMap<br>WebGIS · Telkom University 2026
+  </p>
+
+</div>
+</aside>
+
+<div class="overlay" id="compareOverlay">
+  <div class="modal wide">
+    <button class="modal-close" onclick="document.getElementById('compareOverlay').classList.remove('on')">✕</button>
+    <h3>⚖️ Perbandingan Gym</h3>
+    <p class="hint" style="margin-bottom:12px">Membandingkan fasilitas dan informasi (Maksimal 3 Gym)</p>
+    <div id="compareContent"></div>
+  </div>
+</div>
+
+<div class="overlay" id="reviewOverlay">
+  <div class="modal">
+    <button class="modal-close" id="closeReview">✕</button>
+    <h3 id="revName">Review Gym</h3>
+    <p class="hint" style="margin-bottom:12px">Bagikan pengalamanmu</p>
+    <div class="stars" id="starPicker">
+      <span data-v="1">★</span><span data-v="2">★</span><span data-v="3">★</span><span data-v="4">★</span><span data-v="5">★</span>
+    </div>
+    <textarea id="revText" class="rev-input" placeholder="Peralatan lengkap, pelayanan ramah..."></textarea>
+    <button id="submitRev" class="btn primary">💬 Kirim Review</button>
+    <div id="existingRevs" style="margin-top:14px"></div>
+  </div>
+</div>
+
+<div class="overlay" id="statsOverlay">
+  <div class="modal wide">
+    <button class="modal-close" id="closeStats">✕</button>
+    <h3>📊 Statistik Gym Jawa Barat</h3>
+    <p class="hint" style="margin-bottom:16px">Berdasarkan data aktif di peta</p>
+    <div class="kpi-row">
+      <div class="kpi"><span id="kpiTotal" class="kpi-n">0</span><span class="kpi-l">Total Gym</span></div>
+      <div class="kpi"><span id="kpiOpen" class="kpi-n">0</span><span class="kpi-l">Buka Sekarang</span></div>
+    </div>
+    <div style="margin-bottom:18px">
+      <p class="chart-label">DISTRIBUSI PER KOTA / KAB</p>
+      <div id="cityChart"></div>
+    </div>
+    <div style="margin-bottom:18px">
+      <p class="chart-label">DISTRIBUSI KATEGORI</p>
+      <div id="catChart"></div>
+    </div>
+    <div>
+      <p class="chart-label">TOP 5 PALING DIULASAN</p>
+      <div id="topRevList" class="top-list"></div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="plannerOverlay">
+  <div class="modal wide">
+    <button class="modal-close" id="closePlanner">✕</button>
+    <h3>🗓️ 30-Day Gym Planner</h3>
+    <p class="hint" style="margin-bottom:14px">Buat rencana gym 30 hari sesuai tujuanmu</p>
+    <div class="prog-bar" id="progBar">
+      <div class="prog-dot done" id="pd0"></div><div class="prog-dot" id="pd1"></div><div class="prog-dot" id="pd2"></div><div class="prog-dot" id="pd3"></div><div class="prog-dot" id="pd4"></div>
+    </div>
+    <div class="pstep on" id="ps0">
+      <label class="s-label">LANGKAH 1/4 — TUJUAN GYM</label>
+      <div class="opt-grid">
+        <div class="opt" data-s="goal" data-v="fatburn"><div class="opt-icon">🔥</div><span class="opt-label">Bakar Lemak</span><span class="opt-sub">Turunkan berat badan</span></div>
+        <div class="opt" data-s="goal" data-v="muscle"><div class="opt-icon">💪</div><span class="opt-label">Bangun Otot</span><span class="opt-sub">Massa & kekuatan</span></div>
+        <div class="opt" data-s="goal" data-v="endurance"><div class="opt-icon">🏃</div><span class="opt-label">Stamina</span><span class="opt-sub">Daya tahan & kardio</span></div>
+        <div class="opt" data-s="goal" data-v="flex"><div class="opt-icon">🧘</div><span class="opt-label">Fleksibilitas</span><span class="opt-sub">Yoga & mobilitas</span></div>
+      </div>
+      <div class="p-nav"><button class="p-next" id="p0next">Lanjut →</button></div>
+    </div>
+    <div class="pstep" id="ps1">
+      <label class="s-label">LANGKAH 2/4 — LEVEL FITNESS</label>
+      <div class="opt-grid">
+        <div class="opt" data-s="level" data-v="beginner"><div class="opt-icon">🌱</div><span class="opt-label">Pemula</span><span class="opt-sub">Baru mulai gym</span></div>
+        <div class="opt" data-s="level" data-v="intermediate"><div class="opt-icon">⚡</div><span class="opt-label">Menengah</span><span class="opt-sub">3–6 bulan</span></div>
+        <div class="opt" data-s="level" data-v="advanced"><div class="opt-icon">🏆</div><span class="opt-label">Lanjutan</span><span class="opt-sub">>1 tahun</span></div>
+        <div class="opt" data-s="level" data-v="athlete"><div class="opt-icon">🥇</div><span class="opt-label">Atlet</span><span class="opt-sub">Kompetitif</span></div>
+      </div>
+      <div class="p-nav">
+        <button id="p1back">← Kembali</button>
+        <button class="p-next" id="p1next">Lanjut →</button>
+      </div>
+    </div>
+    <div class="pstep" id="ps2">
+      <label class="s-label">LANGKAH 3/4 — BUDGET BULANAN</label>
+      <div class="opt-grid">
+        <div class="opt" data-s="budget" data-v="budget"><div class="opt-icon">💚</div><span class="opt-label">Hemat</span><span class="opt-sub">< Rp 100.000</span></div>
+        <div class="opt" data-s="budget" data-v="mid"><div class="opt-icon">💛</div><span class="opt-label">Menengah</span><span class="opt-sub">Rp 100–300rb</span></div>
+        <div class="opt" data-s="budget" data-v="premium"><div class="opt-icon">💜</div><span class="opt-label">Premium</span><span class="opt-sub">> Rp 300.000</span></div>
+        <div class="opt" data-s="budget" data-v="all"><div class="opt-icon">🌈</div><span class="opt-label">Semua</span><span class="opt-sub">Tidak masalah</span></div>
+      </div>
+      <div class="p-nav">
+        <button id="p2back">← Kembali</button>
+        <button class="p-next" id="p2next">Lanjut →</button>
+      </div>
+    </div>
+    <div class="pstep" id="ps3">
+      <label class="s-label">LANGKAH 4/4 — FREKUENSI GYM</label>
+      <div class="opt-grid">
+        <div class="opt" data-s="freq" data-v="2"><div class="opt-icon">📅</div><span class="opt-label">2x / minggu</span><span class="opt-sub">Santai</span></div>
+        <div class="opt" data-s="freq" data-v="3"><div class="opt-icon">📆</div><span class="opt-label">3x / minggu</span><span class="opt-sub">Efisien</span></div>
+        <div class="opt" data-s="freq" data-v="4"><div class="opt-icon">🗓️</div><span class="opt-label">4x / minggu</span><span class="opt-sub">Serius</span></div>
+        <div class="opt" data-s="freq" data-v="5"><div class="opt-icon">💥</div><span class="opt-label">5x / minggu</span><span class="opt-sub">Intensif</span></div>
+      </div>
+      <div class="p-nav">
+        <button id="p3back">← Kembali</button>
+        <button class="p-next" id="genPlan">🎯 Buat Rencana</button>
+      </div>
+    </div>
+    <div class="pstep" id="ps4">
+      <div id="planResult"></div>
+      <div class="p-nav" style="margin-top:12px">
+        <button id="planReset">↺ Mulai Ulang</button>
+        <button class="p-next" id="planClose">✓ Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+<script src="https://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"></script>
+<script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+
+<script>
+'use strict';
+/* ═══════ MAP INIT ═══════ */
+const map = L.map('map',{zoomControl:false}).setView([-6.92, 107.60], 8);
+const tiles={
+  dark:L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19}),
+  street:L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:19}),
+  sat:L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:18})
+};
+
+let isDark = (document.documentElement.getAttribute('data-theme') === 'dark');
+tiles[isDark ? 'dark' : 'street'].addTo(map);
+document.querySelector(`.pill[data-layer="${isDark ? 'dark' : 'street'}"]`).classList.add('on');
+document.getElementById('darkBtn').textContent = isDark ? '☀️' : '🌙';
+L.control.zoom({position:'bottomright'}).addTo(map);
+
+const clusterGroup = L.markerClusterGroup({
+  chunkedLoading:true,
+  iconCreateFunction(c){
+    return new L.DivIcon({html:`<div><span>${c.getChildCount()}</span></div>`,className:'marker-cluster marker-cluster-medium',iconSize:new L.Point(40,40)});
+  }
+});
+
+let heatLayer = null;
+let allStores=[], filtered=[], userLoc=null;
+let revStore=null, selStar=0;
+let planData={goal:null,level:null,budget:null,freq:null};
+let planForGym=null;
+let routingControl = null;
+
+// New Features State
+let showHeatmap = true;
+let radiusCircle = null;
+let compareList = [];
+
+/* ═══════ STORAGE ═══════ */
+const getFavs=()=>{try{return JSON.parse(localStorage.getItem('gm_favs')||'{}')}catch{return{}}};
+const setFavs=o=>localStorage.setItem('gm_favs',JSON.stringify(o));
+const getRevs=()=>{try{return JSON.parse(localStorage.getItem('gm_revs')||'{}')}catch{return{}}};
+const setRevs=o=>localStorage.setItem('gm_revs',JSON.stringify(o));
+
+/* ═══════ HELPERS ═══════ */
+function isOpen(h){
+  if(!h)return null;
+  try{
+    const now=new Date(),day=now.getDay(),hm=now.getHours()*60+now.getMinutes();
+    const dm={Mo:1,Tu:2,We:3,Th:4,Fr:5,Sa:6,Su:0};
+    for(const p of h.split(';')){
+      const m=p.trim().match(/^([A-Za-z]{2})(?:-([A-Za-z]{2}))?\s+(\d{1,2}):(\d{2})-(\d{1,2}):(\d{2})$/);
+      if(!m)continue;
+      const sd=dm[m[1]],ed=m[2]?dm[m[2]]:sd;
+      const om=+m[3]*60+ +m[4],cm=+m[5]*60+ +m[6];
+      const inDay=sd<=ed?(day>=sd&&day<=ed):(day>=sd||day<=ed);
+      if(inDay&&hm>=om&&hm<cm)return true;
+    }
+    return false;
+  }catch{return null;}
+}
+const sid=s=>(s.name+'|'+s.lat.toFixed(5)).replace(/\s/g,'_');
+const dist=(a,b)=>{const R=6371,dLa=(b.lat-a.lat)*Math.PI/180,dLn=(b.lng-a.lng)*Math.PI/180,x=Math.sin(dLa/2)**2+Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLn/2)**2;return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));};
+const fmtD=d=>d<1?(d*1e3).toFixed(0)+'m':d.toFixed(1)+'km';
+const priceClass=p=>{if(!p)return null;const n=parseInt((p+'').replace(/\D/g,''));return n<100000?'budget':n<=300000?'mid':'premium';};
+const priceLabel=p=>{const c=priceClass(p);if(!c)return'';const l={budget:'💚 <Rp100rb',mid:'💛 Rp100–300rb',premium:'💜 >Rp300rb'};return`<span class="popup-price ${c}">${l[c]}/bln</span>`;};
+
+/* ═══════ ICON ═══════ */
+function makeIcon(s){
+  const o=isOpen(s.opening_hours);
+  const c=o===true?'#80d480':o===false?'#d47070':'#888';
+  return L.divIcon({className:'pin-wrap',html:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 36" width="32" height="48"><path fill="${c}" stroke="#fff" stroke-width="1.5" d="M12 0C5.4 0 0 5.4 0 12c0 8.5 12 24 12 24s12-15.5 12-24C24 5.4 18.6 0 12 0zm0 17a5 5 0 110-10 5 5 0 010 10z"/></svg>`,iconSize:[32,48],iconAnchor:[16,48],popupAnchor:[0,-46]});
+}
+
+/* ═══════ POPUP ═══════ */
+function buildPopup(s){
+  const id=sid(s),favs=getFavs(),isFav=!!favs[id];
+  const o=isOpen(s.opening_hours),revs=getRevs()[id]||[];
+  const status=o===true?`<span class="popup-badge open">● Buka Sekarang</span>`:o===false?`<span class="popup-badge closed">● Tutup</span>`:`<span class="popup-badge unknown">● Jam tidak diketahui</span>`;
+  const hrs=s.opening_hours?`🕐 ${s.opening_hours}<br>`:'';
+  const tel=s.phone?`📞 <a href="tel:${s.phone}">${s.phone}</a><br>`:'';
+  const rat=s.rating?`⭐ ${s.rating}${s.reviews?` (${s.reviews} ulasan)`:''}<br>`:'';
+  const src=s.source==='Google Maps'?'[G]':'[O]';
+  let revSnip='';
+  if(revs.length){const l=revs[revs.length-1];revSnip=`<div class="popup-rev-snip">${'★'.repeat(l.rating)+'☆'.repeat(5-l.rating)}  "${l.text}"</div>`;}
+  const sn=s.name.replace(/'/g,"\\'");
+  const inComp = compareList.some(x => sid(x) === id);
+  
+  return `<div class="popup">
+    <div class="popup-name">${s.name}</div>
+    ${s.city?`<div class="popup-city">${s.city}</div>`:''}
+    <div class="popup-addr">📍 ${s.address||'-'}</div>
+    ${status}
+    ${s.price_range?priceLabel(s.price_range)+'':''}
+    <div class="popup-meta">${rat}${hrs}${tel}<span style="font-size:9.5px;color:var(--text3)">${src} ${s.source}</span></div>
+    ${revSnip}
+    <div class="popup-actions" style="display:grid;grid-template-columns:1fr 1fr;gap:5px;">
+      <button class="pa route-btn" onclick="routeTo(${s.lat}, ${s.lng})">🗺️ Navigasi</button>
+      <button class="pa" onclick="shareGym('${sn}', ${s.lat}, ${s.lng})">📤 Bagikan</button>
+      <button class="pa ${inComp?'fav-on':''}" onclick="toggleCompare('${id}')">⚖️ ${inComp?'Hapus':'Banding'}</button>
+      <button class="pa ${isFav?'fav-on':''}" id="fb-${id}" onclick="toggleFav('${id}','${sn}',${s.lat},${s.lng})">${isFav?'★ Disimpan':'☆ Favorit'}</button>
+    </div>
+  </div>`;
+}
+
+/* ═══════ NEW FEATURES (SHARE, COMPARE, HEATMAP) ═══════ */
+
+// 1. Share Gym
+function shareGym(name, lat, lng) {
+  const url = `http://maps.google.com/maps?q=${lat},${lng}`;
+  const text = `Yuk latihan di ${name}! Lihat lokasinya di sini: ${url}`;
+  if (navigator.share) {
+    navigator.share({ title: 'GymMap Jawa Barat', text: text }).catch(console.error);
+  } else {
+    window.open('https://wa.me/?text=' + encodeURIComponent(text));
+  }
+}
+
+// 2. Heatmap Toggle
+document.getElementById('heatmapBtn').addEventListener('click', function() {
+  showHeatmap = !showHeatmap;
+  this.style.opacity = showHeatmap ? '1' : '0.4';
+  if(showHeatmap) {
+    if(heatLayer) map.addLayer(heatLayer);
+  } else {
+    if(heatLayer) map.removeLayer(heatLayer);
+  }
+});
+
+// 3. Compare Gyms
+function toggleCompare(id) {
+  const idx = compareList.findIndex(s => sid(s) === id);
+  if(idx >= 0) {
+    compareList.splice(idx, 1);
+  } else {
+    if(compareList.length >= 3) { alert('Maksimal 3 gym untuk dibandingkan!'); return; }
+    const store = allStores.find(s => sid(s) === id);
+    if(store) compareList.push(store);
+  }
+  updateCompareBadge();
+  map.closePopup(); 
+}
+
+function updateCompareBadge() {
+  const count = compareList.length;
+  const badge = document.getElementById('compareBadge');
+  const btn = document.getElementById('compareTopBtn');
+  if(count > 0) {
+    badge.style.display = 'flex';
+    badge.textContent = count;
+    btn.style.background = 'var(--accent)';
+    btn.style.color = 'var(--accent-text)';
+  } else {
+    badge.style.display = 'none';
+    btn.style.background = '';
+    btn.style.color = '';
+  }
+}
+
+document.getElementById('compareTopBtn').addEventListener('click', () => {
+  if(compareList.length === 0) { alert('Pilih gym untuk dibandingkan melalui popup di peta.'); return; }
+  renderCompareModal();
+  document.getElementById('compareOverlay').classList.add('on');
+});
+
+function renderCompareModal() {
+  const box = document.getElementById('compareContent');
+  if(!compareList.length) { box.innerHTML = '<p class="hint">Tidak ada gym yang dipilih.</p>'; return; }
+  
+  let html = `<div class="comp-grid">`;
+  compareList.forEach(s => {
+    const o = isOpen(s.opening_hours);
+    const status = o===true?'<span style="color:var(--green)">Buka</span>':o===false?'<span style="color:var(--red)">Tutup</span>':'-';
+    const d = userLoc ? fmtD(dist(userLoc, s)) : '-';
+    
+    html += `
+    <div class="comp-card">
+      <button class="comp-rm" onclick="toggleCompare('${sid(s)}'); renderCompareModal(); if(!compareList.length) document.getElementById('compareOverlay').classList.remove('on');">✕</button>
+      <div class="comp-title">${s.name}</div>
+      
+      <div class="comp-row"><span class="comp-label">📍 Jarak</span><span class="comp-val">${d}</span></div>
+      <div class="comp-row"><span class="comp-label">⭐ Rating</span><span class="comp-val">${s.rating||'-'}</span></div>
+      <div class="comp-row"><span class="comp-label">💬 Ulasan</span><span class="comp-val">${s.reviews||'-'}</span></div>
+      <div class="comp-row"><span class="comp-label">💰 Harga</span><span class="comp-val">${s.price_range||'-'}</span></div>
+      <div class="comp-row"><span class="comp-label">🕒 Status</span><span class="comp-val">${status}</span></div>
+      
+      <button class="btn" style="margin-top:12px;font-size:10px;padding:6px" onclick="document.getElementById('compareOverlay').classList.remove('on'); routeTo(${s.lat}, ${s.lng})">🗺️ Arahkan</button>
+    </div>`;
+  });
+  html += `</div>`;
+  box.innerHTML = html;
+}
+
+/* ═══════ IN-APP ROUTING ═══════ */
+function routeTo(lat, lng) {
+  if (!userLoc) {
+    alert("⚠️ Aktifkan GPS Anda terlebih dahulu (ikon 📍) untuk menggunakan navigasi.");
+    return;
+  }
+  map.closePopup();
+  if (routingControl) map.removeControl(routingControl);
+  
+  routingControl = L.Routing.control({
+    waypoints: [L.latLng(userLoc.lat, userLoc.lng), L.latLng(lat, lng)],
+    router: L.Routing.osrmv1({ language: 'id', profile: 'car' }),
+    lineOptions: { styles: [{color: '#3b82f6', opacity: 0.8, weight: 6}] },
+    createMarker: function() { return null; },
+    show: false, addWaypoints: false, routeWhileDragging: false, fitSelectedRoutes: true
+  }).addTo(map);
+
+  document.getElementById('clearRouteBtn').style.display = 'flex';
+  if (window.innerWidth <= 680) document.getElementById('sidebar').classList.remove('open'); 
+}
+
+document.getElementById('clearRouteBtn').addEventListener('click', function() {
+  if (routingControl) { map.removeControl(routingControl); routingControl = null; }
+  this.style.display = 'none';
+});
+
+/* ═══════ RENDER & FILTER ═══════ */
+function renderMap(data){
+  clusterGroup.clearLayers();
+  if(heatLayer)map.removeLayer(heatLayer);
+  
+  const heat=[];
+  data.forEach(s=>{
+    heat.push([s.lat,s.lng,1]);
+    const m=L.marker([s.lat,s.lng],{icon:makeIcon(s)});
+    m.bindPopup(buildPopup(s),{maxWidth:300,className:''});
+    m.bindTooltip(`<div class="tt-name">${s.name}</div><div class="tt-city">${s.city||''}</div>`,{direction:'top',offset:[0,-5],className:'gtt'});
+    clusterGroup.addLayer(m);
+  });
+  
+  map.addLayer(clusterGroup);
+  
+  heatLayer=L.heatLayer(heat,{radius:24,blur:18,maxZoom:14,gradient:{.4:'#3b82f6',.65:'#f97316',1:'#ef4444'}});
+  if(showHeatmap) heatLayer.addTo(map);
+  
+  updateStats(data);
+}
+
+function updateStats(data){
+  const openN=data.filter(s=>isOpen(s.opening_hours)===true).length;
+  document.getElementById('totalBadge').textContent=data.length+' gym';
+  document.getElementById('statTotal').textContent=data.length;
+  document.getElementById('statOpen').textContent=openN;
+}
+
+function applyFilters(){
+  const city=document.querySelector('.city-chip.on')?.dataset.city||'all';
+  const cat=document.getElementById('catF').value;
+  const price=document.getElementById('priceF').value;
+  const minR=parseFloat(document.querySelector('#ratingPills .pill.on')?.dataset.val||0);
+  const openOnly=document.getElementById('openF').checked;
+  const q=document.getElementById('q').value.toLowerCase().trim();
+  const sortV=document.getElementById('sortF').value;
+  const radiusMaks = parseInt(document.getElementById('radiusF').value);
+
+  filtered=allStores.filter(s=>{
+    // 4. Radius Filter
+    if(userLoc && radiusMaks < 21) {
+      if(dist(userLoc, s) > radiusMaks) return false;
+    }
+    
+    if(city!=='all'&&s.city!==city)return false;
+    if(cat!=='all'){const c=(s.category||'').toLowerCase();if(!c.includes(cat)&&!s.name.toLowerCase().includes(cat))return false;}
+    if(openOnly&&isOpen(s.opening_hours)!==true)return false;
+    if(q&&!s.name.toLowerCase().includes(q)&&!(s.city||'').toLowerCase().includes(q)&&!s.address.toLowerCase().includes(q))return false;
+    if(minR&&(!s.rating||parseFloat(s.rating)<minR))return false;
+    if(price!=='all'&&s.price_range){const pc=priceClass(s.price_range);if(price==='budget'&&pc!=='budget')return false;if(price==='mid'&&pc!=='mid')return false;if(price==='premium'&&pc!=='premium')return false;}
+    return true;
+  });
+
+  if(sortV==='rating')filtered.sort((a,b)=>(parseFloat(b.rating)||0)-(parseFloat(a.rating)||0));
+  else if(sortV==='reviews')filtered.sort((a,b)=>(parseInt(b.reviews)||0)-(parseInt(a.reviews)||0));
+  else if(sortV==='distance'&&userLoc)filtered.sort((a,b)=>dist(userLoc,a)-dist(userLoc,b));
+
+  renderMap(filtered);
+  
+  // Draw Radius Circle
+  if(radiusCircle) { map.removeLayer(radiusCircle); radiusCircle = null; }
+  if(userLoc && radiusMaks < 21) {
+    radiusCircle = L.circle([userLoc.lat, userLoc.lng], {
+      color: '#3b82f6', fillColor: '#3b82f6', fillOpacity: 0.1, radius: radiusMaks * 1000, interactive:false
+    }).addTo(map);
+  }
+
+  const qR=document.getElementById('qResults');
+  document.getElementById('qClear').style.display=q?'block':'none';
+  if(q){
+    qR.innerHTML=filtered.length
+      ?filtered.slice(0,8).map(s=>`<div class="sr-item" onclick="fly(${s.lat},${s.lng})"><div class="sr-name">${s.name}</div><div class="sr-addr">${s.city||''} · ${s.address}</div></div>`).join('')
+      :`<div class="sr-item"><div class="sr-name" style="color:var(--text3)">Tidak ditemukan</div></div>`;
+  }else qR.innerHTML='';
+}
+
+function fly(lat,lng){map.setView([lat,lng],16);if(window.innerWidth<=680)document.getElementById('sidebar').classList.remove('open');}
+
+/* ═══════ EVENT LISTENERS ═══════ */
+document.getElementById('radiusF').addEventListener('input', (e) => {
+  const val = parseInt(e.target.value);
+  if(!userLoc && val < 21) {
+    alert("Aktifkan GPS (ikon 📍 di sudut kanan atas) terlebih dahulu untuk menggunakan fitur radius.");
+    e.target.value = 21;
+    document.getElementById('radiusVal').textContent = 'Maks';
+    return;
+  }
+  document.getElementById('radiusVal').textContent = val < 21 ? val + ' km' : 'Maks';
+  applyFilters();
+});
+
+function loadGeoJSON(url,src){
+  return fetch(url).then(r=>r.json()).then(d=>{
+    (d.features||[]).forEach(f=>{
+      if(!f.geometry)return;
+      const g=f.geometry,p=f.properties;
+      let lat,lng;
+      if(g.type==='Point'){lng=g.coordinates[0];lat=g.coordinates[1];}
+      else if(g.type==='Polygon'){const r=g.coordinates[0];lat=r.reduce((s,c)=>s+c[1],0)/r.length;lng=r.reduce((s,c)=>s+c[0],0)/r.length;}
+      else return;
+      if(lat<-9||lat>-5||lng<105||lng>115)return;
+      allStores.push({lat,lng,
+        name:p.name||p.Title||'Gym/Fitness',
+        address:p.address||p.Address||[p['addr:street'],p['addr:city']].filter(Boolean).join(', ')||'-',
+        city:p.city||p['addr:city']||null,
+        rating:p.rating||p['Review Rating']||null,
+        reviews:p.reviews||p['# of Reviews']||null,
+        phone:p.phone||p['Phone number']||null,
+        opening_hours:p.opening_hours||null,
+        source:p.source||src,
+        price_range:p.price_range||null,
+        category:p.category||p.type||null
+      });
+    });
+  }).catch(e=>console.warn('Load error:',url,e));
+}
+
+window.addEventListener('load',()=>{
+  Promise.all([
+    loadGeoJSON('gym_jabar_gmaps.json','Google Maps'),
+    loadGeoJSON('gym_jabar_lengkap.json','OpenStreetMap')
+  ]).then(()=>{
+    filtered=[...allStores];
+    renderMap(filtered);
+    renderFavList();
+    handleHash();
+  });
+});
+
+/* ═══════ GPS ═══════ */
+document.getElementById('gpsBtn').addEventListener('click',function(){
+  if(!navigator.geolocation){alert('Browser tidak mendukung GPS.');return;}
+  this.textContent='⏳';const btn=this;
+  navigator.geolocation.getCurrentPosition(pos=>{
+    userLoc={lat:pos.coords.latitude,lng:pos.coords.longitude};
+    map.setView([userLoc.lat,userLoc.lng],14);
+    L.circleMarker([userLoc.lat,userLoc.lng],{radius:10,color:'#3b82f6',fillColor:'#3b82f6',fillOpacity:.4,weight:2}).addTo(map).bindPopup('📍 Lokasi Kamu').openPopup();
+    btn.textContent='📍';
+    document.getElementById('gpsStatus').textContent='✅ GPS aktif';
+    renderNear();applyFilters();
+  },()=>{btn.textContent='📍';alert('Gagal mendapatkan lokasi. Izinkan akses GPS di browser.');});
+});
+
+document.getElementById('gpsSort').addEventListener('click',()=>{
+  if(!userLoc){document.getElementById('gpsStatus').textContent='⚠️ Klik 📍 dulu';return;}
+  document.getElementById('sortF').value='distance';applyFilters();
+  document.getElementById('gpsStatus').textContent='✅ Diurutkan by jarak';
+});
+
+function renderNear(){
+  const el=document.getElementById('nearList');
+  if(!userLoc||!allStores.length){el.innerHTML='<p class="hint">Aktifkan GPS 📍 untuk melihat gym terdekat.</p>';return;}
+  const top=[...allStores].map(s=>({...s,_d:dist(userLoc,s)})).sort((a,b)=>a._d-b._d).slice(0,5);
+  el.innerHTML=top.map((s,i)=>`<div class="near-item" onclick="fly(${s.lat},${s.lng})">
+    <span class="near-rank">#${i+1}</span>
+    <div class="near-info"><div class="near-name">${s.name}</div>
+    <div class="near-meta">📍 ${fmtD(s._d)}${s.rating?' · ⭐'+s.rating:''}${s.city?' · '+s.city:''}</div></div>
+  </div>`).join('');
+}
+
+/* ═══════ DARK MODE TOGGLE (MAPS.HTML) ═══════ */
+document.getElementById('darkBtn').addEventListener('click',function(){
+  isDark = !isDark;
+  const newTheme = isDark ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('gymmap_theme', newTheme);
+  this.textContent = isDark ? '☀️' : '🌙';
+  
+  Object.values(tiles).forEach(t=>{try{map.removeLayer(t);}catch{}});
+  tiles[isDark ? 'dark' : 'street'].addTo(map);
+  
+  document.querySelectorAll('#layerPills .pill').forEach(p => {
+    p.classList.toggle('on', p.dataset.layer === (isDark ? 'dark' : 'street'));
+  });
+});
+
+/* ═══════ LAYER PILLS (SIDEBAR) ═══════ */
+document.getElementById('layerPills').addEventListener('click',e=>{
+  const btn=e.target.closest('.pill');if(!btn||!btn.dataset.layer)return;
+  document.querySelectorAll('#layerPills .pill').forEach(p=>p.classList.remove('on'));btn.classList.add('on');
+  
+  const layerId = btn.dataset.layer;
+  Object.values(tiles).forEach(t=>{try{map.removeLayer(t);}catch{}});
+  tiles[layerId].addTo(map);
+  
+  if(layerId === 'dark' || layerId === 'street') {
+    isDark = (layerId === 'dark');
+    const newTheme = isDark ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('gymmap_theme', newTheme);
+    document.getElementById('darkBtn').textContent = isDark ? '☀️' : '🌙';
+  }
+});
+
+/* ═══════ CITY CHIPS ═══════ */
+document.getElementById('cityChips').addEventListener('click',e=>{
+  const chip=e.target.closest('.city-chip');if(!chip)return;
+  document.querySelectorAll('.city-chip').forEach(c=>c.classList.remove('on'));chip.classList.add('on');
+  const city=chip.dataset.city;
+  if(city!=='all'){
+    const cityStores=allStores.filter(s=>s.city===city);
+    if(cityStores.length){
+      const lats=cityStores.map(s=>s.lat),lngs=cityStores.map(s=>s.lng);
+      map.fitBounds([[Math.min(...lats)-.05,Math.min(...lngs)-.05],[Math.max(...lats)+.05,Math.max(...lngs)+.05]]);
+    }
+  }else{map.setView([-6.92, 107.60], 8);} 
+  applyFilters();
+});
+
+/* ═══════ OTHER FILTERS ═══════ */
+document.getElementById('q').addEventListener('input',applyFilters);
+document.getElementById('qClear').addEventListener('click',()=>{document.getElementById('q').value='';applyFilters();});
+document.getElementById('catF').addEventListener('change',applyFilters);
+document.getElementById('priceF').addEventListener('change',applyFilters);
+document.getElementById('openF').addEventListener('change',applyFilters);
+document.getElementById('sortF').addEventListener('change',applyFilters);
+
+document.getElementById('ratingPills').addEventListener('click',e=>{
+  const p=e.target.closest('.pill');if(!p||!p.dataset.val)return;
+  document.querySelectorAll('#ratingPills .pill').forEach(x=>x.classList.remove('on'));p.classList.add('on');applyFilters();
+});
+
+/* ═══════ FAB / SIDEBAR ═══════ */
+document.getElementById('fabBtn').addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('open'));
+
+/* ═══════ FAVORITES ═══════ */
+function toggleFav(id,name,lat,lng){
+  const favs=getFavs();if(favs[id])delete favs[id];else favs[id]={name,lat,lng};setFavs(favs);renderFavList();
+  const btn=document.getElementById('fb-'+id);
+  if(btn){btn.textContent=favs[id]?'★ Disimpan':'☆ Favorit';btn.classList.toggle('fav-on',!!favs[id]);}
+}
+function renderFavList(){
+  const favs=getFavs(),keys=Object.keys(favs);
+  document.getElementById('favCount').textContent=keys.length;
+  document.getElementById('clearFavBtn').style.display=keys.length?'block':'none';
+  const el=document.getElementById('favList');
+  if(!keys.length){el.innerHTML='<p class="hint">Klik ⭐ di popup untuk menyimpan.</p>';return;}
+  el.innerHTML=keys.map(id=>{const f=favs[id];return`<div class="fav-item" onclick="map.setView([${f.lat},${f.lng}],16)"><span class="fav-name">⭐ ${f.name}</span><button class="fav-rm" onclick="event.stopPropagation();toggleFav('${id}','${f.name.replace(/'/g,"\\'")}',${f.lat},${f.lng})">✕</button></div>`;}).join('');
+}
+document.getElementById('clearFavBtn').addEventListener('click',()=>{localStorage.removeItem('gm_favs');renderFavList();});
+
+/* ═══════ REVIEW ═══════ */
+function openRev(id,name){
+  revStore=id;selStar=0;
+  document.getElementById('revName').textContent=name;
+  document.getElementById('revText').value='';
+  updateStars(0);renderExistingRevs(id);
+  document.getElementById('reviewOverlay').classList.add('on');map.closePopup();
+}
+const updateStars=v=>document.querySelectorAll('#starPicker span').forEach(s=>s.classList.toggle('on',+s.dataset.v<=v));
+document.querySelectorAll('#starPicker span').forEach(s=>s.addEventListener('click',()=>{selStar=+s.dataset.v;updateStars(selStar);}));
+function renderExistingRevs(id){
+  const all=getRevs()[id]||[],box=document.getElementById('existingRevs');
+  if(!all.length){box.innerHTML='';return;}
+  box.innerHTML='<p class="s-label" style="margin:12px 0 7px">REVIEW SEBELUMNYA</p>'+all.slice().reverse().map(r=>`<div class="rev-card"><div class="rev-stars">${'★'.repeat(r.rating)+'☆'.repeat(5-r.rating)}</div><div class="rev-body">${r.text}</div><div class="rev-date">${r.date}</div></div>`).join('');
+}
+document.getElementById('submitRev').addEventListener('click',()=>{
+  const text=document.getElementById('revText').value.trim();
+  if(!text){alert('Tulis komentar dulu!');return;}if(!selStar){alert('Pilih bintang dulu!');return;}
+  const all=getRevs();if(!all[revStore])all[revStore]=[];
+  all[revStore].push({rating:selStar,text,date:new Date().toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'})});
+  setRevs(all);document.getElementById('revText').value='';selStar=0;updateStars(0);renderExistingRevs(revStore);renderMap(filtered);
+});
+document.getElementById('closeReview').addEventListener('click',()=>document.getElementById('reviewOverlay').classList.remove('on'));
+document.getElementById('reviewOverlay').addEventListener('click',e=>{if(e.target===document.getElementById('reviewOverlay'))document.getElementById('reviewOverlay').classList.remove('on');});
+
+/* ═══════ STATS ═══════ */
+document.getElementById('statsBtn').addEventListener('click',()=>{
+  document.getElementById('statsOverlay').classList.add('on');
+  document.getElementById('kpiTotal').textContent=filtered.length;
+  document.getElementById('kpiOpen').textContent=filtered.filter(s=>isOpen(s.opening_hours)===true).length;
+
+  const cityMap={};filtered.forEach(s=>{const c=s.city||'Lainnya';cityMap[c]=(cityMap[c]||0)+1;});
+  const topC=Object.entries(cityMap).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const maxC=topC[0]?topC[0][1]:1;
+  document.getElementById('cityChart').innerHTML=topC.map(([k,v])=>`<div class="brow"><span class="blabel">${k}</span><div class="btrack"><div class="bfill" style="width:0%" data-w="${(v/maxC*100).toFixed(0)}%"></div></div><span class="bcount">${v}</span></div>`).join('');
+
+  const catMap={};filtered.forEach(s=>{const c=s.category||'gym';catMap[c]=(catMap[c]||0)+1;});
+  const topCat=Object.entries(catMap).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  const maxCat=topCat[0]?topCat[0][1]:1;
+  document.getElementById('catChart').innerHTML=topCat.map(([k,v])=>`<div class="brow"><span class="blabel">${k}</span><div class="btrack"><div class="bfill" style="width:0%" data-w="${(v/maxCat*100).toFixed(0)}%"></div></div><span class="bcount">${v}</span></div>`).join('');
+
+  setTimeout(()=>document.querySelectorAll('.bfill').forEach(el=>el.style.width=el.dataset.w),60);
+
+  const topRev=filtered.filter(s=>s.reviews).sort((a,b)=>(parseInt(b.reviews)||0)-(parseInt(a.reviews)||0)).slice(0,5);
+  document.getElementById('topRevList').innerHTML=topRev.map((s,i)=>`<div class="top-item"><span class="top-rank">#${i+1}</span><div class="top-info"><div class="top-name">${s.name}</div><div class="top-meta">${s.city||''} · ⭐${s.rating||'?'} · ${s.reviews} ulasan</div></div></div>`).join('');
+});
+document.getElementById('closeStats').addEventListener('click',()=>document.getElementById('statsOverlay').classList.remove('on'));
+document.getElementById('statsOverlay').addEventListener('click',e=>{if(e.target===document.getElementById('statsOverlay'))document.getElementById('statsOverlay').classList.remove('on');});
+
+/* ═══════ PLANNER ═══════ */
+const GOAL={
+  fatburn:{l:'Bakar Lemak',focus:'Kardio + HIIT',sets:'3-4 set, 15-20 reps, istirahat 30-45 detik',tip:'Prioritaskan cardio 20-30 menit lalu weight training. Jaga kalori defisit.'},
+  muscle:{l:'Bangun Otot',focus:'Strength Training',sets:'4-5 set, 6-12 reps, istirahat 60-90 detik',tip:'Compound movement: squat, deadlift, bench press. Asupan protein minimal 1.6g/kgBB.'},
+  endurance:{l:'Stamina',focus:'Kardio Progresif',sets:'2-3 set, 20-30 reps atau berbasis durasi',tip:'Bangun intensitas bertahap. Kombinasikan treadmill, bike, rowing.'},
+  flex:{l:'Fleksibilitas',focus:'Yoga & Mobilitas',sets:'Hold 30-60 detik per pose',tip:'Dynamic stretching sebelum, static sesudah. Konsistensi lebih penting dari intensitas.'}
+};
+const BUDGET_L={budget:'💚 <Rp100rb/bln',mid:'💛 Rp100–300rb/bln',premium:'💜 >Rp300rb/bln',all:'🌈 Semua harga'};
+const FREQ_PAT={2:[1,0,0,1,0,0,0],3:[1,0,1,0,1,0,0],4:[1,0,1,0,1,1,0],5:[1,1,0,1,1,0,1]};
+const DAYS=['Sen','Sel','Rab','Kam','Jum','Sab','Min'];
+
+let pStep=0;
+function updateProg(){for(let i=0;i<=4;i++)document.getElementById('pd'+i).classList.toggle('done',i<=pStep);}
+function showStep(n){document.querySelectorAll('.pstep').forEach(s=>s.classList.remove('on'));document.getElementById('ps'+n).classList.add('on');pStep=n;updateProg();}
+const getOpt=s=>document.querySelector(`.opt.on[data-s="${s}"]`)?.dataset.v||null;
+
+document.getElementById('plannerBtn').addEventListener('click',()=>{planForGym=null;openPlanner();});
+function openPlanForGym(id,name,lat,lng){planForGym={id,name,lat,lng};map.closePopup();openPlanner();}
+function openPlanner(){
+  planData={goal:null,level:null,budget:null,freq:null};
+  document.querySelectorAll('.opt').forEach(o=>o.classList.remove('on'));
+  document.getElementById('plannerOverlay').classList.add('on');showStep(0);
+}
+document.getElementById('closePlanner').addEventListener('click',()=>document.getElementById('plannerOverlay').classList.remove('on'));
+document.getElementById('planClose').addEventListener('click',()=>document.getElementById('plannerOverlay').classList.remove('on'));
+document.getElementById('plannerOverlay').addEventListener('click',e=>{if(e.target===document.getElementById('plannerOverlay'))document.getElementById('plannerOverlay').classList.remove('on');});
+document.getElementById('plannerOverlay').addEventListener('click',e=>{
+  const opt=e.target.closest('.opt');if(!opt)return;
+  const s=opt.dataset.s;document.querySelectorAll(`.opt[data-s="${s}"]`).forEach(o=>o.classList.remove('on'));opt.classList.add('on');
+});
+document.getElementById('p0next').addEventListener('click',()=>{planData.goal=getOpt('goal');if(!planData.goal){alert('Pilih tujuan gym!');return;}showStep(1);});
+document.getElementById('p1back').addEventListener('click',()=>showStep(0));
+document.getElementById('p1next').addEventListener('click',()=>{planData.level=getOpt('level');if(!planData.level){alert('Pilih level!');return;}showStep(2);});
+document.getElementById('p2back').addEventListener('click',()=>showStep(1));
+document.getElementById('p2next').addEventListener('click',()=>{planData.budget=getOpt('budget');if(!planData.budget){alert('Pilih budget!');return;}showStep(3);});
+document.getElementById('p3back').addEventListener('click',()=>showStep(2));
+document.getElementById('planReset').addEventListener('click',()=>{planForGym=null;document.querySelectorAll('.opt').forEach(o=>o.classList.remove('on'));showStep(0);});
+document.getElementById('genPlan').addEventListener('click',()=>{planData.freq=getOpt('freq');if(!planData.freq){alert('Pilih frekuensi!');return;}buildPlan();showStep(4);});
+
+function buildPlan(){
+  const info=GOAL[planData.goal]||GOAL.muscle;
+  const freq=+planData.freq;
+  const pat=FREQ_PAT[freq]||FREQ_PAT[3];
+  const schedHTML=[0,1,2,3].map(w=>`<div class="sched-week">
+    <div class="sched-wk-label">MINGGU ${w+1}</div>
+    <div class="sched-days">${DAYS.map((d,i)=>`<div class="day-cell ${pat[i]?'gym':'rest'}">${pat[i]?'💪':'—'}<span class="day-lbl">${d}</span></div>`).join('')}</div>
+  </div>`).join('');
+
+  let pool=[...allStores];
+  if(planData.budget!=='all')pool=pool.filter(s=>{if(!s.price_range)return true;return priceClass(s.price_range)===planData.budget;});
+  if(userLoc)pool=pool.map(s=>({...s,_d:dist(userLoc,s)})).sort((a,b)=>a._d-b._d);
+  else pool=pool.sort((a,b)=>(parseFloat(b.rating)||0)-(parseFloat(a.rating)||0));
+  if(planForGym)pool=pool.filter(s=>s.lat!==planForGym.lat||s.lng!==planForGym.lng);
+  const top=pool.slice(0,4);
+  const gymHTML=top.length?top.map((s,i)=>`<div class="plan-gym-item" onclick="fly(${s.lat},${s.lng});document.getElementById('plannerOverlay').classList.remove('on')">
+    <span class="plan-gym-rank">#${i+1}</span>
+    <div><div class="plan-gym-name">${s.name}</div>
+    <div class="plan-gym-meta">${s.city||''} ${s._d?'· 📍'+fmtD(s._d):''} ${s.rating?'· ⭐'+s.rating:''} ${s.price_range?'· Rp'+parseInt((s.price_range+'').replace(/\D/g,'')).toLocaleString('id-ID')+'/bln':''}</div></div>
+  </div>`).join('')
+    :'<p class="hint">Aktifkan GPS untuk rekomendasi gym terdekat, atau ubah filter budget.</p>';
+
+  document.getElementById('planResult').innerHTML=`
+  <div class="plan-result-box">
+    <div class="plan-result-title">📋 RENCANA 30 HARI — ${info.l.toUpperCase()}</div>
+    <div class="stat2" style="margin-bottom:10px">
+      <div class="stat2-item"><span class="stat2-n">${Math.round(freq*4.3)}</span><span class="stat2-l">Sesi Total</span></div>
+      <div class="stat2-item"><span class="stat2-n">${freq}x</span><span class="stat2-l">Per Minggu</span></div>
+    </div>
+    <p style="font-size:11px;color:var(--text2);line-height:1.7;margin-bottom:4px">
+      <b style="color:var(--text)">Fokus:</b> ${info.focus}  | 
+      <b style="color:var(--text)">Set/Rep:</b> ${info.sets}
+    </p>
+    <p style="font-size:11px;color:var(--text2);line-height:1.7">
+      <b style="color:var(--text)">Tips:</b> ${info.tip}
+    </p>
+    ${planData.budget?`<p style="font-size:10px;color:var(--text3);margin-top:6px">Budget: ${BUDGET_L[planData.budget]}</p>`:''}
+  </div>
+  <div style="margin-bottom:12px">
+    <label class="s-label" style="margin-bottom:6px">JADWAL 30 HARI</label>
+    <div class="sched-grid">${schedHTML}</div>
+  </div>
+  <div>
+    <label class="s-label" style="margin-bottom:6px">REKOMENDASI GYM${userLoc?' TERDEKAT':''}</label>
+    ${gymHTML}
+  </div>`;
+}
+
+/* ═══════ HASH NAV ═══════ */
+function handleHash(){
+  const h=location.hash;if(!h||!h.includes('lat='))return;
+  const p={};h.replace('#','').split('&').forEach(s=>{const[k,v]=s.split('=');p[k]=+v;});
+  if(p.lat&&p.lng)setTimeout(()=>{map.flyTo([p.lat,p.lng],p.zoom||16,{animate:true,duration:1.2});history.replaceState(null,'',location.pathname);},600);
+}
+</script>
+</body>
+</html>

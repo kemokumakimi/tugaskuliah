@@ -1,0 +1,13 @@
+# File yang melebihi batas 100MB GitHub
+SEMESTER 1/BIOLOGI/3d.pptx
+SEMESTER 5/WIN_20240924_14_43_16_Pro-video-export-2024-09-24T08-49-15.551Z.mp4
+
+# Dependensi & cache
+node_modules/
+__pycache__/
+.venv/
+venv/
+*.pyc
+
+# Lock file lock dari LibreOffice
+~$*

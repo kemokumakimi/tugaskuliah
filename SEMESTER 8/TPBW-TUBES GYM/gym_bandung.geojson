@@ -1,0 +1,1926 @@
+{
+  "type": "FeatureCollection",
+  "name": "vape_bandung_gmaps_v2",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "JEK VAPE STORE",
+        "address": "Jl. Raya Bojongsoang No.119, Bojongsoang, Kec. Bojongsoang, Kabupaten Bandung, Jawa Barat 40288",
+        "rating": "4.9",
+        "reviews": "101",
+        "phone": "0812-2020-0462",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.979408,107.6342602",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6342602,
+          -6.979408
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "valhalla vape store",
+        "address": "Jl. Raya Bojongsoang No.7, Bojongsoang, Kec. Bojongsoang, Kabupaten Bandung, Jawa Barat 40288",
+        "rating": "4.7",
+        "reviews": "11",
+        "phone": "0851-5526-5599",
+        "website": "https://www.youtube.com/channel/UCADaVJXjTX_W6XnaLZqHkfw",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9808789,107.6342534",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6342534,
+          -6.9808789
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "AS VAPOR",
+        "address": "Lengkong, Bojongsoang, Bandung Regency, West Java 40287",
+        "rating": "4.8",
+        "reviews": "345",
+        "phone": "0821-2083-7955",
+        "website": "https://www.instagram.com/asvapor/",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9737797,107.6363434",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6363434,
+          -6.9737797
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Vaporic Vape Store",
+        "address": "Jl. Telekomunikasi No.233, Sukapura, Kec. Bojongsoang, Kabupaten Bandung, Jawa Barat 40267",
+        "rating": "4.9",
+        "reviews": "703",
+        "phone": "0895-3719-70680",
+        "website": "https://www.instagram.com/vaporic.indonesia/",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9728861,107.6358062",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6358062,
+          -6.9728861
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Legacy Vape Store Bojongsoang",
+        "address": "Jl. Raya Bojongsoang No.253, Lengkong, Kec. Bojongsoang, Kabupaten Bandung, Jawa Barat 40287",
+        "rating": "5.0",
+        "reviews": "273",
+        "phone": "0812-9099-0953",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9715983,107.6363688",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6363688,
+          -6.9715983
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Helios vape store",
+        "address": "Jl. Raya Bojongsoang No.232, Cipagalo, Kec. Bojongsoang, Kabupaten Bandung, Jawa Barat 40287",
+        "rating": "5.0",
+        "reviews": "27",
+        "phone": "0812-2077-8490",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9698394,107.6370271",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6370271,
+          -6.9698394
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "VAPE COURT BOJONGSOANG",
+        "address": "Jl. Terusan Bojongsoang No.21, Bojongsoang, Kec. Bojongsoang, Kabupaten Bandung, Jawa Barat 40288",
+        "rating": "5.0",
+        "reviews": "27",
+        "phone": "0851-8796-5516",
+        "website": "https://www.instagram.com/heroesvapestore",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.975,107.6342",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6342,
+          -6.975
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "703 Vapor Shop Buah Batu",
+        "address": "Jl. Buah Batu No.302A, Cijagra, Kec. Lengkong, Kota Bandung, Jawa Barat 40265",
+        "rating": "5.0",
+        "reviews": "33",
+        "phone": "0877-2008-6069",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.942,107.6275",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6275,
+          -6.942
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "R&D vapestore ciganitri",
+        "address": "Jl. Ciganitri No.72, Cipagalo, Kec. Bojongsoang, Kabupaten Bandung, Jawa Barat 40287",
+        "rating": "4.8",
+        "reviews": "24",
+        "phone": "",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9726782,107.652318",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.652318,
+          -6.9726782
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Vg Vapor Bandung",
+        "address": "Jl. Cijagra No.14, Bojongsoang, Kec. Bojongsoang, Kabupaten Bandung, Jawa Barat 40288",
+        "rating": "4.3",
+        "reviews": "14",
+        "phone": "0812-7276-1313",
+        "website": "https://www.instagram.com/vg.cijagra",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.988741,107.6324458",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6324458,
+          -6.988741
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Cabang 7 Brothers Vape Store Bandung",
+        "address": "Jl. Cijagra No.5, Cijagra, Kec. Lengkong, Kota Bandung, Jawa Barat 40265",
+        "rating": "5.0",
+        "reviews": "33",
+        "phone": "0821-2929-2020",
+        "website": "https://linktr.ee/7brothersid_",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9438166,107.6273044",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6273044,
+          -6.9438166
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tokovapeku Bandung",
+        "address": "Jl. Rancabolang, Margasari, Kec. Buahbatu, Kota Bandung, Jawa Barat 40286",
+        "rating": "5.0",
+        "reviews": "2880",
+        "phone": "0823-1144-2021",
+        "website": "https://www.tokopedia.com/tokovapeku-bandung",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9539584,107.661104",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.661104,
+          -6.9539584
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "3 Army Vapestore",
+        "address": "Jl. Pluto Raya Komplek Margahayu Raya No.4D, Margasari, Kec. Buahbatu, Kota Bandung, Jawa Barat 40286",
+        "rating": "5.0",
+        "reviews": "1097",
+        "phone": "0857-2503-2928",
+        "website": "https://www.instagram.com/3armyvapestore/?hl=id",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9590621,107.6616607",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6616607,
+          -6.9590621
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "VAPORID (HQ) STORE & BILLIARD",
+        "address": "Jl. Veteran No.17C, Kb. Pisang, Kec. Sumur Bandung, Kota Bandung, Jawa Barat 40112",
+        "rating": "5.0",
+        "reviews": "286",
+        "phone": "0877-2109-8796",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9188434,107.6148552",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6148552,
+          -6.9188434
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Naga Vape Store (RELX)",
+        "address": "Jl. Sukamulya No.797/196B, Kopo, Kec. Bojongloa Kaler, Kota Bandung, Jawa Barat 40233",
+        "rating": "4.7",
+        "reviews": "145",
+        "phone": "0812-2717-6232",
+        "website": "https://www.tokopedia.com/nagavapestore",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9363904,107.5895669",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.5895669,
+          -6.9363904
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Legacy Vape Store Ciwastra",
+        "address": "Jl. Ciwastra No.225, Margasari, Kec. Buahbatu, Kota Bandung, Jawa Barat 40286",
+        "rating": "5.0",
+        "reviews": "148",
+        "phone": "0813-5888-0027",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9593,107.6607",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6607,
+          -6.9593
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Vaperscloud Vape Store",
+        "address": "Jl. Adipati Kertamanah No.53, Baleendah, Kec. Baleendah, Kabupaten Bandung, Jawa Barat 40375",
+        "rating": "4.8",
+        "reviews": "57",
+        "phone": "0898-4961-616",
+        "website": "https://www.instagram.com/vaperscloud.vs",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-7.0052,107.6258",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6258,
+          -7.0052
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Vaparella vape store",
+        "address": "Jl. Terusan Kiaracondong, Cijaura, Kec. Buahbatu, Kota Bandung, Jawa Barat",
+        "rating": "4.8",
+        "reviews": "49",
+        "phone": "0882-0015-02891",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.961,107.658",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.658,
+          -6.961
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mezza vape",
+        "address": "Jl. Ciwastra No.179, Cijaura, Kec. Buahbatu, Kota Bandung, Jawa Barat 40287",
+        "rating": "5.0",
+        "reviews": "144",
+        "phone": "0877-2442-7018",
+        "website": "https://instagram.com/mezzavape",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9593,107.6607",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6607,
+          -6.9593
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Buzyatak Vape Store",
+        "address": "Sindangpanon, Kec. Banjaran, Kabupaten Bandung, Jawa Barat 40377",
+        "rating": "4.6",
+        "reviews": "18",
+        "phone": "",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-7.022,107.638",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.638,
+          -7.022
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Legacy Vape Store Buah Batu",
+        "address": "Jl. Kliningan No.2, Turangga, Kec. Lengkong, Kota Bandung, Jawa Barat 40264",
+        "rating": "5.0",
+        "reviews": "265",
+        "phone": "0811-2337-900",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9421719,107.6282905",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6282905,
+          -6.9421719
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "LS VAPE STORE",
+        "address": "Jl. Gatot Subroto No.401, Gumuruh, Kec. Batununggal, Kota Bandung, Jawa Barat 40275",
+        "rating": "4.7",
+        "reviews": "361",
+        "phone": "0812-2201-9390",
+        "website": "https://www.instagram.com/lsvapestore/",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9310626,107.6417404",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6417404,
+          -6.9310626
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Leikha Vape Store",
+        "address": "Jl. Pungkur No.227B, Balonggede, Kec. Regol, Kota Bandung, Jawa Barat 40252",
+        "rating": "5.0",
+        "reviews": "81",
+        "phone": "0853-5581-9996",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9317612,107.6133707",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6133707,
+          -6.9317612
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Key Vape Tubagus",
+        "address": "Jl. Tubagus Ismail Dalam No.60, Lebakgede, Kecamatan Coblong, Kota Bandung, Jawa Barat 40132",
+        "rating": "5.0",
+        "reviews": "602",
+        "phone": "0882-2220-0004",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.8905,107.6136",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6136,
+          -6.8905
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bandung Vape Store (BVS)",
+        "address": "Jl. Moch. Toha No.134, Pelindung Hewan, Kec. Astanaanyar, Kota Bandung, Jawa Barat 40243",
+        "rating": "5.0",
+        "reviews": "70",
+        "phone": "0819-3124-7373",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9413271,107.6068511",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6068511,
+          -6.9413271
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bandung Vaporizer Ciwastra",
+        "address": "Jl. Ciwastra No.301, Margasari, Kec. Buahbatu, Kota Bandung, Jawa Barat 40287",
+        "rating": "4.5",
+        "reviews": "54",
+        "phone": "",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.96,107.662",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.662,
+          -6.96
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "ASGARD VAPE BANDUNG",
+        "address": "Jl. Talaga Bodas No.51, Kec. Lengkong, Kota Bandung, Jawa Barat 40263",
+        "rating": "4.6",
+        "reviews": "309",
+        "phone": "0895-3596-25575",
+        "website": "https://shopee.co.id/asgardvape",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9290563,107.6252545",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6252545,
+          -6.9290563
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "D.I.A Vapor",
+        "address": "Jl. Ciwastra No.311, Mekarjaya, Kec. Buahbatu, Kota Bandung, Jawa Barat 40287",
+        "rating": "4.9",
+        "reviews": "26",
+        "phone": "0878-4644-7857",
+        "website": "https://www.instagram.com/diavapor/",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.961,107.6618",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6618,
+          -6.961
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Store Vape Second",
+        "address": "Jl. Gatot Subroto No.313B, Maleer, Kec. Batununggal, Kota Bandung, Jawa Barat",
+        "rating": "5.0",
+        "reviews": "1",
+        "phone": "0831-0794-6231",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.931,107.638",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.638,
+          -6.931
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Redcard Vape Store",
+        "address": "Jl. Ciwastra No.94, Cijaura, Kec. Buahbatu, Kota Bandung, Jawa Barat 40287",
+        "rating": "4.8",
+        "reviews": "14",
+        "phone": "0878-2601-2348",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9593002,107.660754",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.660754,
+          -6.9593002
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Vaporise Dipatiukur",
+        "address": "Jl. Dipati Ukur No.72F, Lebakgede, Kecamatan Coblong, Kota Bandung, Jawa Barat 40132",
+        "rating": "4.9",
+        "reviews": "94",
+        "phone": "0821-3010-3084",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.8898408,107.6164125",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6164125,
+          -6.8898408
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "VAPE SHOP",
+        "address": "Jl. Stasiun Barat selatan No.12, Kb. Jeruk, Kec. Andir, Kota Bandung, Jawa Barat 40181",
+        "rating": "5.0",
+        "reviews": "2",
+        "phone": "0895-1337-8994",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9153412,107.6027021",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6027021,
+          -6.9153412
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "LS VAPE STORE BUBAT",
+        "address": "Jl. Buah Batu No.205, Cijagra, Kec. Lengkong, Kota Bandung, Jawa Barat 40265",
+        "rating": "4.6",
+        "reviews": "107",
+        "phone": "0821-1900-0569",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9423481,107.6280672",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6280672,
+          -6.9423481
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Vapehitz",
+        "address": "Jl. Palasari No.20, Malabar, Kec. Lengkong, Kota Bandung, Jawa Barat 40262",
+        "rating": "4.8",
+        "reviews": "2199",
+        "phone": "0811-2391-915",
+        "website": "https://s.id/vapehitz",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.929899,107.6224808",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6224808,
+          -6.929899
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bagja Vapor Vape Store",
+        "address": "Jl. Durman No.24A, Kb. Jeruk, Kec. Andir, Kota Bandung, Jawa Barat 40181",
+        "rating": "4.8",
+        "reviews": "342",
+        "phone": "0822-8686-8869",
+        "website": "https://www.tokopedia.com/bagjavaporbdg",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9145,107.6027",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6027,
+          -6.9145
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "GROSIR VAPE STORE DISTRIBUTIOn",
+        "address": "Jl. Terusan Pasirkoja No.4, Cibadak, Kec. Astanaanyar, Kota Bandung, Jawa Barat 40242",
+        "rating": "4.4",
+        "reviews": "43",
+        "phone": "0811-2131-344",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9265205,107.5978916",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.5978916,
+          -6.9265205
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "vape.bandung",
+        "address": "Jl. Jalaprang No.87, Sukaluyu, Kec. Cibeunying Kaler, Kota Bandung, Jawa Barat 40123",
+        "rating": "4.5",
+        "reviews": "324",
+        "phone": "0821-2788-8855",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.897015,107.6310189",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6310189,
+          -6.897015
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "STAYVAPE",
+        "address": "Jl. Solontongan No.20C, Turangga, Kec. Lengkong, Kota Bandung, Jawa Barat 40264",
+        "rating": "4.7",
+        "reviews": "71",
+        "phone": "0858-6091-0093",
+        "website": "http://instagram.com/stayvape",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9381547,107.6271267",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6271267,
+          -6.9381547
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "VAPEROOM VAPE STORE",
+        "address": "Jl. Gegerkalong Girang No.9B, Isola, Kec. Sukasari, Kota Bandung, Jawa Barat 40153",
+        "rating": "4.9",
+        "reviews": "253",
+        "phone": "0895-4049-60948",
+        "website": "https://www.tokopedia.com/vaperoomstore",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.864,107.5903",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.5903,
+          -6.864
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Vaporise Kopo",
+        "address": "Jl. Raya Kopo No.427, Margahayu Utara, Kec. Bojongloa Kidul, Kota Bandung, Jawa Barat 40235",
+        "rating": "5.0",
+        "reviews": "484",
+        "phone": "0821-3010-3083",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.949,107.5936",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.5936,
+          -6.949
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "KM Vapestore",
+        "address": "Jl. Cilengkrang 1 No.15b, Cisurupan, Kec. Ujung Berung, Kota Bandung, Jawa Barat 40614",
+        "rating": "5.0",
+        "reviews": "179",
+        "phone": "0881-4563-142",
+        "website": "https://instagram.com/km_vapestore",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.914,107.7015",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.7015,
+          -6.914
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Amor Vapestore Lengkong",
+        "address": "Jl. Lengkong Besar No.35, Paledang, Kec. Lengkong, Kota Bandung, Jawa Barat 40261",
+        "rating": "4.8",
+        "reviews": "81",
+        "phone": "0817-7413-3304",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9237465,107.6119231",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6119231,
+          -6.9237465
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bears Vape Bandung",
+        "address": "Jl. Pasir Salam Asri D27A, Pasirluyu, Kec. Regol, Kota Bandung, Jawa Barat 40254",
+        "rating": "4.8",
+        "reviews": "17",
+        "phone": "0851-5683-8728",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9436472,107.6197301",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6197301,
+          -6.9436472
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Vape Bekas Bandung",
+        "address": "Jl. Banda No.13S, Merdeka, Kec. Sumur Bandung, Kota Bandung, Jawa Barat 40115",
+        "rating": "4.9",
+        "reviews": "1922",
+        "phone": "0888-0949-6479",
+        "website": "http://linktr.ee/vapebekas.bdg",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9121693,107.6174512",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6174512,
+          -6.9121693
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Identity Vape Store & Kedai Identity",
+        "address": "Jl. Sitimunigar No.19, Nyengseret, Kec. Astanaanyar, Kota Bandung, Jawa Barat 40242",
+        "rating": "4.6",
+        "reviews": "69",
+        "phone": "0895-1523-5311",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9284502,107.6028398",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6028398,
+          -6.9284502
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Legacy vape store Gatsu",
+        "address": "Jl. Gatot Subroto No.479, Kb. Kangkung, Kec. Kiaracondong, Kota Bandung, Jawa Barat 40284",
+        "rating": "5.0",
+        "reviews": "42",
+        "phone": "0821-3071-2038",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.931,107.652",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.652,
+          -6.931
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Cloudvaping",
+        "address": "Jl. Ibu Inggit Garnasih No.68 A/B, Ciateul, Kec. Regol, Kota Bandung, Jawa Barat 40252",
+        "rating": "4.6",
+        "reviews": "729",
+        "phone": "0811-2226-067",
+        "website": "http://www.instagram.com/cv_officialstore",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9319224,107.6062229",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6062229,
+          -6.9319224
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "AS VAPOR GATSU",
+        "address": "Jl. Gatot Subroto No.211, Cibangkong, Kec. Batununggal, Kota Bandung, Jawa Barat 40273",
+        "rating": "4.9",
+        "reviews": "129",
+        "phone": "",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9253941,107.6315771",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6315771,
+          -6.9253941
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Legacy PVS",
+        "address": "Jl. Naripan No.99, Kb. Pisang, Kec. Sumur Bandung, Kota Bandung, Jawa Barat 40112",
+        "rating": "4.7",
+        "reviews": "349",
+        "phone": "0821-2121-5907",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9208927,107.6171556",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6171556,
+          -6.9208927
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "3monkees Inc Vape Critical11",
+        "address": "Jl. Raya Kopo No.448, Margahayu Utara, Kec. Babakan Ciparay, Kota Bandung, Jawa Barat 40228",
+        "rating": "4.7",
+        "reviews": "1238",
+        "phone": "0895-3348-36778",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9497892,107.5866866",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.5866866,
+          -6.9497892
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Reliq Vape Store",
+        "address": "Jl. Raya Derwati No.25, Derwati, Kec. Rancasari, Kota Bandung, Jawa Barat 40292",
+        "rating": "4.5",
+        "reviews": "46",
+        "phone": "0822-1820-4499",
+        "website": "http://www.instagram.com/reliq.vapestore",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9653732,107.6868027",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6868027,
+          -6.9653732
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "C Store Astana - Vape Store",
+        "address": "Jl. Astana Anyar No.68, Cibadak, Kec. Astanaanyar, Kota Bandung, Jawa Barat 40241",
+        "rating": "5.0",
+        "reviews": "158",
+        "phone": "0877-2272-4795",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9227295,107.5984954",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.5984954,
+          -6.9227295
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "AV Vape Store",
+        "address": "Jl. Sekeloa No.4, Margahayu Sel., Kec. Margahayu, Kabupaten Bandung, Jawa Barat 40226",
+        "rating": "4.5",
+        "reviews": "38",
+        "phone": "0822-1800-8801",
+        "website": "http://instagram.com/avvapestore",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.944,107.596",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.596,
+          -6.944
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "C Store Veteran (Vape Store)",
+        "address": "Jl. Veteran No.40, Kb. Pisang, Kec. Sumur Bandung, Kota Bandung, Jawa Barat 40112",
+        "rating": "5.0",
+        "reviews": "175",
+        "phone": "0877-2272-4796",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9194385,107.6153145",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6153145,
+          -6.9194385
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Periphery Vape Store",
+        "address": "Jl. Sukagalih No.85, Sukabungah, Kec. Sukajadi, Kota Bandung, Jawa Barat 40286",
+        "rating": "5.0",
+        "reviews": "1125",
+        "phone": "0831-0983-3594",
+        "website": "https://linktr.ee/periphery_vapestore",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.8925989,107.5927044",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.5927044,
+          -6.8925989
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Baver Vape Store",
+        "address": "Jl. Sukahaji No.142, Sukarasa, Kec. Sukasari, Kota Bandung, Jawa Barat 40152",
+        "rating": "4.8",
+        "reviews": "87",
+        "phone": "0877-5515-1167",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.873,107.5895",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.5895,
+          -6.873
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Legacy Vape Store Burangrang",
+        "address": "Jl. Burangrang No.3, Malabar, Kec. Lengkong, Kota Bandung, Jawa Barat 40262",
+        "rating": "5.0",
+        "reviews": "63",
+        "phone": "0821-2121-5907",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9233202,107.6201234",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6201234,
+          -6.9233202
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Reliq Vape Store Babakansari",
+        "address": "Jl. Babakan Sari No.119, Babakan Sari, Kec. Kiaracondong, Kota Bandung, Jawa Barat 40283",
+        "rating": "5.0",
+        "reviews": "3",
+        "phone": "",
+        "website": "https://www.instagram.com/reliq.vapestore.bbs",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.922,107.648",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.648,
+          -6.922
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "MOVI Bandung",
+        "address": "Jl. Laswi No.1, Kacapiring, Kec. Batununggal, Kota Bandung, Jawa Barat 40272",
+        "rating": "4.9",
+        "reviews": "720",
+        "phone": "0821-2362-3638",
+        "website": "http://instagram.com/movibandung",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9155,107.6406",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6406,
+          -6.9155
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "3MONKEES, INC VAPE STORE CIUMBULEUIT",
+        "address": "Jl. Ciumbuleuit No.73, Hegarmanah, Kec. Cidadap, Kota Bandung, Jawa Barat 40141",
+        "rating": "5.0",
+        "reviews": "7",
+        "phone": "0813-8949-119",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.851,107.5842",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.5842,
+          -6.851
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "FOCUS VAPE STORE BANDUNG",
+        "address": "Jl. Binong Jati No.137, Binong, Kec. Batununggal, Kota Bandung, Jawa Barat 40275",
+        "rating": "4.5",
+        "reviews": "11",
+        "phone": "0895-1415-7124",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9379046,107.6401367",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6401367,
+          -6.9379046
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "C Store IBCC (Vape Store)",
+        "address": "Plaza Ibcc, Jl. A. Yani, Kacapiring, Kec. Batununggal, Kota Bandung, Jawa Barat 40114",
+        "rating": "5.0",
+        "reviews": "55",
+        "phone": "",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9155625,107.6336875",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6336875,
+          -6.9155625
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "VAPORID LODAYA BANDUNG",
+        "address": "Jl. K.H. Ahmad Dahlan No.50, Malabar, Kec. Lengkong, Kota Bandung, Jawa Barat 40262",
+        "rating": "4.9",
+        "reviews": "8",
+        "phone": "0811-2289-1515",
+        "website": "https://www.instagram.com/vaporid.lodaya/",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9322651,107.6209029",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6209029,
+          -6.9322651
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Vape Express Sunda",
+        "address": "Jl. Sunda No.93A, Merdeka, Kec. Sumur Bandung, Kota Bandung, Jawa Barat 40113",
+        "rating": "4.9",
+        "reviews": "251",
+        "phone": "0895-2918-0325",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.916532,107.6180826",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6180826,
+          -6.916532
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bandung Vaporizer Antapani",
+        "address": "Jl. Subang No.52, Antapani Tengah, Kec. Antapani, Kota Bandung, Jawa Barat 40291",
+        "rating": "4.7",
+        "reviews": "19",
+        "phone": "0838-0690-1811",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9205,107.6555",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6555,
+          -6.9205
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Thisvapestore Gerlong",
+        "address": "Jl. Gegerkalong Hilir No.26, Gegerkalong, Kec. Sukasari, Kota Bandung, Jawa Barat 40153",
+        "rating": "4.9",
+        "reviews": "140",
+        "phone": "0896-4843-0258",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.868,107.595",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.595,
+          -6.868
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Vape.bandung 2",
+        "address": "Jl. Tubagus Ismail No.84, Sekeloa, Kecamatan Coblong, Kota Bandung, Jawa Barat 40134",
+        "rating": "4.9",
+        "reviews": "82",
+        "phone": "0821-2788-8855",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.8935,107.6183",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6183,
+          -6.8935
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Galaxy 50 Vape Store",
+        "address": "Jl. Raya Cipamokolan No.50, Cipamokolan, Kec. Rancasari, Kota Bandung, Jawa Barat 40292",
+        "rating": "3.9",
+        "reviews": "36",
+        "phone": "0813-1220-2779",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9509,107.6808",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6808,
+          -6.9509
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "MOOSE VAPE",
+        "address": "Jl. Khp Hasan Mustopa No.54, Cikutra, Kec. Cibeunying Kidul, Kota Bandung, Jawa Barat 40124",
+        "rating": "5.0",
+        "reviews": "87",
+        "phone": "0812-1914-9216",
+        "website": "https://instagram.com/moose.vape",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9004,107.6456",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6456,
+          -6.9004
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "CLOUDROOM VAPE STORE HOLIS",
+        "address": "Jl. Holis No.81, Caringin, Kec. Bandung Kulon, Kota Bandung, Jawa Barat 40212",
+        "rating": "5.0",
+        "reviews": "6",
+        "phone": "0851-1990-2545",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9275,107.5844",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.5844,
+          -6.9275
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bandung Vaporizer Kopo",
+        "address": "Jl. Kopo Sayati No.291, Margahayu Sel., Kec. Margahayu, Kabupaten Bandung, Jawa Barat 40226",
+        "rating": "4.8",
+        "reviews": "29",
+        "phone": "",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.952,107.5942",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.5942,
+          -6.952
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "AS VAPOR SETIABUDI",
+        "address": "Jl. Dr. Setiabudi No.228b, Ledeng, Kec. Cidadap, Kota Bandung, Jawa Barat 40153",
+        "rating": "5.0",
+        "reviews": "167",
+        "phone": "0838-7129-0779",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.8648057,107.5942474",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.5942474,
+          -6.8648057
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "FAMVAPESTORE",
+        "address": "Jl. Sukamenak No.58, Sayati, Kec. Margahayu, Kabupaten Bandung, Jawa Barat 40228",
+        "rating": "5.0",
+        "reviews": "5",
+        "phone": "0853-2199-8838",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.956,107.595",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.595,
+          -6.956
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "VapeStore",
+        "address": "Jl. Cilampeni, Kec. Katapang, Kabupaten Bandung, Jawa Barat 40921",
+        "rating": "5.0",
+        "reviews": "1",
+        "phone": "0858-4620-4811",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.997,107.5878",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.5878,
+          -6.997
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "KEY VAPE STORE ANTAPANI",
+        "address": "Jl. Sulaksana No.8, Cicaheum, Kec. Kiaracondong, Kota Bandung, Jawa Barat 40282",
+        "rating": "5.0",
+        "reviews": "154",
+        "phone": "0898-7775-111",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9175,107.6572",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6572,
+          -6.9175
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "affa & bie vapestore",
+        "address": "Jl. Melong No.78B, Melong, Kec. Cimahi Sel., Kota Cimahi, Jawa Barat 40534",
+        "rating": "5.0",
+        "reviews": "37",
+        "phone": "0878-2540-1193",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.8765,107.539",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.539,
+          -6.8765
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "IMAH VAPOR (vapestore)",
+        "address": "Jl. Sayati Hilir, Sayati, Kec. Margahayu, Kabupaten Bandung, Jawa Barat 40228",
+        "rating": "5.0",
+        "reviews": "8",
+        "phone": "0822-1551-5589",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.957,107.5957",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.5957,
+          -6.957
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Nebula Vape ID",
+        "address": "Jl. Gegerkalong Hilir No.181, Gegerkalong, Kec. Sukasari, Kota Bandung, Jawa Barat 40559",
+        "rating": "4.9",
+        "reviews": "167",
+        "phone": "0811-2228-011",
+        "website": "https://r.grab.com/g/2-2-6-C7EEDFAXJYJZEA",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.862,107.5903",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.5903,
+          -6.862
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "PASKAL VAPE STORE",
+        "address": "Jl. Musaen No.3, Pasir Kaliki, Kec. Cicendo, Kota Bandung, Jawa Barat 40171",
+        "rating": "5.0",
+        "reviews": "139",
+        "phone": "0813-9574-4948",
+        "website": "http://www.lynk.id/paskalvapestore",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9115,107.5985",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.5985,
+          -6.9115
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Helium Vape Store",
+        "address": "Jl. Sindang Sirna No.36, Gegerkalong, Kec. Sukasari, Kota Bandung, Jawa Barat 40153",
+        "rating": "5.0",
+        "reviews": "157",
+        "phone": "0822-4115-9295",
+        "website": "https://www.instagram.com/heliumvapestore",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.866,107.5895",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.5895,
+          -6.866
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "JV vapestore",
+        "address": "Jl. Taman Holis Indah No.43 blok G3, Cigondewah Rahayu, Kec. Bandung Kulon, Kota Bandung, Jawa Barat 40215",
+        "rating": "5.0",
+        "reviews": "23",
+        "phone": "",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9282,107.5802",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.5802,
+          -6.9282
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Legacy Vape Store Teuku Umar",
+        "address": "Jl. Teuku Umar No.1, Lebakgede, Kecamatan Coblong, Kota Bandung, Jawa Barat 40132",
+        "rating": "5.0",
+        "reviews": "1412",
+        "phone": "0821-2121-6981",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.8918014,107.61657",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.61657,
+          -6.8918014
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bandung Vaporizer",
+        "address": "Jalan tamansari Balubur Town Square, Tamansari, Kec. Bandung Wetan, Kota Bandung, Jawa Barat 40116",
+        "rating": "4.5",
+        "reviews": "36",
+        "phone": "0882-0000-00270",
+        "website": "http://www.instagram.com/bandungvaporizer.id",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9021,107.6114",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6114,
+          -6.9021
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "GANG VAPOR VAPESTORE",
+        "address": "Jl. H. Anwar No.2, Cibuntu, Kec. Bandung Kulon, Kota Bandung, Jawa Barat 40212",
+        "rating": "4.5",
+        "reviews": "4",
+        "phone": "0878-3357-4919",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9226,107.5818",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.5818,
+          -6.9226
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "VAPEBOSS BANDUNG DIPATI UKUR",
+        "address": "Jl. Dipati Ukur No.68B, Lebakgede, Kecamatan Coblong, Kota Bandung, Jawa Barat 40132",
+        "rating": "4.9",
+        "reviews": "112",
+        "phone": "0821-3090-2410",
+        "website": "https://vapeboss.co.id/",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.8898,107.6162",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6162,
+          -6.8898
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "DK VAPESTORE CIKUTRA",
+        "address": "Jl. Cikutra Barat No.54, Cigadung, Kec. Cibeunying Kaler, Kota Bandung, Jawa Barat 40124",
+        "rating": "5.0",
+        "reviews": "88",
+        "phone": "",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9,107.638",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.638,
+          -6.9
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Legacy Vape Store",
+        "address": "Jl. Melong Asih No.66D, Cijerah, Kec. Bandung Kulon, Kota Bandung, Jawa Barat 40213",
+        "rating": "4.7",
+        "reviews": "358",
+        "phone": "0821-2121-5906",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.922,107.5848",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.5848,
+          -6.922
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Legacy Vape Store Suci",
+        "address": "Jl. Khp Hasan Mustopa No.20, Cikutra, Kec. Cibeunying Kidul, Kota Bandung, Jawa Barat 40124",
+        "rating": "5.0",
+        "reviews": "668",
+        "phone": "0813-5888-0029",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.8983982,107.6364095",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6364095,
+          -6.8983982
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "ZAENAL VAPE STORE PAJAJARAN",
+        "address": "Jl. Pajajaran No.80B, Pamoyanan, Kec. Cicendo, Kota Bandung, Jawa Barat 40173",
+        "rating": "4.3",
+        "reviews": "78",
+        "phone": "0857-6666-6626",
+        "website": "http://tokopedia.com/zaenalstore",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9075,107.594",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.594,
+          -6.9075
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "3Monkees,INC",
+        "address": "Jl. Bojongloa No.25, Panjunan, Kec. Astanaanyar, Kota Bandung, Jawa Barat 40242",
+        "rating": "5.0",
+        "reviews": "419",
+        "phone": "0821-2911-6425",
+        "website": "http://www.instagram.com/3monkees.inc",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9290861,107.5995566",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.5995566,
+          -6.9290861
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "THIS VAPESTORE",
+        "address": "Jl. AH. Nasution No.02, Cisaranten Bina Harapan, Kec. Arcamanik, Kota Bandung, Jawa Barat 40294",
+        "rating": "4.5",
+        "reviews": "274",
+        "phone": "0896-4843-0258",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.9435,107.67",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.67,
+          -6.9435
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Zest Vapor Suci",
+        "address": "Jl. Khp Hasan Mustopa No.18, Cikutra, Kec. Cibeunying Kidul, Kota Bandung, Jawa Barat 40124",
+        "rating": "5.0",
+        "reviews": "128",
+        "phone": "0812-2262-2603",
+        "website": "http://www.zestvapor.id/",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.8983,107.6456",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.6456,
+          -6.8983
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "CLOUDME VAPE STORE",
+        "address": "Jl. Brigadir Jend. Katamso No.66, Cicadas, Kec. Cibeunying Kidul, Kota Bandung, Jawa Barat 40121",
+        "rating": "4.7",
+        "reviews": "30",
+        "phone": "0812-1905-6007",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.896,107.641",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.641,
+          -6.896
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "C Store Jurang Pasteur (Vape Store)",
+        "address": "Jl. Jurang No.51B, Pasteur, Kec. Sukajadi, Kota Bandung, Jawa Barat 40161",
+        "rating": "4.9",
+        "reviews": "70",
+        "phone": "0859-6671-5459",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.893,107.593",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.593,
+          -6.893
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Vaporic Ciumbeuleuit",
+        "address": "Jl. Ciumbuleuit No.169, Ciumbuleuit, Kec. Cidadap, Kota Bandung, Jawa Barat 40141",
+        "rating": "5.0",
+        "reviews": "325",
+        "phone": "0851-4818-7853",
+        "website": "",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.862,107.5885",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.5885,
+          -6.862
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "AtmosVapeGempol",
+        "address": "Jl. Cigondewah Kaler No.17, Cijerah, Bandung City, West Java 40214",
+        "rating": "4.7",
+        "reviews": "22",
+        "phone": "0899-9812-020",
+        "website": "http://www.tokopedia.com/atmosvapegempol",
+        "google_maps": "https://www.google.com/maps/search/?api=1&query=-6.922,107.5792",
+        "source": "Google Maps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.5792,
+          -6.922
+        ]
+      }
+    }
+  ]
+}

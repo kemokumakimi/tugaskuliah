@@ -1,0 +1,32 @@
+
+import mysql.connector
+
+# Menghubungkan ke database
+mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="",
+    database="kimi"
+)
+
+if mydb.is_connected():
+    print("Berhasil terhubung")
+# Membuat kursor
+mycursor = mydb.cursor()
+
+# Mengeksekusi query untuk membuat tabel mahasiswa
+mycursor.execute("""
+    CREATE TABLE mahasiswa (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        nama VARCHAR(255) NOT NULL,
+        nim VARCHAR(20) NOT NULL,
+        kelas VARCHAR(50) NOT NULL
+    )
+""")
+
+# Melakukan commit untuk menyimpan perubahan
+mydb.commit()
+
+# Menutup koneksi
+mycursor.close()
+mydb.close()

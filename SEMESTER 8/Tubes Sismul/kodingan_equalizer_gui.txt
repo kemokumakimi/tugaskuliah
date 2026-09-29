@@ -1,0 +1,327 @@
+function equalizer_gui
+% EQUALIZER_GUI  10-band audio equalizer + filter (LPF/HPF/BPF/BSF)
+% ---------------------------------------------------------------
+% Nama : Ariski Myardi
+% NIM  : 1103220019
+% Dibuat untuk MATLAB R2026a (macOS) menggunakan komponen uifigure.
+%
+% Cara pakai:
+%   >> equalizer_gui
+%
+% Catatan teknis:
+%   - Semua pemrosesan (equalizer & filter) dilakukan di domain frekuensi
+%     (FFT) sehingga TIDAK membutuhkan Signal Processing Toolbox.
+%   - 10 band equalizer mengikuti rentang pada GUI acuan:
+%       1) 0-200 Hz     2) 201-400 Hz   3) 401-800 Hz   4) 801-1500 Hz
+%       5) 1.5-3 KHz    6) 3-5 KHz      7) 5-7 KHz      8) 7-10 KHz
+%       9) 10-15 KHz   10) >15 KHz
+%   - Tombol preset diganti menjadi filter: LPF, HPF, BPF, BSF.
+% ---------------------------------------------------------------
+
+%% ===== State bersama (dipakai semua nested function) =====
+S.fs        = 8192;     % sampling rate
+S.x         = [];       % audio asli (mono, ternormalisasi, kolom)
+S.y         = [];       % audio hasil proses
+S.player    = [];       % objek audioplayer
+S.volume    = 1.0;      % faktor volume 0..1
+S.filter    = 'none';   % filter aktif: none/LPF/HPF/BPF/BSF
+S.order     = 6;        % orde "Butterworth-like" untuk kurva filter
+
+% Tepi 10 band (Hz) -> 11 nilai
+S.edges = [0 200 400 800 1500 3000 5000 7000 10000 15000 20000];
+S.names = {'0-200Hz','201-400Hz','401-800Hz','801-1500Hz','1.5-3KHz', ...
+           '3-5KHz','5-7KHz','7-10KHz','10-15KHz','>15KHz'};
+S.gainsDB = zeros(1,10);
+
+% Cutoff default tiap filter (Hz)
+S.lpfCut  = 1000;          % LPF: lolos < 1 kHz
+S.hpfCut  = 3000;          % HPF: lolos > 3 kHz
+S.bpfBand = [800 4000];    % BPF: lolos 0.8-4 kHz
+S.bsfBand = [1000 3000];   % BSF: tahan 1-3 kHz
+
+%% ===== Jendela utama =====
+S.fig = uifigure('Name','equalizer','Position',[80 60 1200 660], ...
+    'Color',[0.94 0.94 0.94]);
+
+% --- Header: Nama dan NIM ---
+uilabel(S.fig,'Position',[20 612 560 34], ...
+    'Text','  Ariski Myardi  -  1103220019', ...
+    'FontSize',16,'FontWeight','bold','FontColor',[0.85 0.33 0.10], ...
+    'BackgroundColor',[1 1 1]);
+
+% --- File Address ---
+uilabel(S.fig,'Position',[20 568 95 26],'Text','File Address', ...
+    'FontWeight','bold');
+S.fileField = uieditfield(S.fig,'text','Position',[118 568 380 28], ...
+    'Value','(belum ada file - klik Browse)','Editable','off');
+uibutton(S.fig,'Position',[508 568 70 28],'Text','Browse', ...
+    'ButtonPushedFcn',@onBrowse);
+
+%% ===== Panel Equalizer (10 band) =====
+S.eqPanel = uipanel(S.fig,'Title','Equalizer','Position',[20 250 560 305], ...
+    'FontWeight','bold');
+
+colW = 54; x0 = 10;
+for i = 1:10
+    cx = x0 + (i-1)*colW;
+    % label band (di atas slider)
+    uilabel(S.eqPanel,'Position',[cx-4 252 colW+6 30],'Text',S.names{i}, ...
+        'HorizontalAlignment','center','FontSize',9, ...
+        'WordWrap','on');
+    % slider vertikal -15..+15 dB
+    S.slider(i) = uislider(S.eqPanel,'Orientation','vertical', ...
+        'Limits',[-15 15],'Value',0,'MajorTicks',[-15 0 15], ...
+        'MinorTicks',[],'Position',[cx+6 50 3 195], ...
+        'ValueChangingFcn',@(src,ev) onSlider(i,ev.Value), ...
+        'ValueChangedFcn',@(src,ev) onSlider(i,src.Value));
+    % kotak nilai (dB)
+    S.valBox(i) = uieditfield(S.eqPanel,'numeric','Position',[cx-2 12 colW-4 24], ...
+        'Value',0,'Limits',[-15 15],'ValueDisplayFormat','%.0f', ...
+        'HorizontalAlignment','center', ...
+        'ValueChangedFcn',@(src,ev) onValBox(i,src.Value));
+end
+
+%% ===== Panel Filter (pengganti Presets) =====
+S.fPanel = uipanel(S.fig,'Title','Filter','Position',[20 158 560 84], ...
+    'FontWeight','bold');
+fNames = {'LPF','HPF','BPF','BSF'};
+for k = 1:4
+    uibutton(S.fPanel,'Position',[15+(k-1)*135 14 120 40], ...
+        'Text',fNames{k},'FontWeight','bold','FontSize',13, ...
+        'ButtonPushedFcn',@(src,ev) onFilter(fNames{k}));
+end
+
+%% ===== Panel Setting (Play/Pause/Resume/Stop/Volume) =====
+S.sPanel = uipanel(S.fig,'Title','Setting','Position',[20 20 560 128], ...
+    'FontWeight','bold');
+uibutton(S.sPanel,'Position',[15 55 90 36],'Text','Play', ...
+    'ButtonPushedFcn',@onPlay);
+uibutton(S.sPanel,'Position',[112 55 90 36],'Text','Pause', ...
+    'ButtonPushedFcn',@onPause);
+uibutton(S.sPanel,'Position',[209 55 90 36],'Text','Resume', ...
+    'ButtonPushedFcn',@onResume);
+uibutton(S.sPanel,'Position',[306 55 90 36],'Text','Stop', ...
+    'ButtonPushedFcn',@onStop);
+% reset gain + filter
+uibutton(S.sPanel,'Position',[15 14 187 30],'Text','Reset Equalizer & Filter', ...
+    'ButtonPushedFcn',@onReset);
+% volume
+uilabel(S.sPanel,'Position',[410 88 130 20],'Text','Volume', ...
+    'HorizontalAlignment','center','FontWeight','bold');
+S.volSlider = uislider(S.sPanel,'Limits',[0 1],'Value',1, ...
+    'MajorTicks',[0 0.5 1],'Position',[412 60 130 3], ...
+    'ValueChangedFcn',@(src,ev) onVolume(src.Value));
+
+%% ===== Sumbu (axes) di kanan =====
+pAx = uipanel(S.fig,'Title','Axes','Position',[600 20 580 626], ...
+    'FontWeight','bold');
+S.axOrig = uiaxes(pAx,'Position',[20 410 540 185]);
+title(S.axOrig,'Original'); grid(S.axOrig,'on');
+
+S.axFilt = uiaxes(pAx,'Position',[20 210 540 185]);
+title(S.axFilt,'Filter (bentuk respons yang dipilih)'); grid(S.axFilt,'on');
+
+S.axOut  = uiaxes(pAx,'Position',[20 10 540 185]);
+title(S.axOut,'Hasil audio setelah difilter'); grid(S.axOut,'on');
+
+%% ===== Demo awal: sinyal 'handel' bawaan MATLAB =====
+try
+    d = load('handel.mat');          % menyediakan y dan Fs
+    S.fs = d.Fs;
+    loadSignal(d.y, 'Demo bawaan MATLAB: handel.mat');
+catch
+    % jika gagal, biarkan kosong sampai user Browse
+end
+
+%% =====================================================================
+%%                         NESTED FUNCTIONS
+%% =====================================================================
+
+    function onBrowse(~,~)
+        [f,p] = uigetfile({'*.wav;*.mp3;*.flac;*.ogg;*.m4a','Audio Files'; ...
+                           '*.*','All Files'},'Pilih file audio');
+        if isequal(f,0); return; end
+        full = fullfile(p,f);
+        try
+            [data,fs] = audioread(full);
+            S.fs = fs;
+            loadSignal(data, full);
+        catch ME
+            uialert(S.fig,sprintf('Gagal membaca file:\n%s',ME.message),'Error');
+        end
+    end
+
+    function loadSignal(data, label)
+        data = mean(double(data),2);        % jadikan mono
+        m = max(abs(data));
+        if m > 0, data = data/m; end        % normalisasi
+        S.x = data(:);
+        S.fileField.Value = label;
+        plotOriginal();
+        processAudio();
+    end
+
+    function onSlider(idx, val)
+        S.gainsDB(idx) = val;
+        S.valBox(idx).Value = round(val);
+        processAudio();
+    end
+
+    function onValBox(idx, val)
+        val = max(min(val,15),-15);
+        S.gainsDB(idx) = val;
+        S.slider(idx).Value = val;
+        processAudio();
+    end
+
+    function onFilter(type)
+        if strcmp(S.filter,type)
+            S.filter = 'none';              % klik lagi = matikan filter
+        else
+            S.filter = type;
+        end
+        processAudio();
+    end
+
+    function onReset(~,~)
+        S.gainsDB = zeros(1,10);
+        S.filter  = 'none';
+        for i = 1:10
+            S.slider(i).Value = 0;
+            S.valBox(i).Value = 0;
+        end
+        processAudio();
+    end
+
+    function onVolume(v)
+        S.volume = v;
+        % jika sedang play, terapkan langsung dengan memutar ulang
+        if ~isempty(S.player) && isvalid(S.player) && isplaying(S.player)
+            onPlay();
+        end
+    end
+
+    %% --- Pemrosesan inti ---
+    function processAudio()
+        if isempty(S.x), return; end
+        N  = numel(S.x);
+        f  = (0:N-1).'/N*S.fs;              % frekuensi tiap bin
+        % 1) Equalizer (gain per band)
+        Heq = eqMask(f, S.fs, S.gainsDB, S.edges);
+        Xeq = fft(S.x) .* Heq;
+        % 2) Filter terpilih
+        Hf  = filterMask(f, S.fs, S.filter, S);
+        S.y = real(ifft(Xeq .* Hf));
+        % normalisasi ringan agar tidak clipping
+        m = max(abs(S.y));
+        if m > 1, S.y = S.y/m; end
+        plotFilterShape(f, Heq.*Hf);
+        plotOutput();
+    end
+
+    function plotOriginal()
+        if isempty(S.x), return; end
+        t = (0:numel(S.x)-1)/S.fs;
+        plot(S.axOrig, t, S.x, 'Color',[0 0.45 0.74]);
+        title(S.axOrig,'Original');
+        xlabel(S.axOrig,'Time (s)'); ylabel(S.axOrig,'Amplitude');
+        xlim(S.axOrig,[0 t(end)]); ylim(S.axOrig,[-1.05 1.05]);
+        grid(S.axOrig,'on');
+    end
+
+    function plotOutput()
+        if isempty(S.y), return; end
+        t = (0:numel(S.y)-1)/S.fs;
+        plot(S.axOut, t, S.y, 'Color',[0.85 0.33 0.10]);
+        title(S.axOut,'Hasil audio setelah difilter');
+        xlabel(S.axOut,'Time (s)'); ylabel(S.axOut,'Amplitude');
+        xlim(S.axOut,[0 t(end)]); ylim(S.axOut,[-1.05 1.05]);
+        grid(S.axOut,'on');
+    end
+
+    function plotFilterShape(f, H)
+        % tampilkan magnitudo gabungan EQ+filter pada 0..Nyquist
+        half = f <= S.fs/2;
+        ff   = f(half);
+        mag  = abs(H(half));
+        plot(S.axFilt, ff, mag, 'Color',[0.20 0.55 0.20],'LineWidth',1.5);
+        if strcmp(S.filter,'none')
+            ttl = 'Filter: (tidak ada) - hanya equalizer';
+        else
+            ttl = sprintf('Filter terpilih: %s', S.filter);
+        end
+        title(S.axFilt, ttl);
+        xlabel(S.axFilt,'Frequency (Hz)'); ylabel(S.axFilt,'|H(f)|');
+        xlim(S.axFilt,[0 S.fs/2]); ylim(S.axFilt,[0 max(1.2,max(mag)*1.1)]);
+        grid(S.axFilt,'on');
+    end
+
+    %% --- Pemutaran audio ---
+    function onPlay(~,~)
+        if isempty(S.y)
+            uialert(S.fig,'Belum ada audio. Klik Browse dulu.','Info'); return;
+        end
+        if ~isempty(S.player) && isvalid(S.player), stop(S.player); end
+        out = S.y * S.volume;
+        out = max(min(out,1),-1);           % cegah clipping
+        S.player = audioplayer(out, S.fs);
+        play(S.player);
+    end
+
+    function onPause(~,~)
+        if ~isempty(S.player) && isvalid(S.player), pause(S.player); end
+    end
+
+    function onResume(~,~)
+        if ~isempty(S.player) && isvalid(S.player), resume(S.player); end
+    end
+
+    function onStop(~,~)
+        if ~isempty(S.player) && isvalid(S.player), stop(S.player); end
+    end
+
+end  % ===== akhir equalizer_gui =====
+
+
+%% =====================================================================
+%%                  FUNGSI BANTU (local functions)
+%% =====================================================================
+function H = eqMask(f, fs, gainsDB, edges)
+% Bangun masker gain (linear) per band, simetris terhadap Nyquist.
+fm = f; idx = f > fs/2; fm(idx) = fs - f(idx);   % cermin frekuensi
+H  = ones(numel(f),1);
+for b = 1:numel(gainsDB)
+    g  = 10^(gainsDB(b)/20);                     % dB -> linear
+    lo = edges(b); hi = edges(b+1);
+    sel = (fm >= lo) & (fm < hi);
+    H(sel) = g;
+end
+end
+
+function H = filterMask(f, fs, type, S)
+% Respons magnitudo "Butterworth-like" (orde n) di domain frekuensi.
+n  = S.order;
+fm = f; idx = f > fs/2; fm(idx) = fs - f(idx);
+fm = max(fm, 1e-6);
+switch type
+    case 'LPF'
+        fc = S.lpfCut;
+        H = 1 ./ sqrt(1 + (fm./fc).^(2*n));
+    case 'HPF'
+        fc = S.hpfCut;
+        H = 1 ./ sqrt(1 + (fc./fm).^(2*n));
+    case 'BPF'
+        f1 = S.bpfBand(1); f2 = S.bpfBand(2);
+        Hh = 1 ./ sqrt(1 + (f1./fm).^(2*n));
+        Hl = 1 ./ sqrt(1 + (fm./f2).^(2*n));
+        H  = Hh .* Hl;
+    case 'BSF'
+        f1 = S.bsfBand(1); f2 = S.bsfBand(2);
+        Hl = 1 ./ sqrt(1 + (fm./f1).^(2*n));     % lolos di bawah f1
+        Hh = 1 ./ sqrt(1 + (f2./fm).^(2*n));     % lolos di atas f2
+        H  = min(Hl + Hh, 1);
+    otherwise   % 'none'
+        H = ones(numel(f),1);
+end
+H = H(:);
+end

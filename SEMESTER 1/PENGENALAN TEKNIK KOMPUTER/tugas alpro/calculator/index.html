@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Calculator</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<div class="calculator">
+		<div class="display">
+			<input type="text" id="result" disabled>
+		</div>
+		<div class="buttons">
+			<button class="gray" onclick="clearResult()">C</button>
+			<button class="orange" onclick="calculate('/')">÷</button>
+			<button class="orange" onclick="calculate('*')">x</button>
+			<button class="orange" onclick="calculate('-')">-</button>
+			<button class="orange" onclick="calculate('+')">+</button>
+			<button onclick="calculate('7')">7</button>
+			<button onclick="calculate('8')">8</button>
+			<button onclick="calculate('9')">9</button>
+			<button onclick="calculate('4')">4</button>
+			<button onclick="calculate('5')">5</button>
+			<button onclick="calculate('6')">6</button>
+			<button onclick="calculate('1')">1</button>
+			<button onclick="calculate('2')">2</button>
+			<button onclick="calculate('3')">3</button>
+			<button onclick="calculate('0')">0</button>
+			<button onclick="calculate('.')">.</button>
+			<button class="orange" onclick="getResult()">=</button>
+		</div>
+	</div>
+
+	<script src="script.js"></script>
+</body>
+</html>

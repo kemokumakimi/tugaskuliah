@@ -1,0 +1,3 @@
+pendapatan: 100000
+biaya_operasional: 250000
+laba_bersih: 500000

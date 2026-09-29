@@ -1,0 +1,3 @@
+John Doe|Direktur Utama
+Jane Smith|Direktur Keuangan
+4|4

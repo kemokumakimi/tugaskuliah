@@ -1,0 +1,389 @@
+[
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:55:43",
+    "status": "CLEAN",
+    "confidence": 0.89,
+    "detail": {
+      "sisa_makanan": false,
+      "tumpahan": false,
+      "sampah": false
+    },
+    "source": "dummy"
+  },
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:55:43",
+    "status": "CLEAN",
+    "confidence": 0.89,
+    "detail": {
+      "sisa_makanan": false,
+      "tumpahan": false,
+      "sampah": false
+    },
+    "source": "dummy",
+    "received_at": "2026-06-16T17:55:43"
+  },
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:55:45",
+    "status": "CLEAN",
+    "confidence": 0.97,
+    "detail": {
+      "sisa_makanan": false,
+      "tumpahan": false,
+      "sampah": false
+    },
+    "source": "dummy"
+  },
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:55:45",
+    "status": "CLEAN",
+    "confidence": 0.97,
+    "detail": {
+      "sisa_makanan": false,
+      "tumpahan": false,
+      "sampah": false
+    },
+    "source": "dummy",
+    "received_at": "2026-06-16T17:55:45"
+  },
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:55:47",
+    "status": "DIRTY",
+    "confidence": 0.98,
+    "detail": {
+      "sisa_makanan": false,
+      "tumpahan": true,
+      "sampah": false
+    },
+    "source": "dummy"
+  },
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:55:47",
+    "status": "DIRTY",
+    "confidence": 0.98,
+    "detail": {
+      "sisa_makanan": false,
+      "tumpahan": true,
+      "sampah": false
+    },
+    "source": "dummy",
+    "received_at": "2026-06-16T17:55:47"
+  },
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:55:49",
+    "status": "CLEAN",
+    "confidence": 0.82,
+    "detail": {
+      "sisa_makanan": false,
+      "tumpahan": false,
+      "sampah": false
+    },
+    "source": "dummy"
+  },
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:55:49",
+    "status": "CLEAN",
+    "confidence": 0.82,
+    "detail": {
+      "sisa_makanan": false,
+      "tumpahan": false,
+      "sampah": false
+    },
+    "source": "dummy",
+    "received_at": "2026-06-16T17:55:49"
+  },
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:55:51",
+    "status": "DIRTY",
+    "confidence": 0.92,
+    "detail": {
+      "sisa_makanan": true,
+      "tumpahan": true,
+      "sampah": false
+    },
+    "source": "dummy"
+  },
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:55:51",
+    "status": "DIRTY",
+    "confidence": 0.92,
+    "detail": {
+      "sisa_makanan": true,
+      "tumpahan": true,
+      "sampah": false
+    },
+    "source": "dummy",
+    "received_at": "2026-06-16T17:55:51"
+  },
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:55:53",
+    "status": "CLEAN",
+    "confidence": 0.79,
+    "detail": {
+      "sisa_makanan": false,
+      "tumpahan": false,
+      "sampah": false
+    },
+    "source": "dummy"
+  },
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:55:53",
+    "status": "CLEAN",
+    "confidence": 0.79,
+    "detail": {
+      "sisa_makanan": false,
+      "tumpahan": false,
+      "sampah": false
+    },
+    "source": "dummy",
+    "received_at": "2026-06-16T17:55:53"
+  },
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:55:55",
+    "status": "CLEAN",
+    "confidence": 0.95,
+    "detail": {
+      "sisa_makanan": false,
+      "tumpahan": false,
+      "sampah": false
+    },
+    "source": "dummy"
+  },
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:55:55",
+    "status": "CLEAN",
+    "confidence": 0.95,
+    "detail": {
+      "sisa_makanan": false,
+      "tumpahan": false,
+      "sampah": false
+    },
+    "source": "dummy",
+    "received_at": "2026-06-16T17:55:55"
+  },
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:55:57",
+    "status": "DIRTY",
+    "confidence": 0.79,
+    "detail": {
+      "sisa_makanan": true,
+      "tumpahan": true,
+      "sampah": false
+    },
+    "source": "dummy"
+  },
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:55:57",
+    "status": "DIRTY",
+    "confidence": 0.79,
+    "detail": {
+      "sisa_makanan": true,
+      "tumpahan": true,
+      "sampah": false
+    },
+    "source": "dummy",
+    "received_at": "2026-06-16T17:55:57"
+  },
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:55:59",
+    "status": "CLEAN",
+    "confidence": 0.76,
+    "detail": {
+      "sisa_makanan": false,
+      "tumpahan": false,
+      "sampah": false
+    },
+    "source": "dummy"
+  },
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:55:59",
+    "status": "CLEAN",
+    "confidence": 0.76,
+    "detail": {
+      "sisa_makanan": false,
+      "tumpahan": false,
+      "sampah": false
+    },
+    "source": "dummy",
+    "received_at": "2026-06-16T17:55:59"
+  },
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:56:01",
+    "status": "CLEAN",
+    "confidence": 0.78,
+    "detail": {
+      "sisa_makanan": false,
+      "tumpahan": false,
+      "sampah": false
+    },
+    "source": "dummy"
+  },
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:56:01",
+    "status": "CLEAN",
+    "confidence": 0.78,
+    "detail": {
+      "sisa_makanan": false,
+      "tumpahan": false,
+      "sampah": false
+    },
+    "source": "dummy",
+    "received_at": "2026-06-16T17:56:01"
+  },
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:56:03",
+    "status": "CLEAN",
+    "confidence": 0.93,
+    "detail": {
+      "sisa_makanan": false,
+      "tumpahan": false,
+      "sampah": false
+    },
+    "source": "dummy"
+  },
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:56:03",
+    "status": "CLEAN",
+    "confidence": 0.93,
+    "detail": {
+      "sisa_makanan": false,
+      "tumpahan": false,
+      "sampah": false
+    },
+    "source": "dummy",
+    "received_at": "2026-06-16T17:56:03"
+  },
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:56:05",
+    "status": "CLEAN",
+    "confidence": 0.85,
+    "detail": {
+      "sisa_makanan": false,
+      "tumpahan": false,
+      "sampah": false
+    },
+    "source": "dummy"
+  },
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:56:05",
+    "status": "CLEAN",
+    "confidence": 0.85,
+    "detail": {
+      "sisa_makanan": false,
+      "tumpahan": false,
+      "sampah": false
+    },
+    "source": "dummy",
+    "received_at": "2026-06-16T17:56:05"
+  },
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:56:07",
+    "status": "CLEAN",
+    "confidence": 0.97,
+    "detail": {
+      "sisa_makanan": false,
+      "tumpahan": false,
+      "sampah": false
+    },
+    "source": "dummy"
+  },
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:56:07",
+    "status": "CLEAN",
+    "confidence": 0.97,
+    "detail": {
+      "sisa_makanan": false,
+      "tumpahan": false,
+      "sampah": false
+    },
+    "source": "dummy",
+    "received_at": "2026-06-16T17:56:07"
+  },
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:56:09",
+    "status": "CLEAN",
+    "confidence": 0.8,
+    "detail": {
+      "sisa_makanan": false,
+      "tumpahan": false,
+      "sampah": false
+    },
+    "source": "dummy"
+  },
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:56:09",
+    "status": "CLEAN",
+    "confidence": 0.8,
+    "detail": {
+      "sisa_makanan": false,
+      "tumpahan": false,
+      "sampah": false
+    },
+    "source": "dummy",
+    "received_at": "2026-06-16T17:56:09"
+  },
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:56:11",
+    "status": "DIRTY",
+    "confidence": 0.88,
+    "detail": {
+      "sisa_makanan": true,
+      "tumpahan": false,
+      "sampah": false
+    },
+    "source": "dummy"
+  },
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:56:11",
+    "status": "DIRTY",
+    "confidence": 0.88,
+    "detail": {
+      "sisa_makanan": true,
+      "tumpahan": false,
+      "sampah": false
+    },
+    "source": "dummy",
+    "received_at": "2026-06-16T17:56:11"
+  },
+  {
+    "robot_id": "TIFA-02",
+    "timestamp": "2026-06-16T17:56:13",
+    "status": "DIRTY",
+    "confidence": 0.96,
+    "detail": {
+      "sisa_makanan": false,
+      "tumpahan": true,
+      "sampah": true
+    },
+    "source": "dummy"
+  }
+]

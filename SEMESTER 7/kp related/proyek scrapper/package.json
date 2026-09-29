@@ -1,0 +1,16 @@
+{
+    "name": "proyek-kp-scraper",
+    "version": "1.0.0",
+    "description": "Backend scraper untuk dasbor pertumbuhan sosial",
+    "main": "scraper.js",
+    "scripts": {
+    "start": "node scraper.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "puppeteer": "^22.12.1"
+    }
+}

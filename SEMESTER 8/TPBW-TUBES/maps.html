@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GymMap Bandung</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+    <div class="header-left">
+        <span class="logo-icon">🏋️</span>
+        <div>
+            <h1>GymMap <span class="accent">Bandung</span></h1>
+            <p class="subtitle">Direktori Gym &amp; Fitness Bandung</p>
+        </div>
+    </div>
+    <div class="header-right">
+        <span id="totalBadge" class="badge">Loading...</span>
+        <a href="index.html" class="icon-btn" title="Kembali ke Beranda" style="text-decoration:none">🏠</a>
+        <button id="darkToggle" class="icon-btn" title="Toggle Dark/Light Mode">☀️</button>
+        <button id="locateBtn" class="icon-btn" title="Temukan Lokasi Saya">📍</button>
+    </div>
+</header>
+
+<button id="sidebarToggle" class="sidebar-toggle">☰</button>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+        <label class="section-label">CARI GYM</label>
+        <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" class="search-input" placeholder="Nama gym...">
+            <button id="searchClear" class="search-clear" style="display:none">✕</button>
+        </div>
+        <div id="searchResults" class="search-results"></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="sidebar-section">
+        <label class="section-label">WILAYAH</label>
+        <select id="cityFilter" class="custom-select">
+            <option value="all">🌍 Semua Wilayah</option>
+            <option value="dayeuhkolot">🏘️ Dayeuhkolot</option>
+            <option value="bojongsoang">🌿 Bojongsoang</option>
+            <option value="buahbatu">🍃 Buahbatu</option>
+            <option value="antapani">🏠 Antapani</option>
+            <option value="kopo">🛣️ Kopo</option>
+            <option value="lengkong">🎯 Lengkong / Regol</option>
+            <option value="coblong">🏫 Coblong / Dago</option>
+            <option value="sukajadi">🌆 Sukajadi</option>
+            <option value="astanaanyar">🕌 Astanaanyar</option>
+            <option value="baleendah">⛰️ Baleendah</option>
+        </select>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="sidebar-section">
+        <label class="section-label">URUTKAN</label>
+        <button id="sortDistBtn" class="pill-btn">
+            <span>📡</span> Urutkan by Jarak
+        </button>
+        <p id="gpsStatus" class="hint-text" style="margin-top:6px"></p>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="sidebar-section">
+        <label class="section-label">STATUS JAM</label>
+        <label class="toggle-row">
+            <input type="checkbox" id="openNowFilter">
+            <span class="toggle-slider"></span>
+            <span class="toggle-label">Buka Sekarang</span>
+        </label>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="sidebar-section">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <label class="section-label" style="margin:0">FAVORIT <span id="favCount" class="fav-count">0</span></label>
+            <button id="clearFavBtn" class="mini-btn danger" style="display:none">Hapus</button>
+        </div>
+        <div id="favList" class="fav-list">
+            <p class="hint-text">Klik ⭐ di popup untuk menyimpan.</p>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="sidebar-section">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <label class="section-label" style="margin:0">STATISTIK</label>
+            <button id="openStatsBtn" class="mini-btn">📊 Panel</button>
+        </div>
+        <div class="stat-grid stat-grid-2">
+            <div class="stat-item">
+                <span id="statTotal" class="stat-num">0</span>
+                <span class="stat-label">Total Gym</span>
+            </div>
+            <div class="stat-item">
+                <span id="statOpen" class="stat-num">0</span>
+                <span class="stat-label">Buka Sekarang</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+    <p class="hint-text" style="text-align:center;font-size:10px">Sumber: OSM & Google Maps<br>WebGIS Gym &amp; Fitness — Jawa Barat</p>
+</aside>
+
+<div id="map"></div>
+
+<div id="reviewModal" class="modal-overlay">
+    <div class="modal-box">
+        <button class="modal-close" id="closeReview">✕</button>
+        <h3 id="reviewStoreName"></h3>
+        <p class="hint-text" style="margin-bottom:14px">Bagikan pengalamanmu</p>
+        <div id="starPicker" class="star-picker">
+            <span data-val="1">★</span>
+            <span data-val="2">★</span>
+            <span data-val="3">★</span>
+            <span data-val="4">★</span>
+            <span data-val="5">★</span>
+        </div>
+        <textarea id="reviewText" class="review-input" placeholder="Fasilitas lengkap, pelatih profesional, harga bersaing..."></textarea>
+        <button id="submitReview" class="pill-btn primary">💬 Kirim Review</button>
+        <div id="existingReviews" class="existing-reviews"></div>
+    </div>
+</div>
+
+<div id="statsModal" class="modal-overlay">
+    <div class="modal-box stats-modal-box">
+        <button class="modal-close" id="closeStats">✕</button>
+        <h3>📊 Statistik Gym</h3>
+        <p class="hint-text" style="margin-bottom:18px">Distribusi berdasarkan data aktif di peta</p>
+
+        <div class="stats-summary stats-summary-2">
+            <div class="stats-kpi">
+                <span id="kpiTotal" class="kpi-num">0</span>
+                <span class="kpi-label">Total Gym</span>
+            </div>
+            <div class="stats-kpi">
+                <span id="kpiOpen" class="kpi-num accent">0</span>
+                <span class="kpi-label">Buka Sekarang</span>
+            </div>
+        </div>
+
+        <div class="chart-section">
+            <p class="chart-title">DISTRIBUSI PER KECAMATAN</p>
+            <div id="districtChart" class="district-chart"></div>
+        </div>
+
+        <div class="chart-section">
+            <p class="chart-title">TOP 5 GYM PALING BANYAK DIULASAN</p>
+            <div id="topReviewedList" class="top-list"></div>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+<script src="https://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>

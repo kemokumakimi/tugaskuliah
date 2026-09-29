@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dasbor Pertumbuhan Sosial</title>
+
+    <!-- Menggunakan Tailwind CSS untuk styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Menggunakan Chart.js untuk membuat grafik -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ 
+    <!-- Menggunakan jsPDF dan html2canvas untuk fungsionalitas unduh PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <!-- Menggunakan Google Fonts untuk tipografi -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .btn-active { background-color: #4f46e5 !important; color: #ffffff !important; }
+        #social-input-view, #dashboard-view { display: none; }
+        .stat-card { background-color: #1e293b; border-radius: 0.75rem; padding: 1.5rem; }
+        .stat-value { font-size: 2.25rem; font-weight: 700; color: #ffffff; }
+        .stat-label { font-size: 0.875rem; color: #94a3b8; }
+    </style>
+</head>
+
+<body class="bg-slate-900 text-gray-200">
+
+    <!-- Tampilan Input Akun Sosial -->
+    <div id="social-input-view" class="flex flex-col items-center justify-center min-h-screen p-4">
+        <div class="w-full max-w-lg p-8 space-y-8 bg-slate-800 rounded-2xl shadow-lg">
+            <div class="text-center">
+                <h1 class="text-3xl font-bold text-white">Selamat Datang!</h1>
+                <p class="mt-2 text-slate-400">Masukkan username akun yang ingin Anda lacak.</p>
+            </div>
+            <form id="social-form" class="mt-8 space-y-6">
+                 <div>
+                    <label for="instagram-username" class="block text-sm font-medium text-slate-300 mb-2">Instagram</label>
+                    <input id="instagram-username" required class="w-full p-3 bg-slate-900 border border-slate-700 rounded-md placeholder-slate-500" placeholder="@username_instagram">
+                </div>
+                <div>
+                    <label for="x-username" class="block text-sm font-medium text-slate-300 mb-2">X (Twitter)</label>
+                    <input id="x-username" required class="w-full p-3 bg-slate-900 border border-slate-700 rounded-md placeholder-slate-500" placeholder="@username_x">
+                </div>
+                 <div>
+                    <label for="tiktok-username" class="block text-sm font-medium text-slate-300 mb-2">TikTok</label>
+                    <input id="tiktok-username" required class="w-full p-3 bg-slate-900 border border-slate-700 rounded-md placeholder-slate-500" placeholder="@username_tiktok">
+                </div>
+                <div id="social-error-message" class="text-red-400 text-sm text-center hidden">Harap isi semua username.</div>
+                <div>
+                    <button type="submit" class="group mt-4 relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">Lacak Akun</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tampilan Dasbor Utama -->
+    <div id="dashboard-view">
+        <div class="container mx-auto p-4 md:p-8">
+            <header class="mb-8 flex justify-between items-center">
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-bold text-white">Dasbor Pertumbuhan</h1>
+                    <p class="text-slate-400 mt-2">Menampilkan data terkini.</p>
+                </div>
+                <button id="logout-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">Lacak Ulang</button>
+            </header>
+            
+            <div class="mb-12">
+                <h2 class="text-2xl font-bold text-white mb-6">Rekap Performa</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div id="ig-card" class="stat-card"></div>
+                    <div id="x-card" class="stat-card"></div>
+                    <div id="tiktok-card" class="stat-card"></div>
+                </div>
+            </div>
+
+            <div id="chart-container" class="bg-slate-800 p-4 md:p-6 rounded-lg shadow-lg mb-8">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
+                    <h2 class="text-xl font-bold text-white mb-2 sm:mb-0">Grafik Pertumbuhan Total Pengikut</h2>
+                    <button id="download-pdf-btn" class="flex items-center space-x-2 bg-green-600 hover:bg-green-700 text-white font-semibold py-1 px-3 rounded-md text-sm"><span>Unduh PDF</span></button>
+                </div>
+                <div class="h-80 md:h-96"><canvas id="growthChart"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- ELEMEN DOM ---
+        const socialInputView = document.getElementById('social-input-view');
+        const dashboardView = document.getElementById('dashboard-view');
+        const socialForm = document.getElementById('social-form');
+        const logoutBtn = document.getElementById('logout-btn');
+        const downloadPdfBtn = document.getElementById('download-pdf-btn');
+        const igUserInput = document.getElementById('instagram-username');
+        const xUserInput = document.getElementById('x-username');
+        const tiktokUserInput = document.getElementById('tiktok-username');
+        const socialErrorMessage = document.getElementById('social-error-message');
+
+        let growthChartInstance = null;
+        const { jsPDF } = window.jspdf;
+
+        // --- FUNGSI SIMULASI GRAFIK ---
+        function generateChartData(days, totalFollowers) {
+            const labels = [];
+            const followers = [];
+            const today = new Date();
+            const monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Ags", "Sep", "Okt", "Nov", "Des"];
+
+            for (let i = days - 1; i >= 0; i--) {
+                const date = new Date(today);
+                date.setDate(today.getDate() - i);
+                labels.push(`${date.getDate()} ${monthNames[date.getMonth()]}`);
+                
+                const dailyFollowers = totalFollowers - (i * (150 + Math.random() * 50));
+                followers.push((dailyFollowers / 1000).toFixed(1));
+            }
+            return { labels, followers };
+        }
+
+        // --- LOGIKA APLIKASI ---
+        function updateChart(totalFollowers) {
+            const data = generateChartData(30, totalFollowers);
+            if (growthChartInstance) {
+                growthChartInstance.data.labels = data.labels;
+                growthChartInstance.data.datasets[0].data = data.followers;
+                growthChartInstance.update();
+            }
+        }
+
+        function initChart() {
+            if (growthChartInstance) growthChartInstance.destroy();
+            const ctx = document.getElementById('growthChart').getContext('2d');
+            growthChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Total Pengikut (K)', data: [], borderColor: '#6366f1', backgroundColor: 'rgba(99, 102, 241, 0.1)', borderWidth: 3, tension: 0.4, fill: true
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: {
+                        y: { ticks: { color: '#94a3b8', callback: (v) => v + 'K' } },
+                        x: { ticks: { color: '#94a3b8' } }
+                    },
+                    plugins: { legend: { labels: { color: '#cbd5e1' } } }
+                }
+            });
+        }
+        
+        // --- ALUR APLIKASI ---
+        socialInputView.style.display = 'flex';
+
+        socialForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const igValue = igUserInput.value.trim().replace('@','');
+            const xValue = xUserInput.value.trim().replace('@','');
+            const tiktokValue = tiktokUserInput.value.trim().replace('@','');
+
+            if (!igValue || !xValue || !tiktokValue) {
+                socialErrorMessage.classList.remove('hidden'); return;
+            }
+            socialErrorMessage.classList.add('hidden');
+            
+            try {
+                const response = await fetch(`http://localhost:3000/scrape?instagram=${igValue}&x=${xValue}&tiktok=${tiktokValue}`);
+                
+                if (!response.ok) {
+                    throw new Error(`Gagal terhubung ke server backend (Status: ${response.status}). Pastikan server scraper.js sudah berjalan.`);
+                }
+                const data = await response.json();
+                
+                const { instagramData, xData, tiktokData } = data;
+
+                document.getElementById('ig-card').innerHTML = `<p class="text-pink-400 mb-2 font-mono">${instagramData.username}</p><h3 class="stat-value">${instagramData.followers.toLocaleString('id-ID')}</h3><p class="stat-label">Pengikut</p>`;
+                document.getElementById('x-card').innerHTML = `<p class="text-slate-400 mb-2 font-mono">${xData.username}</p><h3 class="stat-value">${xData.followers.toLocaleString('id-ID')}</h3><p class="stat-label">Pengikut</p>`;
+                document.getElementById('tiktok-card').innerHTML = `<p class="text-cyan-400 mb-2 font-mono">${tiktokData.username}</p><h3 class="stat-value">${tiktokData.followers.toLocaleString('id-ID')}</h3><p class="stat-label">Pengikut</p><h3 class="stat-value mt-4">${tiktokData.likes.toLocaleString('id-ID')}</h3><p class="stat-label">Suka</p>`;
+
+                socialInputView.style.display = 'none';
+                dashboardView.style.display = 'block';
+                
+                const totalFollowers = instagramData.followers + xData.followers + tiktokData.followers;
+                initChart();
+                updateChart(totalFollowers);
+                
+            } catch (error) {
+                console.error("Terjadi error saat fetch:", error);
+                alert(`Gagal mengambil data: ${error.message}`);
+            }
+        });
+
+        logoutBtn.addEventListener('click', function() {
+            window.location.reload();
+        });
+
+        downloadPdfBtn.addEventListener('click', function() {
+            const chartContainer = document.getElementById('chart-container');
+            html2canvas(chartContainer, { backgroundColor: '#1e293b' })
+                .then(canvas => {
+                    const imgData = canvas.toDataURL('image/png');
+                    const pdf = new jsPDF({ orientation: 'landscape', unit: 'px', format: [canvas.width, canvas.height] });
+                    pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+                    pdf.save('laporan-pertumbuhan.pdf');
+                });
+        });
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+tifa_ws_bridge:
+  ros__parameters:
+    ws_uri_primary: "ws://localhost:3001"
+    ws_uri_backup: ""
+    robot_id: "TFRB1"
+    reconnect_interval_sec: 3.0

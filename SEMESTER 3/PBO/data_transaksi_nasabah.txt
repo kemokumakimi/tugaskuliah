@@ -1,0 +1,2 @@
+John Doe|2023-01-15:Transfer Masuk:5000000:Dari Rek. 789|2023-01-20:Penarikan Tunai:2000000:ATM Lokal|2023-02-02:Pembayaran Tagihan:1500000:Listrik|2024:Debit:10000:Debit|2023-01-01:Kredit:10000:Kredit|& C:/Users/Lenovo/AppData/Local/Microsoft/WindowsApps/python3.11.exe "d:/KULIAH KIMI/TUGAS KULIAH SEMESTER 3/PBO/Tugas besar 2/main3.py":Kredit:20000:Kredit
+Jane Smith|2023-03-10:Transfer Keluar:3000000:Ke Rek. 987|2023-03-15:Penarikan Tunai:1000000:ATM Lokal|2020:Biaya Administrasi:10000:Biaya Administrasi

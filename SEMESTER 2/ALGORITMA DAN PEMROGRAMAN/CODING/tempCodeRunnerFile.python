@@ -1,0 +1,26 @@
+nama = input("Masukkan Nama: ")
+nilai = int(input("Masukkan Nilai: "))
+
+komentar = "a"
+
+if nilai <= 39:
+    indeks = "E"
+    komentar = print("Tidak Mencapai Nilai Maks")
+elif nilai <= 49:
+    indeks = "D"
+    komentar = print("Kurang")
+elif nilai <= 64:
+    indeks = "C"
+    komentar = print("Cukup")
+elif nilai <= 79:
+    indeks = "B"
+    komentar = print("Baik")
+elif nilai <= 100:
+    indeks = "A"
+    komentar = print("Sangat Baik")
+
+print(f"Nama     :{nama}")
+print(f"Nilai    :{nilai}")
+print(f"Indeks   :{indeks}")
+print(f"Komentar :{komentar}")
+

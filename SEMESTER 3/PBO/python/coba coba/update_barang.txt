@@ -1,0 +1,10 @@
+Nama Barang: sabun, Stok Tersedia: 20
+Nama Barang: pasta gigi, Stok Tersedia: 18
+Nama Barang: shampoo, Stok Tersedia: 15
+Nama Barang: sikat gigi, Stok Tersedia: 15
+Nama Barang: kapas, Stok Tersedia: 10
+Nama Barang: indomie, Stok Tersedia: 25
+Nama Barang: biskuit Oreo, Stok Tersedia: 30
+Nama Barang: pulpen, Stok Tersedia: 0
+Nama Barang: buku, Stok Tersedia: 8
+Nama Barang: penghapus, Stok Tersedia: 12

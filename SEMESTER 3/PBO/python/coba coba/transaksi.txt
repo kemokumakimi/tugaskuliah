@@ -1,0 +1,2 @@
+Nama Barang: pulpen, Jumlah Pembelian: 10, Total Harga: 25000
+Nama Barang: shampoo, Jumlah Pembelian: 5, Total Harga: 20000

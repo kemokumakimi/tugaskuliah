@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My File Explorer</title>
+    <!-- Tailwind CSS untuk styling yang cepat dan modern -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome untuk Icon Folder dan File -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Animasi hover simpel untuk kartu item */
+        .item-card { transition: all 0.2s ease-in-out; }
+        .item-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans min-h-screen pb-10">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-sm border-b px-6 py-4 flex justify-between items-center sticky top-0 z-10">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-cloud text-blue-500 text-3xl"></i>
+            <div>
+                <h1 class="text-xl font-bold text-gray-700 leading-tight">My<span class="text-blue-500">Drive</span></h1>
+                <p class="text-xs text-gray-400">Cloud Storage Pribadi</p>
+            </div>
+        </div>
+        <div>
+            <a href="https://github.com" target="_blank" class="text-gray-500 hover:text-black transition">
+                <i class="fa-brands fa-github text-2xl"></i>
+            </a>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+        <!-- Breadcrumbs (Navigasi Back/Home) -->
+        <div class="flex items-center flex-wrap gap-2 text-sm text-gray-600 mb-6 bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-gray-100" id="breadcrumbs">
+            <button onclick="fetchContents('')" class="hover:text-blue-500 hover:underline flex items-center gap-1 font-medium">
+                <i class="fa-solid fa-home"></i> Home
+            </button>
+            <!-- Javascript akan mengisi path navigasi di sini -->
+        </div>
+
+        <!-- Animasi Loading -->
+        <div id="loader" class="hidden flex flex-col justify-center items-center py-20 gap-3">
+            <i class="fa-solid fa-circle-notch fa-spin text-4xl text-blue-500"></i>
+            <p class="text-gray-500 text-sm animate-pulse">Mengambil data dari GitHub...</p>
+        </div>
+
+        <!-- Pesan Error -->
+        <div id="error-message" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-4 rounded-xl relative mb-6 flex gap-3 items-start">
+            <i class="fa-solid fa-circle-exclamation text-xl mt-0.5"></i>
+            <div>
+                <strong class="font-bold block mb-1">Terjadi Kesalahan!</strong>
+                <span class="text-sm" id="error-text"></span>
+            </div>
+        </div>
+
+        <!-- Tempat menampilkan folder dan file -->
+        <div id="file-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <!-- Javascript akan merender item di sini -->
+        </div>
+    </main>
+
+    <!-- Modal Pop-up untuk File -->
+    <div id="file-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-4 transition-opacity">
+        <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm mx-auto transform transition-transform scale-100">
+            <div class="flex justify-between items-start mb-5">
+                <div class="flex flex-col overflow-hidden pr-4">
+                    <span class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">File Terpilih</span>
+                    <h3 class="text-lg font-bold truncate text-gray-800" id="modal-filename">filename.pdf</h3>
+                </div>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-red-500 transition-colors bg-gray-100 hover:bg-red-50 rounded-full w-8 h-8 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="flex flex-col gap-3 mt-2">
+                <a id="btn-view" href="#" target="_blank" class="w-full bg-indigo-50 text-indigo-700 font-semibold py-2.5 px-4 rounded-xl border border-indigo-100 hover:bg-indigo-100 hover:border-indigo-200 text-center transition flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-github"></i> Lihat di GitHub
+                </a>
+                <a id="btn-download" href="#" target="_blank" class="w-full bg-blue-600 text-white font-semibold py-2.5 px-4 rounded-xl shadow-md hover:bg-blue-700 hover:shadow-lg text-center transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-cloud-arrow-down"></i> Download File
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================================
+        // PENGATURAN REPOSITORY GITHUB
+        // Silakan ubah 2 baris di bawah ini sesuai dengan akun GitHub Anda!
+        // =========================================================================
+        const USERNAME = 'kemokumakimi';         // Contoh: 'johndoe'
+        const REPO = 'tugaskuliah';               // Contoh: 'penyimpanan-tugas'
+        // =========================================================================
+
+        let currentPath = '';
+
+        // Tangkap elemen HTML
+        const grid = document.getElementById('file-grid');
+        const breadcrumbs = document.getElementById('breadcrumbs');
+        const loader = document.getElementById('loader');
+        const errorMsg = document.getElementById('error-message');
+        const errorText = document.getElementById('error-text');
+        const modal = document.getElementById('file-modal');
+
+        // Fungsi menentukan icon berdasarkan tipe file
+        function getIconClasses(type, filename) {
+            if (type === 'dir') return 'fa-solid fa-folder text-blue-500 text-5xl drop-shadow-sm';
+            
+            const ext = filename.split('.').pop().toLowerCase();
+            const iconMap = {
+                pdf: 'fa-solid fa-file-pdf text-red-500',
+                doc: 'fa-solid fa-file-word text-blue-700',
+                docx: 'fa-solid fa-file-word text-blue-700',
+                xls: 'fa-solid fa-file-excel text-emerald-600',
+                xlsx: 'fa-solid fa-file-excel text-emerald-600',
+                ppt: 'fa-solid fa-file-powerpoint text-orange-500',
+                pptx: 'fa-solid fa-file-powerpoint text-orange-500',
+                jpg: 'fa-regular fa-image text-purple-500',
+                jpeg: 'fa-regular fa-image text-purple-500',
+                png: 'fa-regular fa-image text-purple-500',
+                zip: 'fa-solid fa-file-zipper text-gray-500',
+                rar: 'fa-solid fa-file-zipper text-gray-500',
+                txt: 'fa-solid fa-file-lines text-gray-400',
+                html: 'fa-brands fa-html5 text-orange-600',
+                css: 'fa-brands fa-css3-alt text-blue-500',
+                js: 'fa-brands fa-js text-yellow-400'
+            };
+            return (iconMap[ext] || 'fa-solid fa-file text-gray-400') + ' text-5xl drop-shadow-sm';
+        }
+
+        // Fungsi mengambil data dari API GitHub
+        async function fetchContents(path = '') {
+            // Jika Anda belum mengubah variabel konfigurasi di atas
+            if (USERNAME === 'USERNAME_GITHUB_ANDA') {
+                errorMsg.classList.remove('hidden');
+                errorText.innerHTML = "Anda belum mengatur <b>USERNAME</b> dan <b>REPO</b> di dalam kode HTML. Silakan buka file HTML ini di teks editor dan ubah variabelnya.";
+                return;
+            }
+
+            currentPath = path;
+            grid.innerHTML = '';
+            errorMsg.classList.add('hidden');
+            loader.classList.remove('hidden');
+            updateBreadcrumbs();
+
+            try {
+                // Endpoint GitHub REST API
+                const url = `https://api.github.com/repos/${USERNAME}/${REPO}/contents/${path}`;
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    if (response.status === 404) throw new Error(`Repository <b>${USERNAME}/${REPO}</b> tidak ditemukan. Pastikan repository tersebut Public dan namanya benar.`);
+                    if (response.status === 403) throw new Error("Terlalu banyak permintaan (Rate Limit API GitHub tercapai). Silakan coba lagi nanti.");
+                    throw new Error(`Terjadi kesalahan sistem: ${response.statusText}`);
+                }
+
+                let data = await response.json();
+                
+                // Urutkan: Folder tampil lebih dulu, lalu File, diurutkan sesuai abjad
+                data.sort((a, b) => {
+                    if (a.type === b.type) return a.name.localeCompare(b.name);
+                    return a.type === 'dir' ? -1 : 1;
+                });
+
+                loader.classList.add('hidden');
+                renderGrid(data);
+            } catch (error) {
+                loader.classList.add('hidden');
+                errorMsg.classList.remove('hidden');
+                errorText.innerHTML = error.message;
+            }
+        }
+
+        // Fungsi merender item ke HTML
+        function renderGrid(items) {
+            if (items.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-16 text-gray-400 flex flex-col items-center gap-3"><i class="fa-regular fa-folder-open text-4xl"></i><p>Folder ini kosong.</p></div>`;
+                return;
+            }
+
+            items.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'item-card bg-white border border-gray-100 shadow-sm rounded-2xl p-5 flex flex-col items-center justify-center text-center cursor-pointer relative group';
+                
+                const icon = document.createElement('i');
+                icon.className = getIconClasses(item.type, item.name) + ' mb-4 group-hover:scale-110 transition-transform duration-300';
+                
+                const title = document.createElement('span');
+                title.className = 'text-xs md:text-sm font-semibold text-gray-700 w-full truncate px-1';
+                title.innerText = item.name;
+
+                card.appendChild(icon);
+                card.appendChild(title);
+
+                // Aksi ketika diklik
+                if (item.type === 'dir') {
+                    card.onclick = () => fetchContents(item.path);
+                } else {
+                    card.onclick = () => openModal(item);
+                }
+
+                grid.appendChild(card);
+            });
+        }
+
+        // Fungsi memperbarui breadcrumb (Path / Navigasi)
+        function updateBreadcrumbs() {
+            let parts = currentPath.split('/').filter(p => p !== '');
+            let html = `<button onclick="fetchContents('')" class="hover:text-blue-600 hover:bg-blue-50 px-2 py-1 rounded-md transition flex items-center gap-1.5 font-semibold text-gray-700"><i class="fa-solid fa-house text-sm"></i> Home</button>`;
+            
+            let buildPath = '';
+            parts.forEach((part, index) => {
+                buildPath += (index === 0 ? '' : '/') + part;
+                html += ` <i class="fa-solid fa-chevron-right text-[10px] mx-1 text-gray-300"></i> `;
+                if (index === parts.length - 1) {
+                    html += `<span class="bg-blue-50 text-blue-700 px-3 py-1 rounded-md font-bold truncate max-w-[150px] sm:max-w-[200px]">${part}</span>`;
+                } else {
+                    const thisPath = buildPath;
+                    html += `<button onclick="fetchContents('${thisPath}')" class="hover:text-blue-600 hover:bg-blue-50 px-2 py-1 rounded-md transition text-gray-600 font-medium truncate max-w-[100px] sm:max-w-[150px]">${part}</button>`;
+                }
+            });
+            
+            breadcrumbs.innerHTML = html;
+        }
+
+        // Manajemen Modal
+        function openModal(item) {
+            document.getElementById('modal-filename').innerText = item.name;
+            document.getElementById('btn-view').href = item.html_url; 
+            document.getElementById('btn-download').href = item.download_url;
+            
+            modal.classList.remove('hidden');
+            // Sedikit delay untuk memicu animasi CSS (jika ada)
+            setTimeout(() => {
+                modal.children[0].classList.remove('scale-95', 'opacity-0');
+            }, 10);
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        // Memulai aplikasi pertama kali
+        fetchContents();
+    </script>
+</body>
+</html>

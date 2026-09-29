@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1682567193 source:d:\tugas tugas kuliah\tugas ptk\tugas 2\cuberotate\main.c
+	<math.h>
+	<stdio.h>
+	<string.h>
+	<unistd.h>
+

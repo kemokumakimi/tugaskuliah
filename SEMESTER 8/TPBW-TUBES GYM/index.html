@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GymMap Jawa Barat — WebGIS Gym & Fitness</title>
+
+<script>
+  const savedTheme = localStorage.getItem('gymmap_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  :root {
+    /* DEFAULT DARK MODE VARIABLES */
+    --bg:#121212; --bg2:#1e1e1e; --bg3:#2d2d2d;
+    --border:rgba(255,255,255,0.1);
+    --text:#f5f5f5; --text2:#a3a3a3;
+    --accent:#ffffff; --accent-text:#1e1e1e;
+    --shadow:0 8px 32px rgba(0,0,0,0.3);
+    --font-display:'IBM Plex Mono',monospace;
+    --font-body:'IBM Plex Sans',sans-serif;
+    --nav-height:68px;
+  }
+
+  /* LIGHT MODE VARIABLES */
+  [data-theme="light"] {
+    --bg:#f9f9f9; --bg2:#ffffff; --bg3:#f0f0f0;
+    --border:rgba(0,0,0,0.1);
+    --text:#121212; --text2:#666666;
+    --accent:#121212; --accent-text:#ffffff;
+    --shadow:0 8px 32px rgba(0,0,0,0.08);
+  }
+
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:var(--font-body);background:var(--bg);color:var(--text);overflow-x:hidden; transition: background 0.3s, color 0.3s;}
+
+  /* ── NAV ── */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:1000;
+    height:var(--nav-height);
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 2.5rem;
+    background:rgba(var(--bg),0.95);backdrop-filter:blur(20px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-logo{
+    font-family:var(--font-display);font-size:1.1rem;font-weight:600;letter-spacing:0.04em;
+    color:var(--text);text-decoration:none;display:flex;align-items:center;gap:10px;
+  }
+  .nav-logo .accent{color:var(--accent);}
+  .nav-logo .sub{
+    font-size:0.62rem;font-weight:400;color:var(--text2);letter-spacing:0.08em;
+    border-left:1px solid var(--border);padding-left:10px;
+  }
+  .nav-links{display:flex;gap:2rem;list-style:none;}
+  .nav-links a{
+    font-family:var(--font-display);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;
+    color:var(--text2);text-decoration:none;transition:color 0.2s;
+    position:relative;padding-bottom:4px;
+  }
+  .nav-links a:hover,
+  .nav-links a.active-nav{color:var(--text);}
+  .nav-links a.active-nav::after{
+    content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:var(--text);
+  }
+  
+  .nav-actions { display:flex; align-items:center; gap:0.8rem; }
+  .theme-btn {
+    background: transparent; border: 1px solid var(--border); color: var(--text);
+    cursor: pointer; padding: 0.4rem 0.6rem; border-radius: 4px;
+    font-size: 0.9rem; transition: all 0.2s;
+  }
+  .theme-btn:hover { background: var(--bg3); }
+  
+  .nav-cta{
+    font-family:var(--font-display);font-size:0.68rem;letter-spacing:0.08em;
+    background:var(--accent);color:var(--accent-text);
+    border:none;padding:0.55rem 1.2rem;cursor:pointer;text-decoration:none;display:inline-block;
+    transition:opacity 0.2s,transform 0.15s;
+  }
+  .nav-cta:hover{opacity:0.85;transform:translateY(-1px);}
+
+  /* ── HERO ── */
+  .hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;overflow:hidden;}
+  .hero-left{padding:calc(var(--nav-height) + 3.5rem) 2.5rem 3.5rem 2.5rem;position:relative;z-index:2;}
+  .hero-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:var(--font-display);font-size:0.64rem;letter-spacing:0.12em;text-transform:uppercase;
+    color:var(--text2);border:1px solid var(--border);padding:0.35rem 0.8rem;margin-bottom:1.8rem;border-radius:4px;
+  }
+  .dot{width:5px;height:5px;border-radius:50%;background:var(--accent);animation:blink 1.5s infinite;flex-shrink:0;}
+  @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.2;}}
+  .hero-h1{
+    font-family:var(--font-display);font-size:clamp(2.8rem,5.5vw,5.5rem);
+    font-weight:600;line-height:1.0;letter-spacing:-0.02em;margin-bottom:1.4rem;
+  }
+  .hero-h1 .outline{-webkit-text-stroke:1.5px var(--text);color:transparent;}
+  .hero-h1 .aw{color:var(--accent);}
+  .hero-sub{font-size:0.9rem;color:var(--text2);line-height:1.8;max-width:360px;margin-bottom:2.2rem;font-weight:300;}
+  .btn-primary{
+    font-family:var(--font-display);font-size:0.72rem;letter-spacing:0.08em;
+    background:var(--accent);color:var(--accent-text);
+    border:none;padding:0.85rem 1.8rem;cursor:pointer;
+    transition:opacity 0.2s,transform 0.15s;text-decoration:none;display:inline-block;
+  }
+  .btn-primary:hover{opacity:0.85;transform:translateY(-2px);}
+  .btn-outline{
+    font-family:var(--font-display);font-size:0.72rem;letter-spacing:0.08em;
+    background:transparent;color:var(--text2);
+    border:1px solid var(--border);padding:0.85rem 1.8rem;cursor:pointer;
+    transition:all 0.2s;text-decoration:none;display:inline-block;
+  }
+  .btn-outline:hover{color:var(--text);border-color:var(--text);}
+  .hero-btns{display:flex;gap:1rem;flex-wrap:wrap;}
+  .hero-stats{display:flex;gap:2rem;margin-top:2.8rem;padding-top:2rem;border-top:1px solid var(--border);}
+  .stat-num{display:block;font-family:var(--font-display);font-size:2rem;font-weight:600;color:var(--accent);letter-spacing:-0.02em;}
+  .stat-label{font-family:var(--font-display);font-size:0.6rem;color:var(--text2);text-transform:uppercase;letter-spacing:0.1em;margin-top:2px;}
+
+  /* ── MAP PANEL ── */
+  .hero-right{position:relative;height:100vh;border-left:1px solid var(--border);}
+  #heroMap{width:100%;height:100%;background:var(--bg2);}
+  .map-hint{
+    position:absolute;bottom:20px;left:50%;transform:translateX(-50%);
+    z-index:500;background:var(--bg2);border:1px solid var(--border);
+    backdrop-filter:blur(12px);border-radius:6px;
+    font-family:var(--font-display);font-size:0.58rem;letter-spacing:0.1em;
+    color:var(--text2);padding:0.45rem 1rem;white-space:nowrap;pointer-events:none;
+    animation:fadeUp 0.6s ease 1.2s both;
+  }
+  @keyframes fadeUp{
+    from{opacity:0;transform:translateX(-50%) translateY(6px);}
+    to{opacity:1;transform:translateX(-50%) translateY(0);}
+  }
+  .map-dot{width:8px;height:8px;background:var(--accent);border:1.5px solid var(--bg);border-radius:50%;transition:transform 0.15s;cursor:pointer;}
+  .map-dot:hover{transform:scale(2.2);}
+  .leaflet-container a{color:var(--text) !important;}
+  .leaflet-control-attribution{display:none !important;}
+  .leaflet-interactive:focus,.leaflet-marker-icon:focus{outline:none !important;}
+  .leaflet-div-icon{background:none !important;border:none !important;}
+  .leaflet-tooltip.gym-tip{
+    background:var(--bg2) !important;border:1px solid var(--border) !important;
+    border-radius:10px !important;box-shadow:var(--shadow) !important;
+    padding:8px 12px !important;color:var(--text) !important;
+    font-family:var(--font-body) !important;font-size:11px !important;
+  }
+  .leaflet-tooltip.gym-tip::before{display:none !important;}
+  .tip-name{font-family:var(--font-display);font-size:11px;font-weight:600;color:var(--text);margin-bottom:2px;}
+  .tip-addr{font-size:10px;color:var(--text2);line-height:1.4;}
+
+  /* ── TICKER ── */
+  .ticker-wrap{overflow:hidden;padding:0.6rem 0;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+  .ticker{display:flex;white-space:nowrap;animation:ticker 24s linear infinite;}
+  .ticker-item{font-family:var(--font-display);font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text2);padding:0 2rem;display:flex;align-items:center;gap:1rem;}
+  .ticker-sep{color:var(--border);}
+  @keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+  /* ── SHARED SECTION STYLES ── */
+  .section{padding:5.5rem 2.5rem;}
+  .section-label{font-family:var(--font-display);font-size:0.63rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);margin-bottom:0.7rem;}
+  .section-title{font-family:var(--font-display);font-size:clamp(1.6rem,3vw,2.8rem);font-weight:600;line-height:1.1;letter-spacing:-0.01em;margin-bottom:1rem;}
+  .section-sub{font-size:0.9rem;color:var(--text2);line-height:1.8;max-width:560px;font-weight:300;}
+  .section-alt{background:var(--bg2);}
+
+  /* ── TENTANG ── */
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-top:3rem;}
+  .about-text p{font-size:0.88rem;color:var(--text2);line-height:1.9;font-weight:300;margin-bottom:1rem;}
+  .about-text p:last-child{margin-bottom:0;}
+  .about-text strong{color:var(--text);font-weight:500;}
+  .about-facts{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);}
+  .fact-card{background:var(--bg);padding:1.5rem;}
+  .fact-icon{font-size:1.4rem;margin-bottom:0.6rem;}
+  .fact-title{font-family:var(--font-display);font-size:0.78rem;font-weight:600;margin-bottom:0.4rem;}
+  .fact-desc{font-size:0.78rem;color:var(--text2);line-height:1.6;font-weight:300;}
+
+  /* ── FITUR ── */
+  .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:2.5rem;}
+  .feature-card{background:var(--bg2);padding:1.8rem;transition:background 0.25s;}
+  .feature-card:hover{background:var(--bg3);}
+  .feature-icon{width:40px;height:40px;margin-bottom:1rem;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);}
+  .feature-icon svg{width:18px;height:18px;stroke:var(--text);fill:none;stroke-width:1.5;}
+  .feature-card h3{font-family:var(--font-display);font-size:0.88rem;font-weight:600;letter-spacing:0.02em;margin-bottom:0.5rem;}
+  .feature-card p{font-size:0.82rem;color:var(--text2);line-height:1.7;font-weight:300;}
+
+  /* ── STATISTIK ── */
+  .stats-big-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:2.5rem;}
+  .stats-big-card{background:var(--bg);padding:2rem 1.5rem;text-align:center;}
+  .stats-big-num{font-family:var(--font-display);font-size:2.4rem;font-weight:600;color:var(--accent);letter-spacing:-0.02em;display:block;margin-bottom:0.4rem;}
+  .stats-big-label{font-family:var(--font-display);font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);}
+  .stats-bar-section{margin-top:2.5rem;}
+  .bar-title{font-family:var(--font-display);font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:1rem;}
+  .bar-row{display:flex;align-items:center;gap:1rem;margin-bottom:0.7rem;}
+  .bar-label{font-family:var(--font-display);font-size:0.7rem;color:var(--text2);width:110px;flex-shrink:0;}
+  .bar-track{flex:1;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;}
+  .bar-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 1s ease;}
+  .bar-val{font-family:var(--font-display);font-size:0.68rem;color:var(--text2);width:32px;text-align:right;}
+
+  /* ── TIM ── */
+  .team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:2.5rem;}
+  .team-card{background:var(--bg2);padding:2rem;display:flex;flex-direction:column;gap:0.5rem;transition:background 0.25s;}
+  .team-card:hover{background:var(--bg3);}
+  .team-avatar{width:48px;height:48px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:0.5rem;}
+  .team-name{font-family:var(--font-display);font-size:0.88rem;font-weight:600;}
+  .team-nim{font-family:var(--font-display);font-size:0.65rem;color:var(--text2);letter-spacing:0.06em;}
+  .team-role{font-size:0.78rem;color:var(--text2);font-weight:300;margin-top:2px;}
+  .team-meta{margin-top:2rem;padding-top:2rem;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+  .team-meta-item{display:flex;flex-direction:column;gap:4px;}
+  .team-meta-label{font-family:var(--font-display);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);}
+  .team-meta-val{font-size:0.82rem;color:var(--text);font-weight:400;}
+
+  /* ── FOOTER ── */
+  footer{border-top:1px solid var(--border);padding:2rem 2.5rem;display:flex;justify-content:space-between;align-items:center;}
+  .footer-logo{font-family:var(--font-display);font-size:0.9rem;font-weight:600;letter-spacing:0.06em;color:var(--text);}
+  .footer-logo .accent{color:var(--accent);}
+  .footer-copy{font-size:0.72rem;color:var(--text2);font-family:var(--font-display);}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    GYM<span class="accent">MAP</span>
+    <span class="sub">JABAR</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#home" class="active-nav">Home</a></li>
+    <li><a href="#tentang">Tentang</a></li>
+    <li><a href="#fitur">Fitur</a></li>
+    <li><a href="#statistik">Statistik</a></li>
+    <li><a href="maps.html">Peta</a></li>
+    <li><a href="#tim">Tim</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button id="themeToggle" class="theme-btn" title="Ganti Tema"></button>
+    <a href="maps.html" class="nav-cta">Buka Peta →</a>
+  </div>
+</nav>
+
+<main>
+
+  <section class="hero" id="home">
+    <div class="hero-left">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        WebGIS · Jawa Barat · 2026
+      </div>
+      <h1 class="hero-h1">
+        TEMUKAN<br>
+        <span class="outline">GYM</span><br>
+        <span class="aw">TERBAIK</span><br>
+        <span class="outline">DI JAWA BARAT</span>
+      </h1>
+      <p class="hero-sub">Platform pemetaan interaktif untuk menemukan, membandingkan, dan mengevaluasi gym & fitness center di seluruh Provinsi Jawa Barat.</p>
+      <div class="hero-btns">
+        <a href="maps.html" class="btn-primary">Buka Peta →</a>
+        <a href="#tentang" class="btn-outline">Pelajari Lebih</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-num" id="cnt1">0</span>
+          <span class="stat-label">Gym Terdaftar</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num" id="cnt2">0</span>
+          <span class="stat-label">Kota / Kab</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num" id="cnt3">0</span>
+          <span class="stat-label">Sumber Data</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div id="heroMap"></div>
+      <div class="map-hint">🏋️ KLIK MARKER UNTUK DETAIL</div>
+    </div>
+  </section>
+
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <div class="ticker-item">GYM MAP JAWA BARAT <span class="ticker-sep">·</span> FITNESS CENTER <span class="ticker-sep">·</span> CROSSFIT <span class="ticker-sep">·</span> YOGA STUDIO <span class="ticker-sep">·</span> BOXING <span class="ticker-sep">·</span> PILATES <span class="ticker-sep">·</span> WEBGIS <span class="ticker-sep">·</span> SELURUH JAWA BARAT <span class="ticker-sep">·</span></div>
+      <div class="ticker-item">GYM MAP JAWA BARAT <span class="ticker-sep">·</span> FITNESS CENTER <span class="ticker-sep">·</span> CROSSFIT <span class="ticker-sep">·</span> YOGA STUDIO <span class="ticker-sep">·</span> BOXING <span class="ticker-sep">·</span> PILATES <span class="ticker-sep">·</span> WEBGIS <span class="ticker-sep">·</span> SELURUH JAWA BARAT <span class="ticker-sep">·</span></div>
+    </div>
+  </div>
+
+  <section class="section section-alt" id="tentang">
+    <div class="section-label">// 01 — Tentang</div>
+    <h2 class="section-title">GYM DI JAWA BARAT</h2>
+    <p class="section-sub">Memahami ekosistem gym dan pusat kebugaran di seluruh Jawa Barat.</p>
+
+    <div class="about-grid">
+      <div class="about-text">
+        <p><strong>Gym atau pusat kebugaran</strong> adalah fasilitas yang menyediakan peralatan dan ruang untuk latihan fisik. Di era modern, gym bukan sekadar tempat olahraga — ia menjadi ruang sosial, sarana pemulihan mental, dan bagian dari gaya hidup sehat masyarakat urban.</p>
+        <p>Jawa Barat sebagai salah satu provinsi dengan populasi terbesar di Indonesia memiliki ekosistem kebugaran yang sangat beragam. Dari <strong>gym umum</strong> berbiaya terjangkau di kabupaten hingga <strong>fitness center premium</strong> di pusat perbelanjaan Bandung, Bekasi, dan Bogor — semua tersedia untuk berbagai kalangan.</p>
+        <p>Jenis-jenis gym yang tersebar di seluruh Jawa Barat meliputi <strong>Gym Umum</strong> (free weights & cardio), <strong>CrossFit Box</strong> (latihan fungsional intensitas tinggi), <strong>Yoga Studio</strong> (fleksibilitas & mindfulness), <strong>Boxing / MMA</strong> (seni bela diri & kardio), and <strong>Pilates Studio</strong> (kekuatan inti & postur tubuh).</p>
+        <p>GymMap Jawa Barat hadir sebagai platform WebGIS yang memetakan seluruh fasilitas kebugaran ini, memudahkan warga menemukan gym terdekat sesuai kebutuhan dan anggaran mereka.</p>
+      </div>
+      <div class="about-facts">
+        <div class="fact-card">
+          <div class="fact-icon">💪</div>
+          <div class="fact-title">Gym Umum</div>
+          <div class="fact-desc">Peralatan free weights, mesin kardio, dan area angkat beban. Cocok untuk pemula hingga atlet.</div>
+        </div>
+        <div class="fact-card">
+          <div class="fact-icon">🔥</div>
+          <div class="fact-title">CrossFit</div>
+          <div class="fact-desc">Latihan fungsional intensitas tinggi dengan komunitas yang solid. Sesi terstruktur harian (WOD).</div>
+        </div>
+        <div class="fact-card">
+          <div class="fact-icon">🧘</div>
+          <div class="fact-title">Yoga Studio</div>
+          <div class="fact-desc">Fokus pada fleksibilitas, keseimbangan, dan kesehatan mental. Kelas berjadwal dengan instruktur.</div>
+        </div>
+        <div class="fact-card">
+          <div class="fact-icon">🥊</div>
+          <div class="fact-title">Boxing / MMA</div>
+          <div class="fact-desc">Latihan bela diri dan kardio intensif. Melatih disiplin, kecepatan, dan kekuatan secara bersamaan.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="fitur">
+    <div class="section-label">// 02 — Fitur</div>
+    <h2 class="section-title">SATU PLATFORM,<br>SATU PROVINSI</h2>
+    <p class="section-sub">GymMap Jawa Barat menyediakan berbagai fitur untuk mempermudah pencarian gym dari berbagai kota dan kabupaten di Jawa Barat.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <h3>Peta Interaktif</h3>
+        <p>Visualisasi lokasi gym secara real-time dengan marker cluster, heatmap, dan layer peta Dark / Street / Satellite.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
+        <h3>Filter Multi-Kriteria</h3>
+        <p>Saring berdasarkan wilayah, kategori gym, rentang biaya, rating minimum, dan status jam buka secara bersamaan.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg></div>
+        <h3>Gym Terdekat</h3>
+        <p>Aktifkan GPS dan temukan 5 gym terdekat dari posisimu secara otomatis, lengkap dengan estimasi jarak.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+        <h3>Rating & Ulasan</h3>
+        <p>Lihat rating dari Google Maps, baca dan tulis ulasan komunitas langsung di dalam platform.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+        <h3>Simpan Favorit</h3>
+        <p>Tandai gym favoritmu dengan ⭐ dan akses kembali kapan saja. Data tersimpan di browser lokal.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+        <h3>Statistik & Analisis</h3>
+        <p>Panel statistik distribusi gym per kecamatan, top gym paling banyak diulas, dan ringkasan data aktif.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="statistik">
+    <div class="section-label">// 03 — Statistik</div>
+    <h2 class="section-title">DATA SEKILAS</h2>
+    <p class="section-sub">Gambaran umum distribusi gym & fitness center di Jawa Barat berdasarkan data yang dikumpulkan.</p>
+
+    <div class="stats-big-grid">
+      <div class="stats-big-card">
+        <span class="stats-big-num" id="s1">0</span>
+        <span class="stats-big-label">Total Gym</span>
+      </div>
+      <div class="stats-big-card">
+        <span class="stats-big-num" id="s2">0</span>
+        <span class="stats-big-label">Kota / Kab</span>
+      </div>
+      <div class="stats-big-card">
+        <span class="stats-big-num" id="s3">4.4</span>
+        <span class="stats-big-label">Rata-rata Rating</span>
+      </div>
+      <div class="stats-big-card">
+        <span class="stats-big-num" id="s4">2</span>
+        <span class="stats-big-label">Sumber Data</span>
+      </div>
+    </div>
+
+    <div class="stats-bar-section">
+      <p class="bar-title">Distribusi Kategori Gym Jawa Barat</p>
+      <div class="bar-row"><span class="bar-label">Gym Umum</span><div class="bar-track"><div class="bar-fill" style="width:0%" data-w="72%"></div></div><span class="bar-val">72%</span></div>
+      <div class="bar-row"><span class="bar-label">Fitness Center</span><div class="bar-track"><div class="bar-fill" style="width:0%" data-w="14%"></div></div><span class="bar-val">14%</span></div>
+      <div class="bar-row"><span class="bar-label">Yoga Studio</span><div class="bar-track"><div class="bar-fill" style="width:0%" data-w="7%"></div></div><span class="bar-val">7%</span></div>
+      <div class="bar-row"><span class="bar-label">CrossFit</span><div class="bar-track"><div class="bar-fill" style="width:0%" data-w="4%"></div></div><span class="bar-val">4%</span></div>
+      <div class="bar-row"><span class="bar-label">Boxing / MMA</span><div class="bar-track"><div class="bar-fill" style="width:0%" data-w="3%"></div></div><span class="bar-val">3%</span></div>
+    </div>
+  </section>
+
+  <section class="section" id="tim">
+    <div class="section-label">// 04 — Tim</div>
+    <h2 class="section-title">TIM PENGEMBANG</h2>
+    <p class="section-sub">Proyek WebGIS ini dikembangkan sebagai tugas mata kuliah Sistem Informasi Geografis.</p>
+
+    <div class="team-grid" style="grid-template-columns:1fr 1fr;">
+      <div class="team-card">
+        <div class="team-avatar">👤</div>
+        <div class="team-name">Ariski Myardi</div>
+        <div class="team-nim">NIM · 1103220019</div>
+        <div class="team-role">Pengumpulan Data & Pengembangan Peta</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">👤</div>
+        <div class="team-name">Dwi Agus Cahyo Ilahi</div>
+        <div class="team-nim">NIM · 1103223043</div>
+        <div class="team-role">Desain UI & UX</div>
+      </div>
+    </div>
+
+    <div class="team-meta">
+      <div class="team-meta-item">
+        <span class="team-meta-label">Mata Kuliah</span>
+        <span class="team-meta-val">Teknik Pemetaan Berbasis Web</span>
+      </div>
+      <div class="team-meta-item">
+        <span class="team-meta-label">Dosen Pembimbing</span>
+        <span class="team-meta-val">—</span>
+      </div>
+      <div class="team-meta-item">
+        <span class="team-meta-label">Institusi</span>
+        <span class="team-meta-val">Telkom University</span>
+      </div>
+      <div class="team-meta-item">
+        <span class="team-meta-label">Tahun</span>
+        <span class="team-meta-val">2026</span>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo">GYM<span class="accent">MAP</span> JABAR</div>
+    <div class="footer-copy">Sumber: Google Maps & OSM  ·  © 2026 WebGIS Project · Telkom University</div>
+  </footer>
+
+</main>
+
+<script>
+  let heroMap;
+  const tiles = {
+    dark: L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {maxZoom: 18}),
+    light: L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {maxZoom: 18})
+  };
+
+  /* ── Set Initial Button Icon ── */
+  const themeBtn = document.getElementById('themeToggle');
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+  themeBtn.textContent = currentTheme === 'light' ? '🌙' : '☀️';
+
+  /* ── Toggle Tema Script ── */
+  themeBtn.addEventListener('click', function() {
+    let currTheme = document.documentElement.getAttribute('data-theme');
+    let newTheme = currTheme === 'light' ? 'dark' : 'light';
+    
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('gymmap_theme', newTheme); // Simpan pilihan ke localStorage
+    this.textContent = newTheme === 'light' ? '🌙' : '☀️';
+    
+    if (heroMap) {
+      heroMap.removeLayer(tiles[currTheme]);
+      tiles[newTheme].addTo(heroMap);
+    }
+  });
+
+  /* ── Hero Map ── */
+  async function initHeroMap() {
+    heroMap = L.map('heroMap', {
+      zoomControl:false, scrollWheelZoom:false, dragging:false,
+      touchZoom:false, doubleClickZoom:false, boxZoom:false,
+      keyboard:false, attributionControl:false
+    });
+    
+    let activeTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    tiles[activeTheme].addTo(heroMap);
+
+    heroMap.setView([-6.92, 107.60], 8);
+    
+    try {
+      const res  = await fetch('gym_jabar_lengkap.json');
+      const data = await res.json();
+      const total = data.features.length;
+      const kecSet = new Set();
+      data.features.forEach(f => {
+        const addr  = f.properties.address || '';
+        const match = addr.match(/Kota ([^,]+)/i) || addr.match(/Kabupaten ([^,]+)/i);
+        if (match) kecSet.add(match[1].trim().toLowerCase());
+      });
+      animateCounter('cnt1', total, '+');
+      animateCounter('cnt2', Math.max(kecSet.size, 10), '');
+      animateCounter('cnt3', 2, '');
+      animateCounter('s1', total, '+');
+      animateCounter('s2', Math.max(kecSet.size, 10), '');
+
+      data.features.forEach(f => {
+        const [lng, lat] = f.geometry.coordinates;
+        const props = f.properties;
+        const icon = L.divIcon({ html:`<div class="map-dot"></div>`, iconSize:[8,8], iconAnchor:[4,4], className:'' });
+        const marker = L.marker([lat, lng], { icon }).addTo(heroMap);
+        marker.on('click', () => { window.location.href = `maps.html#lat=${lat}&lng=${lng}&zoom=17`; });
+        marker.bindTooltip(
+          `<div class="tip-name">${props.name||'Gym / Fitness'}</div>
+           <div class="tip-addr">${(props.address||'').split(',').slice(0,2).join(', ')}</div>`,
+          { direction:'top', offset:[0,-6], className:'gym-tip' }
+        );
+      });
+    } catch(e) {
+      document.querySelector('.map-hint').textContent = '⚠ Pastikan file gym_jabar_lengkap.json ada di folder yang sama';
+      animateCounter('cnt1',88,'+'); animateCounter('cnt2',21,''); animateCounter('cnt3',2,'');
+      animateCounter('s1',88,'+'); animateCounter('s2',21,'');
+    }
+  }
+
+  function animateCounter(id, target, suffix) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    let count = 0;
+    const step = Math.max(1, Math.ceil(target / 40));
+    const iv = setInterval(() => {
+      count = Math.min(count + step, target);
+      el.textContent = count + suffix;
+      if (count >= target) clearInterval(iv);
+    }, 35);
+  }
+
+  /* ── Bar chart animate on scroll ── */
+  function animateBars() {
+    document.querySelectorAll('.bar-fill').forEach(el => {
+      el.style.width = el.dataset.w;
+    });
+  }
+  const statsSection = document.getElementById('statistik');
+  const observer = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) { animateBars(); observer.disconnect(); }
+  }, { threshold: 0.3 });
+  observer.observe(statsSection);
+
+  /* ── Active nav on scroll ── */
+  const sections = ['home','tentang','fitur','statistik','tim'];
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY + 80;
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const top = el.offsetTop, bot = top + el.offsetHeight;
+      const link = document.querySelector(`.nav-links a[href="#${id}"]`);
+      if (link) link.classList.toggle('active-nav', scrollY >= top && scrollY < bot);
+    });
+  });
+
+  window.addEventListener('load', initHeroMap);
+</script>
+</body>
+</html>

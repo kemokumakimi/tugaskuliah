@@ -1,0 +1,2 @@
+
+    printf("Masukkan Nilai Uang: ");

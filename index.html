@@ -270,7 +270,6 @@ mark{background:none;color:var(--acc);font-weight:700}
             <option value="size-asc">Ukuran ↑</option>
             <option value="type">Jenis</option>
           </select>
-          <button id="btn-upload" class="w-9 h-9 grid place-items-center rounded-xl border-line hover:bg-panel-2 transition" title="Unggah file ke folder ini"><i class="fa-solid fa-cloud-arrow-up"></i></button>
           <button id="btn-theme" class="w-9 h-9 grid place-items-center rounded-xl border-line hover:bg-panel-2 transition" title="Ganti tema (T)">
             <i class="fa-solid fa-moon" id="theme-icon"></i>
           </button>
@@ -293,6 +292,7 @@ mark{background:none;color:var(--acc);font-weight:700}
         <div class="flex items-center gap-2">
           <button id="btn-copy" class="btn-act"><i class="fa-solid fa-copy"></i><span class="hidden sm:inline">Salin path</span></button>
           <button id="btn-zip" class="btn-act"><i class="fa-solid fa-file-zipper"></i><span class="hidden sm:inline">Unduh folder</span></button>
+          <button id="btn-upload" class="btn-act btn-go"><i class="fa-solid fa-cloud-arrow-up"></i><span class="hidden sm:inline">Unggah</span></button>
         </div>
       </div>
 
@@ -430,9 +430,10 @@ mark{background:none;color:var(--acc);font-weight:700}
     <div class="p-5 space-y-4">
       <p class="text-sm text-muted">File dikirim langsung dari browsermu ke GitHub, jadi browsermu butuh <strong>Personal Access Token</strong> milikmu sendiri. Halaman ini tidak punya server, jadi tidak ada cara lain.</p>
       <ol class="text-xs text-muted space-y-1.5 list-decimal list-inside">
-        <li>Buka <a class="text-acc hover:underline" href="https://github.com/settings/tokens/new?scopes=repo&description=MyDrive%20upload" target="_blank" rel="noopener">halaman token baru</a> dengan scope <code>repo</code>.</li>
-        <li>Salin token yang muncul, lalu tempel di bawah.</li>
-        <li>Klik Simpan. Token hanya tinggal di browsermu.</li>
+        <li>Buka <a class="text-acc hover:underline" href="https://github.com/settings/tokens/new?scopes=repo&description=MyDrive%20upload" target="_blank" rel="noopener">halaman token baru</a>.</li>
+        <li>Pilih <strong>Classic</strong> lalu centang scope <code>repo</code>. Kalau yang terbuka hanya <em>fine-grained</em>, isi: <em>Repository access</em> → pilih hanya <code>tugaskuliah</code>, lalu <em>Permissions</em> → <em>Repository permissions</em> → <strong>Contents: Read and write</strong>.</li>
+        <li>Klik Generate token, lalu salin yang muncul (awalan <code>ghp_</code> atau <code>github_pat_</code>). Halaman itu hanya menampilkannya sekali.</li>
+        <li>Tempel di bawah, klik Simpan. Token hanya tinggal di browsermu.</li>
       </ol>
       <input id="token-in" type="password" placeholder="ghp_… atau github_pat_…" autocomplete="off" spellcheck="false"
              class="w-full px-3.5 h-11 rounded-xl border-line bg-panel-2 text-sm focus:outline-none focus:border-line-2">
@@ -924,8 +925,16 @@ function renderTree(){
       const name = k.path.slice(k.path.lastIndexOf('/') + 1);
       if (k.type === 'dir'){
         const open = S.expanded.has(k.path);
-        const row = el('div', 'flex items-center gap-1 rounded-lg pr-1 hover:bg-panel-2 transition group');
-        row.innerHTML = `
+        const onPath = k.path === S.path || S.path.startsWith(k.path + '/');
+        const line = onPath ? 'var(--acc)' : 'var(--line)';
+        const row = el('div', 'relative flex items-center gap-1 rounded-lg pr-1 hover:bg-panel-2 transition group');
+        row.style.paddingLeft = depth * 14 + 'px';
+        let guides = '';
+        for (let i = 0; i < depth; i++)
+          guides += `<span class="absolute top-0 bottom-0 w-px pointer-events-none" style="left:${i * 14 + 7}px;background:${line};opacity:.5"></span>`;
+        if (depth > 0)
+          guides += `<span class="absolute h-px pointer-events-none" style="left:${(depth - 1) * 14 + 7}px;top:50%;width:8px;background:${line};opacity:.85"></span>`;
+        row.innerHTML = guides + `
           <button class="w-4 h-7 grid place-items-center text-dim shrink-0" data-tw="${esc(k.path)}"><i class="fa-solid fa-chevron-right text-[9px] transition-transform ${open ? 'rotate-90' : ''}"></i></button>
           <button class="flex items-center gap-2 flex-1 min-w-0 h-7 text-left" data-go="${esc(k.path)}">
             <i class="fa-solid ${open ? 'fa-folder-open' : 'fa-folder'} text-[11px]" style="color:var(--acc)"></i>

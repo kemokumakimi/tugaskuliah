@@ -270,6 +270,7 @@ mark{background:none;color:var(--acc);font-weight:700}
             <option value="size-asc">Ukuran ↑</option>
             <option value="type">Jenis</option>
           </select>
+          <button id="btn-upload" class="w-9 h-9 grid place-items-center rounded-xl border-line hover:bg-panel-2 transition" title="Unggah file ke folder ini"><i class="fa-solid fa-cloud-arrow-up"></i></button>
           <button id="btn-theme" class="w-9 h-9 grid place-items-center rounded-xl border-line hover:bg-panel-2 transition" title="Ganti tema (T)">
             <i class="fa-solid fa-moon" id="theme-icon"></i>
           </button>
@@ -374,12 +375,101 @@ mark{background:none;color:var(--acc);font-weight:700}
   </div>
 </div>
 
+<!-- ================= UNGGAH ================= -->
+<div id="upload" class="ov z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4">
+  <div class="sheet w-full sm:max-w-xl bg-panel sh-lg border-line border-t sm:border rounded-t-2xl sm:rounded-2xl overflow-hidden flex flex-col max-h-[92vh]">
+
+    <div class="px-5 py-4 border-line border-b flex items-center gap-3 shrink-0">
+      <i class="fa-solid fa-cloud-arrow-up text-acc"></i>
+      <div class="min-w-0">
+        <h3 class="font-display font-semibold leading-tight">Unggah File</h3>
+        <p class="text-[11px] text-dim truncate">Tujuan: <span id="up-target" class="font-medium"></span></p>
+      </div>
+      <button onclick="closeUpload()" class="ml-auto w-9 h-9 grid place-items-center rounded-lg border-line hover:bg-panel-2 transition shrink-0"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <div class="p-5 overflow-y-auto flex-1 overscroll-contain">
+      <div id="dz" class="dz p-6 sm:p-8 text-center">
+        <div class="flex justify-center mb-3"><div class="dz-ico"><i class="fa-solid fa-arrow-up-from-bracket"></i></div></div>
+        <p class="text-sm font-semibold">Tarik file ke sini</p>
+        <p class="text-xs text-dim mt-1">atau ketuk untuk memilih</p>
+        <div class="flex flex-wrap gap-2 justify-center mt-4">
+          <button id="btn-pick"     class="btn-act"><i class="fa-solid fa-paperclip"></i> Pilih File</button>
+          <button id="btn-pick-cam" class="btn-act"><i class="fa-solid fa-camera"></i> Ambil Foto</button>
+          <button id="btn-pick-dir" class="btn-act hidden sm:inline-flex"><i class="fa-solid fa-folder-open"></i> Pilih Folder</button>
+        </div>
+        <p class="text-[11px] text-dim mt-3.5">Maksimal 100&nbsp;MB per file. Folder ikut terunggah beserta strukturnya.</p>
+      </div>
+
+      <input id="file-in"  type="file" multiple class="hidden">
+      <input id="file-cam" type="file" accept="image/*" capture="environment" class="hidden">
+      <input id="file-dir" type="file" webkitdirectory directory multiple class="hidden">
+
+      <div id="up-list" class="mt-4 space-y-2"></div>
+    </div>
+
+    <div class="px-5 py-3.5 border-line border-t flex items-center gap-3 shrink-0">
+      <span id="up-rate" class="text-[11px] text-dim"></span>
+      <div class="ml-auto flex items-center gap-2">
+        <button onclick="clearQueue()" class="btn-act">Kosongkan</button>
+        <button id="btn-do" onclick="startUpload()" class="btn-act btn-go"><i class="fa-solid fa-cloud-arrow-up"></i> <span id="up-label">Unggah</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= TOKEN ================= -->
+<div id="token" class="ov z-[110] flex items-center justify-center p-4">
+  <div class="sheet w-full max-w-md bg-panel sh-lg border-line border rounded-2xl overflow-hidden">
+    <div class="px-5 py-4 border-line border-b flex items-center gap-3">
+      <i class="fa-solid fa-key text-acc"></i>
+      <h3 class="font-display font-semibold">Hubungkan GitHub</h3>
+      <button onclick="closeToken()" class="ml-auto w-9 h-9 grid place-items-center rounded-lg border-line hover:bg-panel-2 transition"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <div class="p-5 space-y-4">
+      <p class="text-sm text-muted">File dikirim langsung dari browsermu ke GitHub, jadi browsermu butuh <strong>Personal Access Token</strong> milikmu sendiri. Halaman ini tidak punya server, jadi tidak ada cara lain.</p>
+      <ol class="text-xs text-muted space-y-1.5 list-decimal list-inside">
+        <li>Buka <a class="text-acc hover:underline" href="https://github.com/settings/tokens/new?scopes=repo&description=MyDrive%20upload" target="_blank" rel="noopener">halaman token baru</a> dengan scope <code>repo</code>.</li>
+        <li>Salin token yang muncul, lalu tempel di bawah.</li>
+        <li>Klik Simpan. Token hanya tinggal di browsermu.</li>
+      </ol>
+      <input id="token-in" type="password" placeholder="ghp_… atau github_pat_…" autocomplete="off" spellcheck="false"
+             class="w-full px-3.5 h-11 rounded-xl border-line bg-panel-2 text-sm focus:outline-none focus:border-line-2">
+      <div class="note p-3.5 flex gap-3">
+        <i class="fa-solid fa-triangle-exclamation text-dim mt-0.5 shrink-0"></i>
+        <p class="text-[11px] text-muted leading-relaxed">Token ini boleh menulis ke repo-mu dan tersimpan di <code>localStorage</code> peramban ini. Jangan pernah menempelkannya di chat atau commit. Kalau perangkatnya dipakai orang lain, hapus token begitu selesai.</p>
+      </div>
+    </div>
+
+    <div class="px-5 py-3.5 border-line border-t flex items-center gap-2">
+      <button id="btn-token-clear" onclick="clearToken()" class="btn-act hidden"><i class="fa-solid fa-trash-can"></i> Hapus Token</button>
+      <div class="ml-auto flex items-center gap-2">
+        <button onclick="closeToken()" class="btn-act">Batal</button>
+        <button onclick="saveToken()" class="btn-act btn-go">Simpan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="toasts"></div>
 
 <style>
 .btn-act{display:inline-flex;align-items:center;gap:.5rem;padding:.45rem .8rem;border-radius:12px;border:1px solid var(--line);background:var(--bg-2);font-size:.78rem;font-weight:600;transition:border-color .2s ease,background-color .2s ease,transform .15s ease}
 .btn-act:hover{border-color:var(--line-2);background:var(--bg-3)}
 .btn-act:active{transform:scale(.97)}
+.btn-act:disabled{opacity:.5;cursor:not-allowed}
+.btn-go{background:var(--acc);color:var(--acc-fg);border-color:transparent}
+.btn-go:hover{background:var(--acc-2);border-color:transparent}
+
+/* area unggah */
+.dz{border:2px dashed var(--line-2);border-radius:18px;background:var(--bg-2);transition:border-color .2s ease,background-color .2s ease}
+.dz.over{border-color:var(--acc);background:var(--acc-soft)}
+.dz-ico{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;background:var(--acc-soft);color:var(--acc);font-size:1.3rem}
+.up-row{border:1px solid var(--line);border-radius:14px;background:var(--bg-2);padding:.7rem .8rem}
+.bar{height:6px;border-radius:99px;background:var(--bg-4);overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--acc);border-radius:99px;transition:width .2s linear}
+.note{border:1px solid var(--line-2);background:var(--bg-3);border-radius:14px}
 </style>
 
 <script>
@@ -442,6 +532,7 @@ const EXT_ICON = {
   ppt:['fa-file-powerpoint','#c2410c'], pptx:['fa-file-powerpoint','#c2410c'],
   jpg:['fa-file-image','#7c3aed'], jpeg:['fa-file-image','#7c3aed'], png:['fa-file-image','#7c3aed'],
   gif:['fa-file-image','#7c3aed'], webp:['fa-file-image','#7c3aed'], svg:['fa-file-image','#7c3aed'], bmp:['fa-file-image','#7c3aed'],
+  avif:['fa-file-image','#7c3aed'], heic:['fa-file-image','#7c3aed'], heif:['fa-file-image','#7c3aed'],
   zip:['fa-file-zipper','#71717a'], rar:['fa-file-zipper','#71717a'], '7z':['fa-file-zipper','#71717a'],
   mp4:['fa-file-video','#0891b2'], mkv:['fa-file-video','#0891b2'], mov:['fa-file-video','#0891b2'], avi:['fa-file-video','#0891b2'],
   mp3:['fa-file-audio','#7c3aed'], wav:['fa-file-audio','#7c3aed'], m4a:['fa-file-audio','#7c3aed'],
@@ -460,7 +551,7 @@ function iconFor(type, name){
 }
 const isPreviewable = name => {
   const e = extOf(name);
-  return ['png','jpg','jpeg','gif','webp','bmp','svg','pdf','mp4','webm','mov','mp3','wav','m4a','md','txt','json','html','htm','css','js','mjs','ts','py','c','cpp','h','hpp','java','xml','yml','yaml','csv','ino','log','sh','sql','r','go','rs','php','rb','lua','kt','swift'].includes(e);
+  return ['png','jpg','jpeg','gif','webp','bmp','svg','avif','heic','heif','pdf','mp4','webm','mov','mp3','wav','m4a','md','txt','json','html','htm','css','js','mjs','ts','py','c','cpp','h','hpp','java','xml','yml','yaml','csv','ino','log','sh','sql','r','go','rs','php','rb','lua','kt','swift'].includes(e);
 };
 
 /* ============================================================================
@@ -940,9 +1031,10 @@ function syncCmdActive(){
 /* ============================================================================
    PREVIEW
    ========================================================================= */
-let pvToken = 0;
+let pvToken = 0, pvEntry = null;
 function openPreview(e){
   const tok = ++pvToken;
+  pvEntry = e;
   const [ic, col] = iconFor(e.type, e.name);
   $('#pv-icon').innerHTML = `<i class="fa-solid ${ic}" style="color:${col}"></i>`;
   $('#pv-name').textContent = e.name;
@@ -956,7 +1048,7 @@ function openPreview(e){
   const url = `${RAW}/${enc(e.path)}`;
   const ext = extOf(e.name);
 
-  if (['png','jpg','jpeg','gif','webp','bmp','svg'].includes(ext)){
+  if (['png','jpg','jpeg','gif','webp','bmp','svg','avif','heic','heif'].includes(ext)){
     body.innerHTML = `<div class="grid place-items-center min-h-[50vh]"><img src="${url}" alt="${esc(e.name)}" class="max-h-[68vh] rounded-xl sh" onerror="pvFail(this)"></div>`;
     return;
   }
@@ -988,10 +1080,22 @@ function openPreview(e){
       : `<pre class="text-[12.5px] leading-relaxed font-mono overflow-x-auto"><code>${esc(t)}</code></pre>`;
   }).catch(() => { if (tok === pvToken) pvFail(null) });
 }
-function closePreview(){ pvToken++; $('#pv').classList.remove('open') }
+function closePreview(){ pvToken++; pvEntry = null; $('#pv').classList.remove('open') }
 function pvFail(img){
-  if (img) img.outerHTML = '<div class="py-16 text-center text-dim text-sm">Pratinjau gagal dimuat.</div>';
-  else $('#pv-body').innerHTML = '<div class="py-16 text-center text-dim text-sm">Pratinjau tidak tersedia untuk file ini.</div>';
+  const ext = pvEntry ? extOf(pvEntry.name) : '';
+  const html = ext === 'heic' || ext === 'heif'
+    ? `<div class="py-16 text-center text-sm">
+         <i class="fa-solid fa-file-image text-5xl mb-4 block text-dim"></i>
+         <p class="font-medium">Browser ini tidak bisa membuka ${ext.toUpperCase()}.</p>
+         <p class="text-dim mt-1.5 mb-5">Format ini dipakai iPhone. Buka di Safari, atau unduh dulu untuk melihatnya.</p>
+         ${pvEntry ? `<a href="${RAW}/${enc(pvEntry.path)}" class="btn-act">Unduh ${esc(pvEntry.name)}</a>` : ''}
+       </div>`
+    : `<div class="py-16 text-center text-sm">
+         <i class="fa-regular fa-eye-slash text-5xl mb-4 block text-dim"></i>
+         <p class="text-dim">Pratinjau gagal dimuat.</p>
+         ${pvEntry ? `<a href="${RAW}/${enc(pvEntry.path)}" class="btn-act mt-5">Buka/Unduh sebagai gantinya</a>` : ''}
+       </div>`;
+  if (img) img.outerHTML = html; else $('#pv-body').innerHTML = html;
 }
 function loadingBlock(){
   return `<div class="space-y-3 py-4">${'<div class="skel" style="height:14px;width:' + (90 - Math.random() * 30) + '%"></div>'.repeat(7)}</div>`;
@@ -1223,8 +1327,281 @@ function markAllQuick(){
 }
 
 /* ============================================================================
+   UNGGAH FILE  (langsung ke GitHub API, tanpa server)
+   ========================================================================= */
+const MAX_FILE = 100 * 1024 * 1024;
+const U = { items : [], busy : false, afterToken : false };
+S.token = localStorage.getItem('md:token') || '';
+
+function ghHeaders(){
+  const h = { 'Accept' : 'application/vnd.github+json', 'X-GitHub-Api-Version' : '2022-11-28' };
+  if (S.token) h['Authorization'] = 'Bearer ' + S.token;
+  return h;
+}
+function ghError(status, body){
+  const e = new Error((body && body.message) || ('HTTP ' + status));
+  e.status = status; return e;
+}
+async function gh(method, url, body){
+  const hdr = ghHeaders();
+  if (body) hdr['Content-Type'] = 'application/json';
+  const r = await fetch(url, { method, headers : hdr, body : body ? JSON.stringify(body) : undefined });
+  const t = await r.text();
+  let d = null; try { d = t ? JSON.parse(t) : null } catch {}
+  if (!r.ok) throw ghError(r.status, d);
+  return d;
+}
+/* XHR, bukan fetch, karena butuh progres unggahan yang nyata */
+function ghPost(url, body, onProgress){
+  return new Promise((res, rej) => {
+    const x = new XMLHttpRequest();
+    x.open('POST', url);
+    const hdr = ghHeaders(); hdr['Content-Type'] = 'application/json';
+    for (const k in hdr) x.setRequestHeader(k, hdr[k]);
+    if (x.upload && onProgress) x.upload.onprogress = ev => { if (ev.lengthComputable) onProgress(ev.loaded / ev.total) };
+    x.onload = () => {
+      let d = null; try { d = x.responseText ? JSON.parse(x.responseText) : null } catch {}
+      if (x.status >= 200 && x.status < 300) res(d);
+      else rej(ghError(x.status, d));
+    };
+    x.onerror   = () => rej(new Error('Jaringan gagal'));
+    x.ontimeout = () => rej(new Error('Waktu habis'));
+    x.send(JSON.stringify(body));
+  });
+}
+function readB64(file, onProgress){
+  return new Promise((res, rej) => {
+    const fr = new FileReader();
+    fr.onprogress = ev => { if (ev.lengthComputable && onProgress) onProgress(ev.loaded / ev.total) };
+    fr.onload = () => {
+      try {
+        const u8 = new Uint8Array(fr.result);
+        let bin = '';
+        for (let i = 0; i < u8.length; i += 32768) bin += String.fromCharCode.apply(null, u8.subarray(i, i + 32768));
+        res(btoa(bin));
+      } catch (e){ rej(e) }
+    };
+    fr.onerror = () => rej(new Error('File tidak bisa dibaca'));
+    fr.readAsArrayBuffer(file);
+  });
+}
+function safePath(p){
+  return String(p).split('/')
+    .map(s => s.replace(/[\x00-\x1f\x7f]/g, '').replace(/^\.+$/, '').trim())
+    .filter(s => s && s !== '.' && s !== '..')
+    .join('/');
+}
+function pushItem(file, rel){
+  if (file.size > MAX_FILE){ toast(`${file.name} melebihi 100 MB — dilewati`, 'fa-triangle-exclamation'); return }
+  const r = safePath(rel); if (!r) return;
+  const path = safePath(S.path ? S.path + '/' + r : r);
+  const fresh = { file, path, state : 'wait', pct : 0 };
+  const at = U.items.findIndex(i => i.path.toLowerCase() === path.toLowerCase());
+  if (at >= 0) U.items[at] = fresh; else U.items.push(fresh);
+}
+function enqueue(files, isDir){
+  for (const f of Array.from(files || [])) pushItem(f, isDir ? (f.webkitRelativePath || f.name) : f.name);
+  if (files && files.length) renderQueue();
+}
+/* folder yang di-drag: webkitGetAsEntry, rekursif, struktur ikut terawa */
+function walkEntry(entry, prefix, out){
+  return new Promise(res => {
+    if (entry.isFile){
+      entry.file(f => { out.push({ file : f, rel : prefix + f.name }); res() }, () => res());
+    } else if (entry.isDirectory){
+      const rd = entry.createReader();
+      const all = [];
+      const more = () => rd.readEntries(async es => {
+        if (!es.length){
+          for (const s of all) await walkEntry(s, prefix + entry.name + '/', out);
+          res();
+        } else { all.push(...es); more() }
+      }, () => res());
+      more();
+    } else res();
+  });
+}
+function onDrop(e){
+  e.preventDefault(); e.stopPropagation();
+  $('#dz').classList.remove('over');
+  const dt = e.dataTransfer; if (!dt) return;
+  const entries = [];
+  if (dt.items && dt.items.length && dt.items[0].webkitGetAsEntry){
+    for (const it of dt.items){ const en = it.webkitGetAsEntry && it.webkitGetAsEntry(); if (en) entries.push(en) }
+  }
+  if (entries.length){
+    const out = [];
+    Promise.all(entries.map(en => walkEntry(en, '', out))).then(() => {
+      for (const o of out) pushItem(o.file, o.rel);
+      if (out.length) renderQueue();
+    });
+  } else {
+    enqueue(dt.files, false);
+  }
+}
+
+function renderQueue(){
+  const box = $('#up-list');
+  if (!U.items.length){ box.innerHTML = ''; updUpBtn(); return }
+  box.innerHTML = U.items.map((it, i) => {
+    const icon = it.file.type.startsWith('image/') ? 'fa-file-image' : 'fa-file-lines';
+    const tag = it.state === 'done'  ? '<i class="fa-solid fa-circle-check text-acc"></i>'
+              : it.state === 'fail'  ? '<i class="fa-solid fa-circle-exclamation" style="color:var(--danger)"></i>'
+              : it.state === 'ready' ? '<i class="fa-solid fa-circle-check text-acc"></i>'
+              : it.state === 'busy'  ? '<i class="fa-solid fa-spinner fa-spin text-dim"></i>'
+              : '<i class="fa-regular fa-clock text-dim"></i>';
+    const pct = it.state === 'wait' ? '' : Math.round(it.pct * 100) + '%';
+    const sub  = it.msg  ? `<p class="text-[11px] mt-1.5" style="color:var(--danger)">${esc(it.msg)}</p>`
+              : it.state === 'wait' ? '<p class="text-[11px] text-dim mt-1.5">Menunggu</p>' : '';
+    return `<div class="up-row">
+      <div class="flex items-center gap-3">
+        <i class="fa-solid ${icon} text-dim shrink-0"></i>
+        <div class="min-w-0 flex-1">
+          <p class="text-xs font-medium truncate">${esc(it.file.name)}</p>
+          <p class="text-[11px] text-dim truncate">${esc(it.path)} · ${bytes(it.size)}</p>
+        </div>
+        <span class="text-[11px] text-dim shrink-0">${pct}</span>
+        ${tag}
+        <button onclick="dequeue(${i})" class="w-7 h-7 grid place-items-center rounded-lg hover:bg-panel-2 transition shrink-0 ${U.busy ? 'hidden' : ''}" title="Hapus dari antrean"><i class="fa-solid fa-xmark text-xs"></i></button>
+      </div>
+      <div class="bar mt-2.5"><i style="width:${Math.round((it.state === 'wait' ? 0 : it.pct) * 100)}%"></i></div>
+      ${sub}
+    </div>`;
+  }).join('');
+  updUpBtn();
+}
+function updUpBtn(){
+  const n = U.items.filter(i => i.state !== 'done').length;
+  $('#up-label').textContent = U.busy ? 'Mengunggah…' : (n ? `Unggah ${n} file` : 'Unggah');
+  $('#btn-do').disabled = U.busy || !n;
+}
+function dequeue(i){ if (U.busy) return; U.items.splice(i, 1); renderQueue() }
+function clearQueue(){ if (U.busy) return; U.items = []; renderQueue() }
+
+/* satu antrean = satu commit lewat Git Data API.
+   Dipakai bukan contents API karena (a) contents API menolak file > 1 MB,
+   (b) satu commit jauh lebih hemat kuota daripada satu commit per file,
+   (c) GitHub mewajibkan operasi tulis berurutan. */
+async function commitBatch(entries){
+  const msg = `Unggah ${entries.length} file lewat MyDrive`;
+  for (let attempt = 1; attempt <= 2; attempt++){
+    const ref  = await gh('GET', `${API}/git/ref/heads/${CONFIG.branch}`);
+    const head = ref.object.sha;
+    const base = await gh('GET', `${API}/git/commits/${head}`);
+    const tree = await gh('POST', `${API}/git/trees`, {
+      base_tree : base.tree.sha,
+      tree      : entries.map(e => ({ path : e.path, mode : '100644', type : 'blob', sha : e.blob }))
+    });
+    const commit = await gh('POST', `${API}/git/commits`, { message : msg, tree : tree.sha, parents : [head] });
+    try {
+      await gh('PATCH', `${API}/git/refs/heads/${CONFIG.branch}`, { sha : commit.sha, force : false });
+      return;
+    } catch (e){
+      if (attempt === 2 || (e.status !== 422 && e.status !== 409)) throw e;
+    }
+  }
+}
+
+async function startUpload(){
+  if (U.busy) return;
+  if (!S.token) return openToken();
+  const pend = U.items.filter(i => i.state !== 'done');
+  if (!pend.length) return;
+  U.busy = true; updUpBtn();
+  const entries = [];
+  let ok = 0, fail = 0;
+  try {
+    for (const it of pend){
+      try {
+        it.state = 'busy'; it.pct = 0; it.msg = ''; renderQueue();
+        const b64  = await readB64(it.file, p => { it.pct = p * 0.25; renderQueue() });
+        const blob = await ghPost(`${API}/git/blobs`, { content : b64, encoding : 'base64' }, p => { it.pct = 0.25 + p * 0.75; renderQueue() });
+        entries.push({ path : it.path, blob : blob.sha });
+        it.state = 'ready'; it.pct = 1; ok++;
+      } catch (e){
+        it.state = 'fail';
+        it.msg = e.status === 401 ? 'Token ditolak'
+               : e.status === 403 ? 'Akses ditolak atau kuota habis'
+               : e.status === 422 ? 'Ditolak GitHub' : (e.message || 'Gagal');
+        fail++;
+      }
+      renderQueue();
+    }
+    if (entries.length){
+      await commitBatch(entries);
+      toast(`${ok} file masuk commit di ${CONFIG.branch}`, 'fa-circle-check');
+      U.items = U.items.filter(i => i.state !== 'ready');
+      try { localStorage.removeItem('md:cache:tree') } catch {}
+      await loadIndex(); loadFolder();
+    } else if (fail){
+      toast(`${fail} file gagal diunggah`, 'fa-circle-exclamation');
+    }
+  } catch (e){
+    toast(e.status === 401 ? 'Token ditolak' : (e.message || 'Gagal membuat commit'), 'fa-circle-exclamation');
+  } finally {
+    U.busy = false; updUpBtn(); refreshRate();
+  }
+}
+async function refreshRate(){
+  const box = $('#up-rate'); if (!box) return;
+  try {
+    const r = await fetch('https://api.github.com/rate_limit', { headers : ghHeaders() });
+    const d = await r.json();
+    const c = d.resources.core;
+    box.textContent = S.token ? `Kuota API: ${c.remaining}/${c.limit} per jam` : 'Tanpa token: 60 permintaan per jam';
+  } catch { box.textContent = '' }
+}
+
+function openUpload(){
+  if (!S.token){ U.afterToken = true; return openToken() }
+  $('#up-target').textContent = '/' + S.path;
+  $('#upload').classList.add('open');
+  refreshRate();
+}
+function closeUpload(){ if (!U.busy) $('#upload').classList.remove('open') }
+function openToken(){
+  $('#token-in').value = S.token;
+  $('#btn-token-clear').classList.toggle('hidden', !S.token);
+  $('#token').classList.add('open');
+  setTimeout(() => $('#token-in').focus(), 90);
+}
+function closeToken(){ $('#token').classList.remove('open') }
+function saveToken(){
+  const v = $('#token-in').value.trim();
+  if (!v) return toast('Token masih kosong', 'fa-circle-info');
+  S.token = v;
+  try { localStorage.setItem('md:token', v) } catch {}
+  closeToken();
+  toast('Token disimpan di browsermu', 'fa-shield-halved');
+  if (U.afterToken){ U.afterToken = false; openUpload() }
+}
+function clearToken(){
+  S.token = '';
+  try { localStorage.removeItem('md:token') } catch {}
+  $('#token-in').value = '';
+  $('#token').classList.remove('open');
+  toast('Token dihapus dari browsermu', 'fa-trash-can');
+}
+
+/* ============================================================================
    EVENT BINDING
    ========================================================================= */
+$('#btn-upload').onclick   = openUpload;
+$('#upload').onclick       = e => { if (e.target.id === 'upload') closeUpload() };
+$('#token').onclick        = e => { if (e.target.id === 'token') closeToken() };
+$('#dz').onclick           = e => { if (!e.target.closest('button')) $('#file-in').click() };
+$('#btn-pick').onclick     = () => $('#file-in').click();
+$('#btn-pick-cam').onclick = () => $('#file-cam').click();
+$('#btn-pick-dir').onclick = () => $('#file-dir').click();
+$('#file-in').onchange     = e => { enqueue(e.target.files, false); e.target.value = '' };
+$('#file-cam').onchange    = e => { enqueue(e.target.files, false); e.target.value = '' };
+$('#file-dir').onchange    = e => { enqueue(e.target.files, true ); e.target.value = '' };
+$('#dz').ondragover        = e => { e.preventDefault(); $('#dz').classList.add('over') };
+$('#dz').ondragleave       = e => { if (!$('#dz').contains(e.relatedTarget)) $('#dz').classList.remove('over') };
+$('#dz').ondrop            = onDrop;
+/* cegah browser membuka file yang dijatuhkan di luar dropzone */
+addEventListener('dragover', e => e.preventDefault());
+addEventListener('drop',     e => e.preventDefault());
 $('#open-cmd').onclick   = openCmd;
 $('#cmd').onclick         = e => { if (e.target.id === 'cmd') closeCmd() };
 $('#cmd-input').oninput   = debounce(e => paintCmd(e.target.value), 90);

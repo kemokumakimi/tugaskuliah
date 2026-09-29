@@ -633,8 +633,9 @@ function buildIndex(list, fromCache){
       if (!folders.has(dir)){ folders.add(dir); tree.set(dir, { path: dir, type: 'dir', size: 0 }) }
     }
   }
+  /* WAJIB ikut memuat entri 'dir', bukan hanya file — kalau hanya file,
+     folder seperti "SEMESTER 1" tidak pernah muncul di children induknya. */
   for (const n of tree.values()){
-    if (n.type !== 'file') continue;
     const dir = n.path.includes('/') ? n.path.slice(0, n.path.lastIndexOf('/')) : '';
     if (!children.has(dir)) children.set(dir, []);
     children.get(dir).push(n);

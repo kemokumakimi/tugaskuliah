@@ -570,10 +570,11 @@ function applyTheme(){
   i.parentElement.title = dark ? 'Mode gelap (T)' : 'Mode terang (T)';
 }
 function cycleTheme(){
-  S.theme = S.theme === 'light' ? 'dark' : S.theme === 'system' ? 'light' : 'dark';
+  // Selalu balik ke kebalikan tema yang sedang tampil, supaya tiap tekan terlihat berubah.
+  S.theme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
   ls('md:theme', S.theme);
   applyTheme();
-  toast(`Tema: ${S.theme === 'system' ? 'Ikuti sistem' : S.theme === 'dark' ? 'Gelap' : 'Terang'}`);
+  toast(`Tema: ${S.theme === 'dark' ? 'Gelap' : 'Terang'}`);
 }
 media.addEventListener('change', () => { if (S.theme === 'system') applyTheme() });
 
@@ -836,32 +837,8 @@ function renderCards(){
 function open(e){
   if (e.type === 'dir'){ go(e.path); return }
   trackRecent(e);
-  if (extOf(e.name) === 'pdf'){ openPdf(e); return }
   if (isPreviewable(e.name)){ openPreview(e); return }
   download(e);
-}
-// GitHub menyajikan PDF sebagai application/octet-stream, jadi tab baru akan men-download-nya.
-// Bungkus jadi Blob dengan tipe aslinya supaya browser menampilkannya di viewer bawaan.
-// Tab harus dibuka duluan, sebelum fetch, kalau tidak akan diblokir popup.
-function openPdf(e){
-  const url = `${RAW}/${enc(e.path)}`;
-  const tab = window.open('', '_blank');
-  if (!tab){ toast('Pop-up diblokir peramban. Izinkan pop-up untuk situs ini.', 'fa-triangle-exclamation'); return }
-  try {
-    tab.document.write('<!doctype html><meta charset="utf-8"><title>Memuat…</title>'
-      + '<body style="font:15px system-ui;display:grid;place-items:center;height:100vh;margin:0;background:#0b1020;color:#94a3b8">'
-      + 'Memuat ' + esc(e.name) + '…</body>');
-  } catch (_){}
-  fetch(url).then(r => { if (!r.ok) throw new Error(r.status); return r.blob() })
-    .then(b => {
-      const obj = URL.createObjectURL(new Blob([b], { type: 'application/pdf' }));
-      tab.location.replace(obj);
-      setTimeout(() => URL.revokeObjectURL(obj), 60000);
-    })
-    .catch(() => {
-      try { tab.location.replace(url) } catch (_){}
-      toast('Tidak bisa ditampilkan, membuka file mentahnya.', 'fa-triangle-exclamation');
-    });
 }
 function download(e){
   trackRecent(e);
@@ -1062,7 +1039,7 @@ function syncCmdActive(){
 /* ============================================================================
    PREVIEW
    ========================================================================= */
-let pvToken = 0, pvEntry = null;
+let pvToken = 0, pvEntry = null, pvBlob = null;
 function openPreview(e){
   const tok = ++pvToken;
   pvEntry = e;
@@ -1083,7 +1060,19 @@ function openPreview(e){
     body.innerHTML = `<div class="grid place-items-center min-h-[50vh]"><img src="${url}" alt="${esc(e.name)}" class="max-h-[68vh] rounded-xl sh" onerror="pvFail(this)"></div>`;
     return;
   }
-  if (ext === 'pdf'){ openPdf(e); return }
+  if (ext === 'pdf'){
+    fetch(url).then(r => r.ok ? r.blob() : Promise.reject()).then(b => {
+      if (tok !== pvToken) return;
+      if (pvBlob) URL.revokeObjectURL(pvBlob);
+      pvBlob = URL.createObjectURL(new Blob([b], { type: 'application/pdf' }));
+      body.innerHTML = `<iframe src="${pvBlob}" class="w-full h-[72vh] rounded-xl border-line border bg-panel-2"></iframe>
+        <p class="text-[11px] text-dim mt-3 text-center">PDF ditampilkan oleh viewer bawaan peramban. Kalau kosong, <a href="${pvBlob}" target="_blank" rel="noopener" class="text-acc underline">buka di tab baru</a>.</p>`;
+      const dl = $('#pv-dl');
+      dl.href = pvBlob; dl.removeAttribute('download');
+      dl.innerHTML = '<i class="fa-solid fa-up-right-from-square"></i><span class="hidden sm:inline">Tab baru</span>';
+    }).catch(() => { if (tok === pvToken) pvFail(null) });
+    return;
+  }
   if (isOffice(e.name)){
     const src = `${RAW}/${enc(e.path)}`;
     body.innerHTML = `
@@ -1121,7 +1110,14 @@ function openPreview(e){
       : `<pre class="text-[12.5px] leading-relaxed font-mono overflow-x-auto"><code>${esc(t)}</code></pre>`;
   }).catch(() => { if (tok === pvToken) pvFail(null) });
 }
-function closePreview(){ pvToken++; pvEntry = null; $('#pv').classList.remove('open') }
+function closePreview(){
+  pvToken++; pvEntry = null;
+  if (pvBlob){ URL.revokeObjectURL(pvBlob); pvBlob = null }
+  const dl = $('#pv-dl');
+  dl.removeAttribute('download'); dl.href = '#';
+  dl.innerHTML = '<i class="fa-solid fa-download"></i><span class="hidden sm:inline">Unduh</span>';
+  $('#pv').classList.remove('open');
+}
 // GitHub menyajikan video/audio sebagai octet-stream; sebagian peramban menolak memainkannya.
 function pvMediaFail(node, ext){
   if (!pvEntry) return;
@@ -1195,10 +1191,7 @@ function contextMenu(e, x, y){
   ctxEl && ctxEl.remove();
   const fav = S.favorites.includes(e.path);
   const items = [];
-  const pdf = e.type !== 'dir' && extOf(e.name) === 'pdf';
-  const lab = e.type === 'dir' ? 'Buka folder' : (pdf ? 'Buka di tab baru' : (isPreviewable(e.name) ? 'Pratinjau' : 'Unduh'));
-  const ico = e.type === 'dir' || isPreviewable(e.name) ? 'fa-eye' : 'fa-download';
-  items.push([lab, ico, () => open(e)]);
+  items.push([e.type === 'dir' ? 'Buka folder' : (isPreviewable(e.name) ? 'Pratinjau' : 'Unduh'), e.type === 'dir' || isPreviewable(e.name) ? 'fa-eye' : 'fa-download', () => open(e)]);
   if (e.type === 'file') items.push(['Unduh', 'fa-download', () => download(e)]);
   items.push(['Salin path', 'fa-copy', () => { navigator.clipboard.writeText(e.path); toast('Path disalin', 'fa-copy') }]);
   items.push([fav ? 'Hapus dari favorit' : 'Tambah favorit', 'fa-star', () => toggleFav(e)]);

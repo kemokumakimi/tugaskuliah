@@ -230,6 +230,10 @@ mark{background:none;color:var(--acc);font-weight:700}
       <button data-quick="recent" class="quick w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium hover:bg-panel-2 transition text-left">
         <i class="fa-solid fa-clock-rotate-left w-4 text-center"></i> Baru dibuka
       </button>
+      <button data-quick="uploads" class="quick w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium hover:bg-panel-2 transition text-left">
+        <i class="fa-solid fa-cloud-arrow-up w-4 text-center"></i> Baru diunggah
+        <span class="ml-auto text-[11px] text-dim" id="up-count">0</span>
+      </button>
     </div>
 
     <div class="px-5 pt-4 pb-2 flex items-center justify-between">
@@ -504,6 +508,7 @@ const S = {
   expanded   : new Set(JSON.parse(localStorage.getItem('md:exp') || '[]')),
   recents    : JSON.parse(localStorage.getItem('md:recent') || '[]'),
   favorites  : JSON.parse(localStorage.getItem('md:fav')   || '[]'),
+  uploads    : JSON.parse(localStorage.getItem('md:uploads') || '[]'),
   cmdItems   : [],
   cmdIndex   : 0,
   quick      : ''
@@ -715,7 +720,7 @@ async function loadFolder(){
   showError(null);
   showSkeletons();
 
-  if (S.quick === 'favorites' || S.quick === 'recent'){ renderQuick(S.quick); return }
+  if (S.quick){ renderQuick(S.quick); return }
 
   let items = null;
   if (S.children && S.children.has(S.path)) items = S.children.get(S.path).map(toItem);
@@ -867,20 +872,37 @@ function renderQuick(kind){
   const wrap = $('#content');
   wrap.className = 'flex flex-col gap-1';
   wrap.innerHTML = '';
-  const st = kind === 'favorites'
-    ? S.favorites.map(p => S.tree.get(p)).filter(Boolean)
-    : S.recents.map(r => S.tree.get(r.p) || { path: r.p, name: r.n, type: r.t, size: r.s });
-  $('#folder-title').textContent = kind === 'favorites' ? 'Favorit' : 'Baru dibuka';
-  $('#folder-meta').textContent = `${countFmt(st.length)} item`;
+  const TITLES = { favorites: 'Favorit', recent: 'Baru dibuka', uploads: 'Baru diunggah' };
+  const st = kind === 'favorites' ? S.favorites.map(p => S.tree.get(p)).filter(Boolean)
+          : kind === 'uploads'  ? S.uploads.map(r => S.tree.get(r.p) || { path: r.p, name: r.n, type: r.t, size: r.s })
+          : S.recents.map(r => S.tree.get(r.p) || { path: r.p, name: r.n, type: r.t, size: r.s });
+  $('#folder-title').textContent = TITLES[kind] || kind;
+  $('#folder-meta').textContent = kind === 'uploads'
+    ? `${countFmt(st.length)} file · menupload dari perangkat ini`
+    : `${countFmt(st.length)} item`;
   $('#btn-zip').style.display = 'none';
 
   if (!st.length){
     $('#content').classList.add('hidden');
-    $('#empty').innerHTML = `<i class="fa-regular fa-star text-5xl mb-4 block"></i>${kind === 'favorites' ? 'Belum ada favorit. Bintangkan file lewat klik kanan.' : 'Riwayat kosong.'}`;
+    $('#empty').innerHTML = kind === 'uploads'
+      ? `<i class="fa-solid fa-cloud-arrow-up text-5xl mb-4 block"></i>Belum ada file yang diunggah dari perangkat ini.<br><span class="text-sm">Tekan <strong>Unggah</strong> di bagian atas untuk menambahkan file ke folder yang sedang dibuka.</span>`
+      : `<i class="fa-regular fa-star text-5xl mb-4 block"></i>${kind === 'favorites' ? 'Belum ada favorit. Bintangkan file lewat klik kanan.' : 'Riwayat kosong.'}`;
     $('#empty').classList.remove('hidden');
     return;
   }  $('#empty').classList.add('hidden');
   $('#content').classList.remove('hidden');
+
+  if (kind === 'uploads' && st.length){
+    const bar = el('div', 'flex items-center justify-between gap-3 mb-3 px-1', `
+      <div class="text-[11px] text-dim">Muncul di daftar ini setelah kamu unggah lewat aplikasi. File tetap ada di folder aslinya di repo.</div>
+      <button class="btn-act shrink-0"><i class="fa-solid fa-trash-can"></i><span class="hidden sm:inline">Kosongkan</span></button>`);
+    bar.querySelector('button').onclick = () => {
+      S.uploads = []; ls('md:uploads', S.uploads);
+      $('#up-count').textContent = '0';
+      renderQuick(kind);
+    };
+    wrap.appendChild(bar);
+  }
 
   st.forEach(n => {
     const [ic, col] = iconFor(n.type, n.name);
@@ -891,15 +913,18 @@ function renderQuick(kind){
         <div class="text-[11px] text-dim font-mono truncate">${esc(n.path.includes('/') ? n.path.slice(0, n.path.lastIndexOf('/')) || '/' : '/')}</div>
       </div>
       <div class="flex items-center gap-2 shrink-0">
-        <button class="w-7 h-7 grid place-items-center rounded-lg text-sm text-dim hover:text-[#f59e0b] transition" title="Hapus"><i class="fa-solid fa-xmark"></i></button>
+        ${n.size != null ? `<span class="text-[11px] text-dim hidden sm:inline">${esc(bytes(n.size))}</span>` : ''}
+        <button class="w-7 h-7 grid place-items-center rounded-lg text-sm text-dim hover:text-[#f59e0b] transition" title="Hapus dari daftar"><i class="fa-solid fa-xmark"></i></button>
       </div>`);
     row.onclick = ev => { if (ev.target.closest('button')) return; open({ name: n.name, path: n.path, type: n.type, size: n.size }) };
     row.querySelector('button').onclick = ev => {
       ev.stopPropagation();
       S.favorites = S.favorites.filter(p => p !== n.path);
       S.recents  = S.recents.filter(r => r.p !== n.path);
-      ls('md:fav', S.favorites); ls('md:recent', S.recents);
+      S.uploads  = S.uploads.filter(r => r.p !== n.path);
+      ls('md:fav', S.favorites); ls('md:recent', S.recents); ls('md:uploads', S.uploads);
       $('#fav-count').textContent = S.favorites.length;
+      $('#up-count').textContent = S.uploads.length;
       renderQuick(kind);
     };
     wrap.appendChild(row);
@@ -1589,6 +1614,13 @@ async function startUpload(){
     if (entries.length){
       await commitBatch(entries);
       toast(`${ok} file masuk commit di ${CONFIG.branch}`, 'fa-circle-check');
+      // Catat dulu SEBELUM U.items dibersihkan, supaya ukuran file masih terbaca.
+      const now = Date.now();
+      const fresh = entries.map(e => { const it = U.items.find(i => i.path === e.path);
+        return { p: e.path, n: e.path.split('/').pop(), t: 'file', s: it && it.file ? it.file.size : 0, w: now } });
+      S.uploads = [...fresh, ...S.uploads.filter(u => !entries.some(e => e.path === u.p))].slice(0, 100);
+      ls('md:uploads', S.uploads);
+      $('#up-count').textContent = S.uploads.length;
       U.items = U.items.filter(i => i.state !== 'ready');
       try { localStorage.removeItem('md:cache:tree') } catch {}
       await loadIndex(); loadFolder();
@@ -1678,6 +1710,7 @@ $('#btn-copy').onclick    = async () => {
 $('#btn-zip').onclick     = zipFolder;
 $('#tree-collapse').onclick = () => { S.expanded = new Set(['']); ls('md:exp', ['']); renderTree() };
 $('#fav-count').textContent = S.favorites.length;
+$('#up-count').textContent  = S.uploads.length;
 $('#sort').value = S.sort;
 $('#btn-sidebar').onclick = () => {
   const sb = $('#sidebar'), bd = $('#sb-backdrop');

@@ -1279,13 +1279,14 @@ addEventListener('keydown', e => {
     if ($('#help').classList.contains('open')) return closeHelp();
     return;
   }
-  if (typing) return;
   if ($('#cmd').classList.contains('open')){
+    // Dicek sebelum `typing`, karena fokus selalu di input saat palet terbuka.
     if (e.key === 'ArrowDown' || (e.key === 'Tab' && !e.shiftKey)){ e.preventDefault(); S.cmdIndex = Math.min(S.cmdIndex + 1, (S.cmdItems2 || []).length - 1); syncCmdActive() }
     if (e.key === 'ArrowUp' || (e.key === 'Tab' && e.shiftKey)){ e.preventDefault(); S.cmdIndex = Math.max(S.cmdIndex - 1, 0); syncCmdActive() }
-    if (e.key === 'Enter'){ const it = (S.cmdItems2 || [])[S.cmdIndex]; if (it){ closeCmd(); open(it) } }
+    if (e.key === 'Enter'){ e.preventDefault(); const it = (S.cmdItems2 || [])[S.cmdIndex]; if (it){ closeCmd(); open(it) } }
     return;
   }
+  if (typing) return;
   const k = e.key.toLowerCase();
   if (k === '?'){ e.preventDefault(); openHelp(); return }
   if (k === '/'){ e.preventDefault(); openCmd(); return }

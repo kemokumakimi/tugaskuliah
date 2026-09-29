@@ -422,6 +422,31 @@ mark{background:none;color:var(--acc);font-weight:700}
   </div>
 </div>
 
+<!-- ================= KONFIRMASI HAPUS ================= -->
+<div id="confirm" class="ov z-[120] flex items-center justify-center p-4">
+  <div class="sheet w-full max-w-md bg-panel sh-lg border-line border rounded-2xl overflow-hidden">
+    <div class="px-5 py-4 border-line border-b flex items-center gap-3">
+      <i class="fa-solid fa-triangle-exclamation" style="color:var(--danger)"></i>
+      <h3 class="font-display font-semibold">Hapus dari repo</h3>
+      <button onclick="closeConfirm()" class="ml-auto w-9 h-9 grid place-items-center rounded-lg border-line hover:bg-panel-2 transition shrink-0"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="p-5 space-y-3">
+      <div data-del-name class="text-sm text-muted"></div>
+      <p class="text-sm text-muted">File ini akan dihapus dari repo lewat GitHub API. Tindakan ini tidak bisa dibatalkan dari aplikasi.</p>
+      <div class="note p-3.5 flex gap-3">
+        <i class="fa-solid fa-circle-info text-dim mt-0.5 shrink-0"></i>
+        <p class="text-[11px] text-muted leading-relaxed">File tetap ada di riwayat commit GitHub, jadi masih bisa dipulihkan lewat GitHub. Yang hilang adalah file ini dari daftar isi repo.</p>
+      </div>
+    </div>
+    <div class="px-5 py-3.5 border-line border-t flex items-center gap-2">
+      <button onclick="closeConfirm()" class="btn-act">Batal</button>
+      <button id="btn-del-ok" onclick="confirmDelete()" class="btn-act btn-go ml-auto" style="background:var(--danger);color:#fff;border-color:var(--danger)">
+        <i class="fa-solid fa-trash-can"></i> Hapus
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- ================= TOKEN ================= -->
 <div id="token" class="ov z-[110] flex items-center justify-center p-4">
   <div class="sheet w-full max-w-md bg-panel sh-lg border-line border rounded-2xl overflow-hidden">
@@ -1230,10 +1255,15 @@ function contextMenu(e, x, y){
   items.push(['Salin path', 'fa-copy', () => { navigator.clipboard.writeText(e.path); toast('Path disalin', 'fa-copy') }]);
   items.push([fav ? 'Hapus dari favorit' : 'Tambah favorit', 'fa-star', () => toggleFav(e)]);
   items.push(['Buka di GitHub', 'fa-brands fa-github', () => window.open(`https://github.com/${CONFIG.username}/${CONFIG.repo}/blob/${CONFIG.branch}/${e.path}`, '_blank')]);
+  items.push(['sep']);
+  items.push(['Hapus dari repo', 'fa-trash-can', () => askDelete(e), true]);
 
   ctxEl = el('div', 'fixed z-[130] bg-panel border-line border rounded-xl sh-lg p-1.5 text-sm min-w-[210px]');
-  items.forEach(([label, icon, fn]) => {
-    const b = el('button', 'w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-panel-2 transition text-left', `<i class="fa-solid ${icon} w-4 text-center text-dim text-xs"></i><span>${label}</span>`);
+  items.forEach(it => {
+    if (it[0] === 'sep'){ ctxEl.appendChild(el('div', 'h-px bg-[var(--line)] my-1.5')); return }
+    const [label, icon, fn, danger] = it;
+    const b = el('button', `w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition text-left ${danger ? 'hover:bg-[var(--danger)]/10' : 'hover:bg-panel-2'}`,
+      `<i class="fa-solid ${icon} w-4 text-center text-xs ${danger ? '' : 'text-dim'}" style="${danger ? 'color:var(--danger)' : ''}"></i><span style="${danger ? 'color:var(--danger)' : ''}">${label}</span>`);
     b.onclick = () => { ctxEl.remove(); ctxEl = null; fn() };
     ctxEl.appendChild(b);
   });
@@ -1311,6 +1341,9 @@ addEventListener('keydown', e => {
     if ($('#cmd').classList.contains('open')) return closeCmd();
     if ($('#pv').classList.contains('open')) return closePreview();
     if ($('#help').classList.contains('open')) return closeHelp();
+    if ($('#confirm').classList.contains('open')) return closeConfirm();
+    if ($('#token').classList.contains('open')) return closeToken();
+    if ($('#upload').classList.contains('open')) return closeUpload();
     return;
   }
   if ($('#cmd').classList.contains('open')){
@@ -1643,6 +1676,91 @@ async function refreshRate(){
   } catch { box.textContent = '' }
 }
 
+/* ============================================================================
+   HAPUS DARI REPO
+   ========================================================================= */
+let delTarget = null, delBusy = false;
+function askDelete(e){
+  if (!S.token){ toast('Butuh token dulu untuk menghapus', 'fa-circle-info'); return openToken() }
+  const clean = safePath(e.path);
+  if (!clean){ toast('Path tidak valid', 'fa-circle-exclamation'); return }
+  // index.html adalah aplikasinya sendiri; menghapusnya mematikan MyDrive.
+  if (clean === 'index.html'){ toast('index.html tidak bisa dihapus dari sini', 'fa-shield-halved'); return }
+  delTarget = e;
+  const isDir = e.type === 'dir';
+  const st = isDir ? S.stats && S.stats.get(clean) : null;
+  const sub = isDir
+    ? (st ? `Folder ini berisi <strong>${countFmt(st.files)} file</strong> (${esc(bytes(st.bytes))}).` : 'Semua isi folder ini ikut terhapus.')
+    : `Ukuran ${esc(bytes(e.size))}.`;
+  $('#confirm').querySelector('[data-del-name]').innerHTML =
+    `<strong>${esc(e.name)}</strong><br><span class="text-[11px] text-dim font-mono">${esc(e.path)}</span><br><span class="text-[12px]">${sub}</span>`;
+  $('#btn-del-ok').disabled = false;
+  $('#confirm').classList.add('open');
+}
+function closeConfirm(){
+  if (delBusy) return;
+  delTarget = null;
+  $('#confirm').classList.remove('open');
+}
+async function confirmDelete(){
+  if (delBusy || !delTarget) return;
+  const target = delTarget;
+  const isDir  = target.type === 'dir';
+  const path   = safePath(target.path);
+  if (!path || path === 'index.html'){ delBusy = false; closeConfirm(); return }
+  delBusy = true;
+  const ok = $('#btn-del-ok');
+  ok.disabled = true;
+  ok.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menghapus';
+  try {
+    // Git Data API: kirim entri dengan sha: null = hapus path itu beserta seluruh isinya.
+    for (let attempt = 1; attempt <= 2; attempt++){
+      const ref  = await gh('GET', `${API}/git/ref/heads/${CONFIG.branch}`);
+      const head = ref.object.sha;
+      const base = await gh('GET', `${API}/git/commits/${head}`);
+      const tree = await gh('POST', `${API}/git/trees`, {
+        base_tree : base.tree.sha,
+        // yang menentukan hapus adalah sha:null; mode/type ikut jenis entri.
+        tree      : [{ path, mode : isDir ? '040000' : (target.mode || '100644'), type : isDir ? 'tree' : 'blob', sha : null }]
+      });
+      const commit = await gh('POST', `${API}/git/commits`, {
+        message : `Hapus ${path} lewat MyDrive`, tree : tree.sha, parents : [head]
+      });
+      try {
+        await gh('PATCH', `${API}/git/refs/heads/${CONFIG.branch}`, { sha : commit.sha, force : false });
+        break;
+      } catch (e){
+        if (attempt === 2 || (e.status !== 422 && e.status !== 409)) throw e;
+      }
+    }
+    S.uploads  = S.uploads.filter(r => r.p !== path && !r.p.startsWith(path + '/'));
+    S.favorites = S.favorites.filter(p => p !== path && !p.startsWith(path + '/'));
+    S.recents  = S.recents.filter(r => r.p !== path && !r.p.startsWith(path + '/'));
+    ls('md:uploads', S.uploads); ls('md:fav', S.favorites); ls('md:recent', S.recents);
+    $('#up-count').textContent  = S.uploads.length;
+    $('#fav-count').textContent = S.favorites.length;
+    if (S.path === path || S.path.startsWith(path + '/')) S.path = path.split('/').slice(0, -1).join('/');
+    [...S.expanded].forEach(p => { if (p === path || p.startsWith(path + '/')) S.expanded.delete(p) });
+    ls('md:exp', [...S.expanded]);
+    try { localStorage.removeItem('md:cache:tree') } catch {}
+    delBusy = false;              // harus sebelum closeConfirm, yang menolak saat masih busy
+    closeConfirm();
+    toast(`${target.name} dihapus dari repo`, 'fa-trash-can');
+    await loadIndex();
+    renderTree();
+    S.quick ? renderQuick(S.quick) : loadFolder();
+  } catch (e){
+    delBusy = false;
+    ok.disabled = false;
+    ok.innerHTML = '<i class="fa-solid fa-trash-can"></i> Hapus';
+    const msg = e.status === 401 ? 'Token ditolak'
+              : e.status === 403 ? 'Akses ditolak atau kuota habis'
+              : e.status === 404 ? 'File tidak ada di repo'
+              : (e.message || 'Gagal menghapus');
+    toast(msg, 'fa-circle-exclamation');
+  }
+}
+
 function openUpload(){
   if (!S.token){ U.afterToken = true; return openToken() }
   $('#up-target').textContent = '/' + S.path;
@@ -1680,6 +1798,7 @@ function clearToken(){
 $('#btn-upload').onclick   = openUpload;
 $('#upload').onclick       = e => { if (e.target.id === 'upload') closeUpload() };
 $('#token').onclick        = e => { if (e.target.id === 'token') closeToken() };
+$('#confirm').onclick      = e => { if (e.target.id === 'confirm') closeConfirm() };
 $('#dz').onclick           = e => { if (!e.target.closest('button')) $('#file-in').click() };
 $('#btn-pick').onclick     = () => $('#file-in').click();
 $('#btn-pick-cam').onclick = () => $('#file-cam').click();

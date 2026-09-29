@@ -141,7 +141,7 @@ body.has-pointer #pointer-glow{opacity:.75}
 .cmd-row[data-active="1"] .cmd-name{color:var(--acc)}
 mark{background:none;color:var(--acc);font-weight:700}
 
-/* markdown preview */
+/* pratinjau markdown */
 .md-wrap{font-size:.95rem;line-height:1.75;color:var(--fg-2)}
 .md-wrap h1,.md-wrap h2,.md-wrap h3,.md-wrap h4{color:var(--fg);font-family:'Sora',sans-serif;line-height:1.25;margin:1.5rem 0 .6rem;font-weight:600}
 .md-wrap h1{font-size:1.6rem} .md-wrap h2{font-size:1.3rem} .md-wrap h3{font-size:1.1rem} .md-wrap h4{font-size:1rem}
@@ -352,7 +352,7 @@ mark{background:none;color:var(--acc);font-weight:700}
   </div>
 </div>
 
-<!-- ================= PREVIEW MODAL ================= -->
+<!-- ================= MODAL PRATINJAU ================= -->
 <div id="pv" class="ov z-[100] flex items-center justify-center p-3 sm:p-6">
   <div class="sheet w-full max-w-5xl max-h-[92vh] bg-panel sh-lg border-line border rounded-2xl flex flex-col overflow-hidden">
     <div class="flex items-start gap-3 px-5 py-4 border-line border-b">
@@ -889,7 +889,7 @@ function trackRecent(e){
 }
 
 /* ============================================================================
-   FAVORIT / RECENT
+   FAVORIT / TERBUKA TERBARU
    ========================================================================= */
 function renderQuick(kind){
   hideSkeletons();
@@ -898,9 +898,17 @@ function renderQuick(kind){
   wrap.className = 'flex flex-col gap-1';
   wrap.innerHTML = '';
   const TITLES = { favorites: 'Favorit', recent: 'Baru dibuka', uploads: 'Baru diunggah' };
-  const st = kind === 'favorites' ? S.favorites.map(p => S.tree.get(p)).filter(Boolean)
-          : kind === 'uploads'  ? S.uploads.map(r => S.tree.get(r.p) || { path: r.p, name: r.n, type: r.t, size: r.s })
-          : S.recents.map(r => S.tree.get(r.p) || { path: r.p, name: r.n, type: r.t, size: r.s });
+  // Entri S.tree tidak menyimpan 'name' (hanya path/type/size), jadi selalu
+  // dinormalkan lewat toItem(). Kalau path hilang dari tree, nama diturunkan
+  // dari path supaya tidak tampil sebagai "undefined".
+  const pick = (p, fb) => {
+    const n = S.tree && S.tree.get(p);
+    if (n) return toItem(n);
+    return { ...toItem({ path: p, type: (fb && fb.t) || 'file', size: (fb && fb.s) || 0 }), missing: true };
+  };
+  const st = kind === 'favorites' ? S.favorites.map(p => pick(p))
+          : kind === 'uploads'  ? S.uploads.map(r => pick(r.p, r))
+          : S.recents.map(r => pick(r.p, r));
   $('#folder-title').textContent = TITLES[kind] || kind;
   $('#folder-meta').textContent = kind === 'uploads'
     ? `${countFmt(st.length)} file · menupload dari perangkat ini`
@@ -931,17 +939,23 @@ function renderQuick(kind){
 
   st.forEach(n => {
     const [ic, col] = iconFor(n.type, n.name);
+    const parent = n.path.includes('/') ? n.path.slice(0, n.path.lastIndexOf('/')) || '/' : '/';
     const row = el('div', 'rise row border border-transparent hover:border-line', `
       <i class="fa-solid ${ic} text-xl w-6 text-center" style="color:${col}"></i>
       <div class="min-w-0">
         <div class="text-sm font-medium truncate" title="${esc(n.name)}">${esc(n.name)}</div>
-        <div class="text-[11px] text-dim font-mono truncate">${esc(n.path.includes('/') ? n.path.slice(0, n.path.lastIndexOf('/')) || '/' : '/')}</div>
+        <div class="text-[11px] text-dim font-mono truncate">${esc(parent)}</div>
       </div>
+      ${n.missing ? `<span class="shrink-0 text-[10px] px-2 py-0.5 rounded-md" style="background:var(--danger);color:#fff">Tidak ada di repo</span>` : ''}
       <div class="flex items-center gap-2 shrink-0">
-        ${n.size != null ? `<span class="text-[11px] text-dim hidden sm:inline">${esc(bytes(n.size))}</span>` : ''}
+        ${!n.missing && n.size != null ? `<span class="text-[11px] text-dim hidden sm:inline">${esc(bytes(n.size))}</span>` : ''}
         <button class="w-7 h-7 grid place-items-center rounded-lg text-sm text-dim hover:text-[#f59e0b] transition" title="Hapus dari daftar"><i class="fa-solid fa-xmark"></i></button>
       </div>`);
-    row.onclick = ev => { if (ev.target.closest('button')) return; open({ name: n.name, path: n.path, type: n.type, size: n.size }) };
+    row.onclick = ev => {
+      if (ev.target.closest('button')) return;
+      if (n.missing){ toast(`${n.name} sudah tidak ada di repo`, 'fa-circle-info'); return }
+      open(n);
+    };
     row.querySelector('button').onclick = ev => {
       ev.stopPropagation();
       S.favorites = S.favorites.filter(p => p !== n.path);
@@ -963,7 +977,7 @@ function markQuick(){
 }
 
 /* ============================================================================
-   SIDEBAR TREE
+   POHON SIDEBAR
    ========================================================================= */
 function renderTree(){
   const nav = $('#tree');
@@ -1096,7 +1110,7 @@ function syncCmdActive(){
 }
 
 /* ============================================================================
-   PREVIEW
+   PRATINJAU
    ========================================================================= */
 let pvToken = 0, pvEntry = null, pvBlob = null;
 function openPreview(e){
@@ -1186,7 +1200,7 @@ function pvMediaFail(node, ext){
   if (box) box.innerHTML = `<div class="py-16 text-center text-sm">
     <i class="fa-solid fa-circle-exclamation text-5xl mb-4 block text-dim"></i>
     <p class="font-medium">Peramban ini tidak bisa memutar ${esc(ext.toUpperCase())} langsung dari repo.</p>
-    <p class="text-dim mt-1.5 mb-5">File Disajikan GitHub sebagai application/octet-stream, bukan video.</p>
+    <p class="text-dim mt-1.5 mb-5">GitHub menyajikan file ini sebagai application/octet-stream, bukan video.</p>
     <a href="${url}" target="_blank" rel="noopener" class="btn-act">Buka di tab baru</a></div>`;
 }
 function pvFail(img){
@@ -1243,7 +1257,7 @@ function mdToHtml(src){
 }
 
 /* ============================================================================
-   CONTEXT MENU
+   MENU KANAN
    ========================================================================= */
 let ctxEl = null;
 function contextMenu(e, x, y){
@@ -1317,7 +1331,7 @@ async function zipFolder(){
 }
 
 /* ============================================================================
-   KEYBOARD
+   PINTASAN KEYBOARD
    ========================================================================= */
 const SHORTCUTS = [
   ['Ctrl / ⌘ + K', 'Buka pencarian'],
@@ -1793,7 +1807,7 @@ function clearToken(){
 }
 
 /* ============================================================================
-   EVENT BINDING
+   PENYANDERA ACARA
    ========================================================================= */
 $('#btn-upload').onclick   = openUpload;
 $('#upload').onclick       = e => { if (e.target.id === 'upload') closeUpload() };
